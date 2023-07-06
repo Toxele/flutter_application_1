@@ -46,17 +46,15 @@ class GHFlutterState extends State<GHFlutter> {
   void addRecordToData() async {
     _dataRecords = [];
     _dataRecords.addAll(await _dataService.loadRecords());
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    _dataService = DataService();
+    _dataService = DataService(DataServiceLoader());
     addRecordToData();
-  
+
     //_dataService.addAll([1, 2, 3, 4, 5]);
   }
 
@@ -64,7 +62,7 @@ class GHFlutterState extends State<GHFlutter> {
     setState(() {
       _dataService.addRecord(sys, dia, pulse);
       addRecordToData();
-  //    print(_dataRecords[0].dia.toString() + 'Im here');
+      //    print(_dataRecords[0].dia.toString() + 'Im here');
     });
   }
 

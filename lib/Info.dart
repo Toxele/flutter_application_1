@@ -26,7 +26,9 @@ class UserRecord {
 }
 
 class DataService {
-  DataService();
+  DataService(this._serviceLoader);
+
+  final DataServiceLoader _serviceLoader;
 
   List<UserRecord> _records = [];
   List<UserRecord> get records => _records;
@@ -37,19 +39,17 @@ class DataService {
       '${(await getApplicationDocumentsDirectory()).path}$_fileName';
 
   Future<List<UserRecord>> loadRecords() async {
-    final path = await _getPath;
-    final file = File(path);
-    if (await file.exists()) {
-      String rawRecordsList = await file.readAsString();
+    String rawRecordsList =
+        await _serviceLoader.loadRecords(path: await _getPath);
 
-      final recordList = <UserRecord>[];
-      for (final record in jsonDecode(rawRecordsList) as List) {
-        recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
-      }
-      _records = recordList;
-      return recordList;
+    if (rawRecordsList.isEmpty) return [];
+
+    final recordList = <UserRecord>[];
+    for (final record in jsonDecode(rawRecordsList) as List) {
+      recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
     }
-    return [];
+    _records = recordList;
+    return recordList;
   }
 
   Future addRecord(int sys, int dia, int pulse) async {
@@ -73,24 +73,13 @@ class DataService {
 
 class DataServiceLoader {
   DataServiceLoader();
-  List<UserRecord> _records = [];
-  List<UserRecord> get records => _records;
-  static const String _fileName = '\\records.json';
-  Future<String> get _getPath async =>
-      '${(await getApplicationDocumentsDirectory()).path}$_fileName';
-  Future<List<UserRecord>> loadRecords() async {
-    final path = await _getPath;
+
+  Future<String> loadRecords({required String path}) async {
     final file = File(path);
     if (await file.exists()) {
       String rawRecordsList = await file.readAsString();
-
-      final recordList = <UserRecord>[];
-      for (final record in jsonDecode(rawRecordsList) as List) {
-        recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
-      }
-      _records = recordList;
-      return recordList;
+      return rawRecordsList;
     }
-    return [];
+    return '';
   }
 }
