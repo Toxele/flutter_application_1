@@ -4,7 +4,7 @@
 //import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Info.dart';
+import 'package:flutter_application_1/info.dart';
 import 'package:flutter_application_1/strings.dart' as strings;
 // ignore: unused_import
 import 'package:flutter_application_1/the_morning.dart';
