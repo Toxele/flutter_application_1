@@ -1,0 +1,78 @@
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields
+
+//import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/color_block.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'IndieFlower',
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  // ignore: library_private_types_in_public_api
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  ColorBlock _block = ColorBlock();
+  @override
+  void dispose() {
+    _block.dispose();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('BLoC with Stream'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: StreamBuilder(
+          stream: _block.outputStateStream,
+          initialData: Colors.red,
+          builder: (context, snapshot) {
+            return AnimatedContainer(
+              height: 100,
+              width: 100,
+              color: snapshot.data,
+              duration: Duration(milliseconds: 500),
+            );
+          },
+        ),
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FloatingActionButton(
+            backgroundColor: Colors.red,
+            onPressed: () {
+              _block.inputEventSink.add(ColorEvent.event_red);
+            },
+          ),
+          SizedBox(width: 10),
+          FloatingActionButton(
+            backgroundColor: Colors.green,
+            onPressed: () {
+                _block.inputEventSink.add(ColorEvent.event_green);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}

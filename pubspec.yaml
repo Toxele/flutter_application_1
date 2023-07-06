@@ -1,0 +1,42 @@
+name: flutter_application_1
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.2 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.3
+  http: ^0.13.3
+  json_annotation: ^4.8.1
+  cupertino_icons: ^1.0.2
+  path_provider: ^2.0.15
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  build_runner: ^2.4.5
+  json_serializable: ^6.7.0
+
+  lint: ^2.1.2
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+  - assets/images/phon.jpg
+  - assets/icons/icon.jpg
+
+  fonts:
+    - family: IndieFlower
+      fonts:
+        - asset: fonts/IndieFlower-Regular.ttf

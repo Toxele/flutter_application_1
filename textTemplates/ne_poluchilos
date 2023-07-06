@@ -1,0 +1,71 @@
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields
+
+import 'package:flutter/material.dart';
+import 'strings.dart' as strings;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+void main() {
+  runApp(GHFlutterApp());
+}
+
+class GHFlutterApp extends StatelessWidget {
+  const GHFlutterApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: strings.appTitle,
+      home: const GHFlutter(),
+    );
+  }
+}
+
+class GHFlutter extends StatefulWidget {
+  const GHFlutter({Key? key}) : super(key: key);
+
+  @override
+  _GHFlutterState createState() => _GHFlutterState();
+}
+
+class _GHFlutterState extends State<GHFlutter> {
+  final _biggerFont = const TextStyle(fontSize: 18.0);
+  var _members = <dynamic>[];
+ 
+
+   Future<void> _loadData() async {
+    const dataUrl = 'https://api.github.com/orgs/raywenderlich/members';
+    final response = await http.get(Uri.parse(dataUrl));
+    setState(() {
+      _members = json.decode(response.body);
+    });
+  } 
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(strings.appTitle),
+      ),
+      body: ListView.builder(
+          padding: const EdgeInsets.all(16.0),
+          itemCount: 5,
+          itemBuilder: (BuildContext context, int position) {
+            return _buildRow(position);
+          }),
+    );
+  }
+
+  Widget _buildRow(int i) {
+    return ListTile(
+      title: Text('${_members[i]['login']}', style: _biggerFont),
+    );
+  }
+
+ 
+
+}

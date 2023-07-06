@@ -1,0 +1,169 @@
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, prefer_const_literals_to_create_immutables
+
+//import 'dart:async';
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'IndieFlower',
+      ),
+      home: MyTestWidget(),
+    );
+  }
+}
+
+class MyTestWidget extends StatefulWidget {
+  @override
+  MyTest createState() => MyTest();
+}
+
+class MyTest extends State<MyTestWidget> {
+  int _count = 50;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Center(child: Text('Counter')),
+          backgroundColor: Colors.indigo,
+        ),
+        body: Container(
+          color: Colors.indigo[300],
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Press "+" to increment',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(horizontal: 140.0, vertical: 5),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.indigo[50],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: _increment,
+                      ),
+                      Text('$_count', style: TextStyle(fontSize: 20),),
+                      IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: _decrement,
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  'Press "-" to decrement',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  void _increment() {
+    setState(() {
+      _count++;
+    });
+  }
+
+  void _decrement() {
+    setState(() {
+      _count--;
+    });
+  }
+}
+
+class CounterWidget extends StatefulWidget {
+  @override
+  CounterWidgetState createState() => CounterWidgetState();
+}
+
+class CounterWidgetState extends State<CounterWidget> {
+  int _count = 50;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Center(
+          child: Text('Couter'),
+        ),
+        backgroundColor: Colors.indigo,
+      ),
+      body: Container(
+        color: Colors.indigo[300],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Tap "-" to decrement',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 140.0, vertical: 5),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.indigo[50],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.add),
+                      tooltip: 'Increase 1',
+                      onPressed: _increment,
+                    ),
+                    Text(
+                      '$_count',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.remove),
+                      tooltip: 'Increase 1',
+                      onPressed: _decrement,
+                    ),
+                  ],
+                ),
+              ),
+              Text(
+                'Tap "+" to increment',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _decrement() {
+    setState(() {
+      _count--;
+    });
+  }
+
+  void _increment() {
+    setState(() {
+      _count++;
+    });
+  }
+}
