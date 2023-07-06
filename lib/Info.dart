@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
+
 @JsonSerializable(explicitToJson: true)
 class UserRecord {
   // поля значений, которые вводят пользователь, возможно сюда добавится дата и время
@@ -52,7 +53,7 @@ class DataService {
   }
 
   Future addRecord(int sys, int dia, int pulse) async {
-     final user = UserRecord(sys, dia, pulse);
+    final user = UserRecord(sys, dia, pulse);
 
     _records.add(user);
     final recordsRaw = _records.map((e) => e.toJson()).toList();
@@ -64,8 +65,32 @@ class DataService {
       await file.create();
     }
     String encoded = json.encode(recordsRaw); // преобразуем в json
-    
+
     await file.writeAsString(encoded); // запись в файл
     return true;
+  }
+}
+
+class DataServiceLoader {
+  DataServiceLoader();
+  List<UserRecord> _records = [];
+  List<UserRecord> get records => _records;
+  static const String _fileName = '\\records.json';
+  Future<String> get _getPath async =>
+      '${(await getApplicationDocumentsDirectory()).path}$_fileName';
+  Future<List<UserRecord>> loadRecords() async {
+    final path = await _getPath;
+    final file = File(path);
+    if (await file.exists()) {
+      String rawRecordsList = await file.readAsString();
+
+      final recordList = <UserRecord>[];
+      for (final record in jsonDecode(rawRecordsList) as List) {
+        recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
+      }
+      _records = recordList;
+      return recordList;
+    }
+    return [];
   }
 }
