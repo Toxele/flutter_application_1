@@ -44,9 +44,10 @@ class GHFlutterState extends State<GHFlutter> {
   late List<UserRecord> _dataRecords = [];
   // ignore: avoid_void_async
   void addRecordToData() async {
-    _dataRecords = [];
-    _dataRecords.addAll(await _dataService.loadRecords());
-    setState(() {});
+    setState(() async {
+      _dataRecords = [];
+      _dataRecords.addAll(await _dataService.loadRecords());
+    });
   }
 
   @override
