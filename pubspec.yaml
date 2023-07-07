@@ -22,7 +22,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  fl_chart: ^0.63.0
   build_runner: ^2.4.5
   json_serializable: ^6.7.0
 

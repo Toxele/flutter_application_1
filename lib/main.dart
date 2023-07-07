@@ -5,9 +5,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Info.dart';
+//import 'package:flutter_application_1/presentation/graph_screen.dart';
 import 'package:flutter_application_1/strings.dart' as strings;
 // ignore: unused_import
-import 'package:flutter_application_1/the_morning.dart';
+import 'package:flutter_application_1/trash/the_morning.dart';
 import 'package:flutter_application_1/my_dialog_widget.dart';
 //import 'dart:convert';
 //import 'package:http/http.dart' as http;
@@ -46,17 +47,15 @@ class GHFlutterState extends State<GHFlutter> {
   void addRecordToData() async {
     _dataRecords = [];
     _dataRecords.addAll(await _dataService.loadRecords());
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    _dataService = DataService();
+    _dataService = DataService(DataServiceLoader());
     addRecordToData();
-  
+
     //_dataService.addAll([1, 2, 3, 4, 5]);
   }
 
@@ -64,7 +63,7 @@ class GHFlutterState extends State<GHFlutter> {
     setState(() {
       _dataService.addRecord(sys, dia, pulse);
       addRecordToData();
-  //    print(_dataRecords[0].dia.toString() + 'Im here');
+      //    print(_dataRecords[0].dia.toString() + 'Im here');
     });
   }
 
@@ -82,6 +81,24 @@ class GHFlutterState extends State<GHFlutter> {
           return _RowRecords(record: _dataRecords[position]);
         },
       ),
+      //  TODO: uncomment this code later
+    //  bottomNavigationBar: Row(
+     //   children: <Widget>[
+    //      Navigator(
+    //    pages: [
+    //      MaterialPage(
+    //        key: const ValueKey('graph_screen'),
+    //        child: GraphScreen(
+          //    onItemTapped: _handleItemTapped,
+            //  onRouteTapped: _handleRouteTapped,
+     //       ),
+     //     ),
+
+     //   ],
+     //   onPopPage: (route, result) => route.didPop(result),
+     // ),
+    //    ],
+     // ),
     );
   }
 
