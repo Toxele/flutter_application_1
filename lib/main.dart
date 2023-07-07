@@ -5,11 +5,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Info.dart';
+import 'package:flutter_application_1/my_dialog_widget.dart';
 //import 'package:flutter_application_1/presentation/graph_screen.dart';
 import 'package:flutter_application_1/strings.dart' as strings;
 // ignore: unused_import
 import 'package:flutter_application_1/trash/the_morning.dart';
-import 'package:flutter_application_1/my_dialog_widget.dart';
 //import 'dart:convert';
 //import 'package:http/http.dart' as http;
 //import 'dart:async';
@@ -82,23 +82,23 @@ class GHFlutterState extends State<GHFlutter> {
         },
       ),
       //  TODO: uncomment this code later
-    //  bottomNavigationBar: Row(
-     //   children: <Widget>[
-    //      Navigator(
-    //    pages: [
-    //      MaterialPage(
-    //        key: const ValueKey('graph_screen'),
-    //        child: GraphScreen(
-          //    onItemTapped: _handleItemTapped,
-            //  onRouteTapped: _handleRouteTapped,
-     //       ),
-     //     ),
+      //  bottomNavigationBar: Row(
+      //   children: <Widget>[
+      //      Navigator(
+      //    pages: [
+      //      MaterialPage(
+      //        key: const ValueKey('graph_screen'),
+      //        child: GraphScreen(
+      //    onItemTapped: _handleItemTapped,
+      //  onRouteTapped: _handleRouteTapped,
+      //       ),
+      //     ),
 
-     //   ],
-     //   onPopPage: (route, result) => route.didPop(result),
-     // ),
-    //    ],
-     // ),
+      //   ],
+      //   onPopPage: (route, result) => route.didPop(result),
+      // ),
+      //    ],
+      // ),
     );
   }
 
@@ -124,7 +124,6 @@ class GHFlutterState extends State<GHFlutter> {
 
 class _RowRecords extends StatelessWidget {
   const _RowRecords({
-    super.key,
     required this.record,
   });
 

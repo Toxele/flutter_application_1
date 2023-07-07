@@ -38,14 +38,19 @@ class DataService {
       '${(await getApplicationDocumentsDirectory()).path}$_fileName';
 
   Future<List<UserRecord>> loadRecords() async {
-   String rawRecordsList = await _serviceLoader.loadRecords(path: await _getPath);
-   final recordList = <UserRecord>[];
-   for(final record in jsonDecode(rawRecordsList) as List)
-   {
-    recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
-   }
-   _records = recordList;
-   return recordList;
+    final path = await _getPath;
+    final file = File(path);
+    if (await file.exists()) {
+      String rawRecordsList = await file.readAsString();
+
+      final recordList = <UserRecord>[];
+      for (final record in jsonDecode(rawRecordsList) as List) {
+        recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
+      }
+      _records = recordList;
+      return recordList;
+    }
+    return [];
   }
 
   Future addRecord(int sys, int dia, int pulse) async {
