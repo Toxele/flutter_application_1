@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/Info.dart';
 import 'package:flutter_application_1/my_dialog_widget.dart';
+import 'package:flutter_application_1/presentation/graph_screen.dart';
 //import 'package:flutter_application_1/presentation/graph_screen.dart';
 import 'package:flutter_application_1/strings.dart' as strings;
 // ignore: unused_import
@@ -27,6 +28,11 @@ class GHFlutterApp extends StatelessWidget {
     return MaterialApp(
       title: strings.appTitle,
       home: const GHFlutter(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => GHFlutter(),
+        '/graph': (context) => GraphScreen(),
+      },
     );
   }
 }
@@ -72,6 +78,14 @@ class GHFlutterState extends State<GHFlutter> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(strings.appTitle),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/graph');
+            },
+            icon: Icon(Icons.auto_graph_rounded),
+          )
+        ],
       ),
       floatingActionButton: addRecordDataActionButton(),
       body: ListView.builder(
@@ -81,8 +95,18 @@ class GHFlutterState extends State<GHFlutter> {
           return _RowRecords(record: _dataRecords[position]);
         },
       ),
-      //  TODO: uncomment this code later
-      //  bottomNavigationBar: Row(
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.account_box_sharp),
+      //     ),
+      //   ],
+      // )
+
+      //   Row(
       //   children: <Widget>[
       //      Navigator(
       //    pages: [
@@ -102,6 +126,7 @@ class GHFlutterState extends State<GHFlutter> {
     );
   }
 
+  // todo: так не надо, перемести код в build
   Widget addRecordDataActionButton() {
     return FloatingActionButton(
       child: IconButton(
