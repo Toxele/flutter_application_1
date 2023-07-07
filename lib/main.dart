@@ -27,7 +27,6 @@ class GHFlutterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: strings.appTitle,
-      home: const GHFlutter(),
       initialRoute: '/',
       routes: {
         '/': (context) => GHFlutter(),
@@ -76,54 +75,54 @@ class GHFlutterState extends State<GHFlutter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(strings.appTitle),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/graph');
-            },
-            icon: Icon(Icons.auto_graph_rounded),
-          )
-        ],
-      ),
-      floatingActionButton: addRecordDataActionButton(),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: _dataRecords.length,
-        itemBuilder: (BuildContext context, int position) {
-          return _RowRecords(record: _dataRecords[position]);
-        },
-      ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.account_box_sharp),
-      //     ),
-      //   ],
-      // )
+        appBar: AppBar(
+          title: const Text(strings.appTitle),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/graph');
+              },
+              icon: Icon(Icons.auto_graph_rounded),
+            )
+          ],
+        ),
+        floatingActionButton: addRecordDataActionButton(),
+        body: ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: _dataRecords.length,
+          itemBuilder: (BuildContext context, int position) {
+            return _RowRecords(record: _dataRecords[position]);
+          },
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_box_sharp),
+            ),
+          ],
+        )
 
-      //   Row(
-      //   children: <Widget>[
-      //      Navigator(
-      //    pages: [
-      //      MaterialPage(
-      //        key: const ValueKey('graph_screen'),
-      //        child: GraphScreen(
-      //    onItemTapped: _handleItemTapped,
-      //  onRouteTapped: _handleRouteTapped,
-      //       ),
-      //     ),
+        //   Row(
+        //   children: <Widget>[
+        //      Navigator(
+        //    pages: [
+        //      MaterialPage(
+        //        key: const ValueKey('graph_screen'),
+        //        child: GraphScreen(
+        //    onItemTapped: _handleItemTapped,
+        //  onRouteTapped: _handleRouteTapped,
+        //       ),
+        //     ),
 
-      //   ],
-      //   onPopPage: (route, result) => route.didPop(result),
-      // ),
-      //    ],
-      // ),
-    );
+        //   ],
+        //   onPopPage: (route, result) => route.didPop(result),
+        // ),
+        //    ],
+        // ),
+        );
   }
 
   // todo: так не надо, перемести код в build
