@@ -4,7 +4,8 @@
 //import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Info.dart';
+import 'package:flutter_application_1/domain/dataService_and_UserRecord.dart';
+import 'package:flutter_application_1/data/data_service_loader.dart';
 import 'package:flutter_application_1/ui/my_dialog_widget.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
 //import 'package:flutter_application_1/presentation/graph_screen.dart';
@@ -66,7 +67,7 @@ class GHFlutterState extends State<GHFlutter> {
 
   void addRecord({int sys = 120, int dia = 80, int pulse = 75}) {
     setState(() {
-      _dataService.addRecord(sys, dia, pulse);
+      _dataService.addRecord(sys: sys, dia: dia, pulse: pulse);
       addRecordToData();
       //    print(_dataRecords[0].dia.toString() + 'Im here');
     });
@@ -75,54 +76,54 @@ class GHFlutterState extends State<GHFlutter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(strings.appTitle),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/graph');
-              },
-              icon: Icon(Icons.auto_graph_rounded),
-            )
-          ],
-        ),
-        floatingActionButton: addRecordDataActionButton(),
-        body: ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: _dataRecords.length,
-          itemBuilder: (BuildContext context, int position) {
-            return _RowRecords(record: _dataRecords[position]);
-          },
-        ),
-       // bottomNavigationBar: BottomNavigationBar(
-       //   items: [
-       //     BottomNavigationBarItem(
-        //      icon: Icon(Icons.home),
-        //    ),
-        //    BottomNavigationBarItem(
-        //      icon: Icon(Icons.account_box_sharp),
-        //    ),
-        //  ],
+      appBar: AppBar(
+        title: const Text(strings.appTitle),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/graph');
+            },
+            icon: Icon(Icons.auto_graph_rounded),
+          )
+        ],
+      ),
+      floatingActionButton: addRecordDataActionButton(),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _dataRecords.length,
+        itemBuilder: (BuildContext context, int position) {
+          return _RowRecords(record: _dataRecords[position]);
+        },
+      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: [
+      //     BottomNavigationBarItem(
+      //      icon: Icon(Icons.home),
+      //    ),
+      //    BottomNavigationBarItem(
+      //      icon: Icon(Icons.account_box_sharp),
+      //    ),
+      //  ],
       //  )
 
-        //   Row(
-        //   children: <Widget>[
-        //      Navigator(
-        //    pages: [
-        //      MaterialPage(
-        //        key: const ValueKey('graph_screen'),
-        //        child: GraphScreen(
-        //    onItemTapped: _handleItemTapped,
-        //  onRouteTapped: _handleRouteTapped,
-        //       ),
-        //     ),
+      //   Row(
+      //   children: <Widget>[
+      //      Navigator(
+      //    pages: [
+      //      MaterialPage(
+      //        key: const ValueKey('graph_screen'),
+      //        child: GraphScreen(
+      //    onItemTapped: _handleItemTapped,
+      //  onRouteTapped: _handleRouteTapped,
+      //       ),
+      //     ),
 
-        //   ],
-        //   onPopPage: (route, result) => route.didPop(result),
-        // ),
-        //    ],
-        // ),
-        );
+      //   ],
+      //   onPopPage: (route, result) => route.didPop(result),
+      // ),
+      //    ],
+      // ),
+    );
   }
 
   // todo: так не надо, перемести код в build
