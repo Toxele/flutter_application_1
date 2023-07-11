@@ -51,7 +51,7 @@ class DataService {
       _records = recordList;
       return recordList;
     }
-    return [];
+    return []; 
   }
 
   Future addRecord({int sys = 120, int dia = 80, int pulse = 75}) async {
