@@ -7,12 +7,13 @@ import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../data/data_service_loader.dart';
 @JsonSerializable(explicitToJson: true)
 class UserRecord {
   // поля значений, которые вводят пользователь, возможно сюда добавится дата и время
-  int? sys;
-  int? dia;
-  int? pulse;
+  final int? sys;
+  final int? dia;
+  final int? pulse;
 // DateTime timeOfRecord;
   UserRecord(this.sys, this.dia, this.pulse);
   factory UserRecord.fromJson(Map<String, dynamic> jsonMap) {
@@ -53,7 +54,7 @@ class DataService {
     return [];
   }
 
-  Future addRecord(int sys, int dia, int pulse) async {
+  Future addRecord({int sys = 120, int dia = 80, int pulse = 75}) async {
     final user = UserRecord(sys, dia, pulse);
 
     _records.add(user);
@@ -72,14 +73,4 @@ class DataService {
   }
 }
 
-class DataServiceLoader {
-  DataServiceLoader();
-  Future<String> loadRecords({required String path}) async {
-    final file = File(path);
-    if (await file.exists()) {
-      String rawRecordsList = await file.readAsString();
-      return rawRecordsList;
-    }
-    return '';
-  }
-}
+

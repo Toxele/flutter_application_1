@@ -4,7 +4,7 @@ import 'package:flutter_application_1/default_values.dart' as default_values;
 class MyDialog extends StatefulWidget {
   const MyDialog({super.key, required this.onDone});
 
-  final Function(int sys, int dia, int pulse) onDone;
+  final Function({int sys, int dia, int pulse}) onDone;
 
   @override
   State<MyDialog> createState() => _MyDialogState();
@@ -49,7 +49,7 @@ class _MyDialogState extends State<MyDialog> {
                 dia < 140 &&
                 pulse > 50 &&
                 pulse < 160) {
-              widget.onDone.call(sys, dia, pulse);
+              widget.onDone.call(sys: sys, dia: dia, pulse: pulse);
 
               Navigator.of(context).pop();
             }
