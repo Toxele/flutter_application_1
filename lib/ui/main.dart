@@ -4,7 +4,7 @@
 //import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/domain/dataService_and_UserRecord.dart';
+import 'package:flutter_application_1/logical_domain/dataService_and_UserRecord.dart';
 import 'package:flutter_application_1/data/data_service_loader.dart';
 import 'package:flutter_application_1/ui/my_dialog_widget.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
