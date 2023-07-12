@@ -4,12 +4,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../data/data_service_loader.dart';
+import '../data/json_loader.dart';
 import 'user_record.dart';
 
 class DataService {
   DataService(this._serviceLoader);
-  final DataServiceLoader _serviceLoader;
+  final JsonLoader _serviceLoader;
   List<UserRecord> _records = [];
   List<UserRecord> get records => _records;
   static const String _fileName = '\\records.json';

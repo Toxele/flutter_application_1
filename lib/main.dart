@@ -5,7 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/logical_domain/user_data_service.dart';
-import 'package:flutter_application_1/data/data_service_loader.dart';
+import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/ui/my_dialog_widget.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
 //import 'package:flutter_application_1/presentation/graph_screen.dart';
@@ -61,7 +61,7 @@ class GHFlutterState extends State<GHFlutter> {
   @override
   void initState() {
     super.initState();
-    _dataService = DataService(DataServiceLoader());
+    _dataService = DataService(JsonLoader());
     addRecordToData();
 
     //_dataService.addAll([1, 2, 3, 4, 5]);

@@ -3,8 +3,10 @@
 import 'dart:async';
 //import 'dart:ffi';
 import 'dart:io';
-class DataServiceLoader {
-  DataServiceLoader();
+
+class JsonLoader {
+  const JsonLoader();
+
   Future<String> loadRecords({required String path}) async {
     final file = File(path);
     if (await file.exists()) {
