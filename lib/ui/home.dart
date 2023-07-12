@@ -5,7 +5,7 @@ import 'package:flutter_application_1/domain/user_record.dart';
 
 import 'package:flutter_application_1/strings.dart' as strings;
 
-import 'my_dialog_widget.dart';
+import 'shared/my_dialog_widget.dart';
 
 class GHFlutter extends StatefulWidget {
   const GHFlutter({Key? key}) : super(key: key);
