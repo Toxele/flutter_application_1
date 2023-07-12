@@ -12,6 +12,8 @@ import 'package:flutter_application_1/ui/graph_screen.dart';
 import 'package:flutter_application_1/strings.dart' as strings;
 // ignore: unused_import
 import 'package:flutter_application_1/trash/the_morning.dart';
+
+import 'logical_domain/user_record.dart';
 //import 'dart:convert';
 //import 'package:http/http.dart' as http;
 //import 'dart:async';
