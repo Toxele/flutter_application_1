@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/json_loader.dart';
-import 'package:flutter_application_1/logical_domain/user_data_service.dart';
-import 'package:flutter_application_1/logical_domain/user_record.dart';
+import 'package:flutter_application_1/domain/user_data_service.dart';
+import 'package:flutter_application_1/domain/user_record.dart';
 
 import 'package:flutter_application_1/strings.dart' as strings;
 
