@@ -49,7 +49,7 @@ class GHFlutter extends StatefulWidget {
 class GHFlutterState extends State<GHFlutter> {
   //final _biggerFont = const TextStyle(fontSize: 18.0);
   // ignore: unused_field
-  late DataService _dataService;
+  late UserDataService _dataService;
   late List<UserRecord> _dataRecords = [];
   // ignore: avoid_void_async
   void addRecordToData() async {
@@ -61,7 +61,7 @@ class GHFlutterState extends State<GHFlutter> {
   @override
   void initState() {
     super.initState();
-    _dataService = DataService(JsonLoader());
+    _dataService = UserDataService(JsonLoader());
     addRecordToData();
 
     //_dataService.addAll([1, 2, 3, 4, 5]);

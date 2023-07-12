@@ -7,8 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import '../data/json_loader.dart';
 import 'user_record.dart';
 
-class DataService {
-  DataService(this._serviceLoader);
+class UserDataService {
+  UserDataService(this._serviceLoader);
   final JsonLoader _serviceLoader;
   List<UserRecord> _records = [];
   List<UserRecord> get records => _records;
