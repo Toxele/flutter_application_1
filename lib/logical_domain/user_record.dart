@@ -7,7 +7,7 @@ class UserRecord {
   final int? dia;
   final int? pulse;
 // DateTime timeOfRecord;
-  UserRecord(this.sys, this.dia, this.pulse);
+  const UserRecord(this.sys, this.dia, this.pulse);
   factory UserRecord.fromJson(Map<String, dynamic> jsonMap) {
     return UserRecord(
       jsonMap["sys"] as int,
