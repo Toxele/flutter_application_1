@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_locals, file_names, cast_nullable_to_non_nullable
+// ignore_for_file: prefer_final_locals, file_names, cast_nullable_to_non_nullable, unused_field
 
 import 'dart:async';
 import 'dart:convert';
@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../data/data_service_loader.dart';
 @JsonSerializable(explicitToJson: true)
 class UserRecord {
