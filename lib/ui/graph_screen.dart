@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 class GraphScreen extends StatefulWidget {
@@ -6,11 +8,59 @@ class GraphScreen extends StatefulWidget {
 }
 
 class GraphScreenState extends State<GraphScreen> {
+  late final CartNotifier cartNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    cartNotifier = CartNotifier();
+
+    cartNotifier.addListener(() {
+      print('Произошло обновление состояния');
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    cartNotifier.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: const Center(child: Text('Мой график')),
+      appBar: AppBar(title: Text('Мой график')),
+      body: ListenableBuilder(
+        listenable: cartNotifier,
+        builder: (context, child) {
+          return ListView(
+            children: [...cartNotifier.items.map((e) => Text(e.toString()))],
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          cartNotifier.add(Item());
+        },
+      ),
     );
   }
 }
+
+class CartNotifier extends ChangeNotifier {
+  final List<Item> _items = [];
+
+  UnmodifiableListView<Item> get items => UnmodifiableListView(_items);
+
+  void add(Item item) {
+    _items.add(item);
+    notifyListeners();
+  }
+
+  void removeAll() {
+    _items.clear();
+    notifyListeners();
+  }
+}
+
+class Item {}
