@@ -1,1 +1,0 @@
-int default_zero = 0;

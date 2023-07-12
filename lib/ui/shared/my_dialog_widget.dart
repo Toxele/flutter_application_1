@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/default_values.dart' as default_values;
+import 'package:flutter_application_1/constant/default_values.dart'
+    as default_values;
 
 class MyDialog extends StatefulWidget {
   const MyDialog({super.key, required this.onDone});
@@ -14,8 +15,9 @@ class _MyDialogState extends State<MyDialog> {
   late TextEditingController sysController;
   late TextEditingController diaController;
   late TextEditingController pulseController;
+
   @override
-  initState() {
+  void initState() {
     super.initState();
     sysController = TextEditingController();
     diaController = TextEditingController();
@@ -37,12 +39,12 @@ class _MyDialogState extends State<MyDialog> {
         appBar: AppBar(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            int sys =
-                int.tryParse(sysController.text) ?? default_values.default_zero;
-            int dia =
-                int.tryParse(diaController.text) ?? default_values.default_zero;
-            int pulse = int.tryParse(pulseController.text) ??
-                default_values.default_zero;
+            final sys =
+                int.tryParse(sysController.text) ?? default_values.defaultZero;
+            final dia =
+                int.tryParse(diaController.text) ?? default_values.defaultZero;
+            final pulse = int.tryParse(pulseController.text) ??
+                default_values.defaultZero;
             if (sys > 90 &&
                 sys < 170 &&
                 dia > 70 &&
@@ -54,46 +56,48 @@ class _MyDialogState extends State<MyDialog> {
               Navigator.of(context).pop();
             }
           },
-          child: Icon(Icons.done),
+          child: const Icon(Icons.done),
         ),
-        body: Column(children: [
-          const SizedBox(
-            height: 10,
-          ),
-          const Center(
-            child: Text(
-              'Давление, SYS',
-              style: TextStyle(fontSize: 20),
+        body: Column(
+          children: [
+            const SizedBox(
+              height: 10,
             ),
-          ),
-          TextField(
-            controller: sysController,
-          ),
-           const SizedBox(
-            height: 10,
-          ),
-          const Center(
-            child: Text(
-              'Давление, DIA',
-              style: TextStyle(fontSize: 20),
+            const Center(
+              child: Text(
+                'Давление, SYS',
+                style: TextStyle(fontSize: 20),
+              ),
             ),
-          ),
-          TextField(
-            controller: diaController,
-          ),
-           const SizedBox(
-            height: 10,
-          ),
-          const Center(
-            child: Text(
-              'Пульс',
-              style: TextStyle(fontSize: 20),
+            TextField(
+              controller: sysController,
             ),
-          ),
-          TextField(
-            controller: pulseController,
-          ),
-        ]),
+            const SizedBox(
+              height: 10,
+            ),
+            const Center(
+              child: Text(
+                'Давление, DIA',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            TextField(
+              controller: diaController,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Center(
+              child: Text(
+                'Пульс',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            TextField(
+              controller: pulseController,
+            ),
+          ],
+        ),
       ),
     );
   }

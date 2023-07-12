@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
 import 'package:flutter_application_1/domain/user_record.dart';
 
-import 'package:flutter_application_1/strings.dart' as strings;
-
 import 'shared/my_dialog_widget.dart';
 
 class GHFlutter extends StatefulWidget {
-  const GHFlutter({Key? key}) : super(key: key);
+  const GHFlutter({super.key});
 
   @override
   GHFlutterState createState() => GHFlutterState();
