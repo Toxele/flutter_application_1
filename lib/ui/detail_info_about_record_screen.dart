@@ -13,16 +13,14 @@ class DetailRecordInfoScreenState extends State<DetailRecordInfoScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('')),
       body: ListView(
-        children: const <Widget>
-        [
+        children: const <Widget>[
           Text('Давление, Sys: '),
           Text('Давление, Dia: '),
           Text('Пульс: '),
           Text('Температура: '),
           Text('Атмосферное давление: '),
           Text('Облачность: '),
-        ]
-        ,
+        ],
       ),
     );
   }
