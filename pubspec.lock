@@ -632,6 +632,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  weather_pack:
+    dependency: "direct dev"
+    description:
+      name: weather_pack
+      sha256: e0314c77afb4ce8ef5bceab333cf1b295b63dcfd4ddc4c564f6ccce9f1190e23
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   web_socket_channel:
     dependency: transitive
     description:

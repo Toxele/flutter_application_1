@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/json_loader.dart';
+import 'package:flutter_application_1/data/model/weather_model.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
 import 'package:flutter_application_1/domain/user_record.dart';
 
@@ -28,15 +29,17 @@ class GHFlutterState extends State<GHFlutter> {
   @override
   void initState() {
     super.initState();
-    _dataService = UserDataService(JsonLoader());
-    addRecordToData();
+    _dataService = UserDataService(const JsonLoader());
+    // addRecordToData();
 
     //_dataService.addAll([1, 2, 3, 4, 5]);
   }
 
-  void addRecord({int sys = 120, int dia = 80, int pulse = 75}) {
+  void addRecord(
+      {int sys = 120, int dia = 80, int pulse = 75, required Weather weather}) {
     setState(() {
-      _dataService.addRecord(sys: sys, dia: dia, pulse: pulse);
+      _dataService.addRecord(
+          sys: sys, dia: dia, pulse: pulse, weather: weather);
       addRecordToData();
       //    print(_dataRecords[0].dia.toString() + 'Im here');
     });

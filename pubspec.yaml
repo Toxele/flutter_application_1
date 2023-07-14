@@ -25,7 +25,7 @@ dev_dependencies:
   fl_chart: ^0.63.0
   build_runner: ^2.4.5
   json_serializable: ^6.7.0
-
+  weather_pack: ^0.0.2
   lint: ^2.1.2
 
 flutter:

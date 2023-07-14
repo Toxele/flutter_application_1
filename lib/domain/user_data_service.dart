@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_application_1/data/model/weather_model.dart';
 import 'package:path_provider/path_provider.dart';
 import '../data/json_loader.dart';
 import 'user_record.dart';
@@ -33,8 +34,8 @@ class UserDataService {
     return [];
   }
 
-  Future addRecord({int sys = 120, int dia = 80, int pulse = 75}) async {
-    final user = UserRecord(sys, dia, pulse);
+  Future addRecord({int sys = 120, int dia = 80, int pulse = 75, required Weather weather}) async {
+    final user = UserRecord(sys, dia, pulse, weather);
 
     _records.add(user);
     final recordsRaw = _records.map((e) => e.toJson()).toList();

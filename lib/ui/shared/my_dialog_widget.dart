@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as default_values;
+import 'package:flutter_application_1/data/model/weather_model.dart';
+import 'package:flutter_application_1/domain/controllers.dart';
 
 class MyDialog extends StatefulWidget {
   const MyDialog({super.key, required this.onDone});
 
-  final Function({int sys, int dia, int pulse}) onDone;
+  final Function({int sys, int dia, int pulse, required Weather weather})
+      onDone;
 
   @override
   State<MyDialog> createState() => _MyDialogState();
@@ -15,13 +18,20 @@ class _MyDialogState extends State<MyDialog> {
   late TextEditingController sysController;
   late TextEditingController diaController;
   late TextEditingController pulseController;
-
+  late TextEditingController temperatureController;
+  late TextEditingController pressureController;
+  late TextEditingController cloudinessController;
+  late WeatherController weatherController;
   @override
   void initState() {
     super.initState();
+    weatherController = WeatherController();
     sysController = TextEditingController();
     diaController = TextEditingController();
     pulseController = TextEditingController();
+    temperatureController = TextEditingController();
+    pressureController = TextEditingController();
+    cloudinessController = TextEditingController();
   }
 
   @override
@@ -30,6 +40,9 @@ class _MyDialogState extends State<MyDialog> {
     sysController.dispose();
     diaController.dispose();
     pulseController.dispose();
+    temperatureController.dispose();
+    pressureController.dispose();
+    cloudinessController.dispose();
   }
 
   @override
@@ -45,59 +58,117 @@ class _MyDialogState extends State<MyDialog> {
                 int.tryParse(diaController.text) ?? default_values.defaultZero;
             final pulse = int.tryParse(pulseController.text) ??
                 default_values.defaultZero;
+            final temperature = double.tryParse(temperatureController.text);
+            final pressure = double.tryParse(pressureController.text);
+            final cloudiness = double.tryParse(cloudinessController.text);
             if (sys > 90 &&
                 sys < 170 &&
                 dia > 70 &&
                 dia < 140 &&
                 pulse > 50 &&
                 pulse < 160) {
-              widget.onDone.call(sys: sys, dia: dia, pulse: pulse);
+              widget.onDone.call(
+                sys: sys,
+                dia: dia,
+                pulse: pulse,
+                weather: Weather(
+                    temperature: temperature,
+                    pressure: pressure,
+                    cloudiness: cloudiness),
+              );
 
               Navigator.of(context).pop();
             }
           },
           child: const Icon(Icons.done),
         ),
-        body: Column(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            const Center(
-              child: Text(
-                'Давление, SYS',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            TextField(
-              controller: sysController,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Center(
-              child: Text(
-                'Давление, DIA',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            TextField(
-              controller: diaController,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Center(
-              child: Text(
-                'Пульс',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            TextField(
-              controller: pulseController,
-            ),
-          ],
-        ),
+        body: ListenableBuilder(
+            listenable: weatherController,
+            builder: (context, child) {
+              return Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Center(
+                    child: Text(
+                      'Давление, SYS',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  TextField(
+                    controller: sysController,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Center(
+                    child: Text(
+                      'Давление, DIA',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  TextField(
+                    controller: diaController,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Center(
+                    child: Text(
+                      'Пульс',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  TextField(
+                    controller: pulseController,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Center(
+                    child: Text(
+                      'Температура',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                        hintText:
+                            '${(weatherController.weather?.temperature)}'),
+                    controller: temperatureController,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Center(
+                    child: Text(
+                      'Давление, мм. рт. ст.',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                        hintText: '${(weatherController.weather?.pressure)}'),
+                    controller: pressureController,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Center(
+                    child: Text(
+                      'Облачность',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                        hintText: '${(weatherController.weather?.cloudiness)}'),
+                    controller: cloudinessController,
+                  ),
+                ],
+              );
+            }),
       ),
     );
   }
