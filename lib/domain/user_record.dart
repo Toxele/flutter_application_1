@@ -1,5 +1,6 @@
 import 'package:flutter_application_1/domain/weather/weather_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 @JsonSerializable(explicitToJson: true)
 class UserRecord {
   // поля значений, которые вводят пользователь, возможно сюда добавится дата и время

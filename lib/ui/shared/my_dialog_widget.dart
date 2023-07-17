@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as default_values;
+import 'package:flutter_application_1/domain/controllers.dart' as controllers;
 import 'package:flutter_application_1/domain/weather/weather_model.dart';
 import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
 
@@ -15,17 +16,17 @@ class MyDialog extends StatefulWidget {
 }
 
 class _MyDialogState extends State<MyDialog> {
-  late TextEditingController sysController;
-  late TextEditingController diaController;
-  late TextEditingController pulseController;
-  late TextEditingController temperatureController;
-  late TextEditingController pressureController;
-  late TextEditingController cloudinessController;
-  late WeatherNotifier weatherController;
+  late final TextEditingController sysController;
+  late final TextEditingController diaController;
+  late final TextEditingController pulseController;
+  late final TextEditingController temperatureController;
+  late final TextEditingController pressureController;
+  late final TextEditingController cloudinessController;
+  late final WeatherNotifier weatherController;
   @override
   void initState() {
     super.initState();
-    weatherController = WeatherNotifier();
+    weatherController = controllers.weatherController;
     sysController = TextEditingController();
     diaController = TextEditingController();
     pulseController = TextEditingController();
