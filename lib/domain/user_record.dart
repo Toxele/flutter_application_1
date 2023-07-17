@@ -1,4 +1,4 @@
-import 'package:flutter_application_1/data/model/weather_model.dart';
+import 'package:flutter_application_1/domain/weather/weather_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 @JsonSerializable(explicitToJson: true)
 class UserRecord {
@@ -19,5 +19,5 @@ class UserRecord {
     );
   }
 
-  Map toJson() => {"sys": sys, "pulse": pulse, "dia": dia};
+  Map toJson() => {"sys": sys, "pulse": pulse, "dia": dia, "weather": weather};
 }

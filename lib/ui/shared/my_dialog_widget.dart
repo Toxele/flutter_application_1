@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as default_values;
-import 'package:flutter_application_1/data/model/weather_model.dart';
-import 'package:flutter_application_1/domain/controllers.dart';
+import 'package:flutter_application_1/domain/weather/weather_model.dart';
+import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
 
 class MyDialog extends StatefulWidget {
   const MyDialog({super.key, required this.onDone});
@@ -21,11 +21,11 @@ class _MyDialogState extends State<MyDialog> {
   late TextEditingController temperatureController;
   late TextEditingController pressureController;
   late TextEditingController cloudinessController;
-  late WeatherController weatherController;
+  late WeatherNotifier weatherController;
   @override
   void initState() {
     super.initState();
-    weatherController = WeatherController();
+    weatherController = WeatherNotifier();
     sysController = TextEditingController();
     diaController = TextEditingController();
     pulseController = TextEditingController();
@@ -85,7 +85,7 @@ class _MyDialogState extends State<MyDialog> {
         body: ListenableBuilder(
             listenable: weatherController,
             builder: (context, child) {
-              return Column(
+              return ListView(
                 children: [
                   const SizedBox(
                     height: 10,

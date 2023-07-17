@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/json_loader.dart';
-import 'package:flutter_application_1/data/model/weather_model.dart';
+import 'package:flutter_application_1/domain/weather/weather_model.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
 import 'package:flutter_application_1/domain/user_record.dart';
 

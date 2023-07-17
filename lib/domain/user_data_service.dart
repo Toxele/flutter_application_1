@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter_application_1/data/model/weather_model.dart';
+import 'package:flutter_application_1/domain/weather/weather_model.dart';
 import 'package:path_provider/path_provider.dart';
 import '../data/json_loader.dart';
 import 'user_record.dart';
