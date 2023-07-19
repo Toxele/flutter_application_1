@@ -1,6 +1,6 @@
 import 'package:flutter_application_1/data/geolocation_repository.dart';
 import 'package:flutter_application_1/domain/weather/weather_class.dart';
-//import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weather_pack/weather_pack.dart';
 

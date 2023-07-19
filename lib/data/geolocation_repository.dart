@@ -1,4 +1,4 @@
-/*import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';
 
 class GeolocationService {
   const GeolocationService();
@@ -27,4 +27,3 @@ class GeolocationService {
     return Geolocator.getCurrentPosition();
   }
 }
-*/
