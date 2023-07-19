@@ -1,5 +1,6 @@
 import 'package:flutter_application_1/data/geolocation_repository.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter_application_1/domain/weather/weather_class.dart';
+//import 'package:geolocator/geolocator.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weather_pack/weather_pack.dart';
 
@@ -25,11 +26,3 @@ class WeatherRepository {
   }
 }
 
-@JsonSerializable(explicitToJson: true)
-class Weather {
-  double? temperature;
-  double? pressure;
-  double? cloudiness;
-  // TODO: add more fields
-  Weather({this.temperature, this.pressure, this.cloudiness});
-}

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/json_loader.dart';
-import 'package:flutter_application_1/domain/weather/weather_model.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
 import 'package:flutter_application_1/domain/user_record.dart';
+import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
+import 'package:http/http.dart';
 
-import 'shared/my_dialog_widget.dart';
+import '../domain/weather/weather_class.dart';
+import 'shared/input_record_dialog.dart';
 
 class GHFlutter extends StatefulWidget {
   const GHFlutter({super.key});
@@ -55,11 +57,26 @@ class GHFlutterState extends State<GHFlutter> {
             onPressed: () {
               Navigator.of(context).pushNamed('/graph');
             },
-            icon: Icon(Icons.auto_graph_rounded),
+            icon: const Icon(Icons.auto_graph_rounded),
           )
         ],
       ),
-      floatingActionButton: addRecordDataActionButton(),
+      floatingActionButton: FloatingActionButton(
+        child: IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return InputRecordDialog(
+                  onDone: addRecord,
+                );
+              },
+            );
+          },
+        ),
+        onPressed: () {},
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: _dataRecords.length,
@@ -67,54 +84,6 @@ class GHFlutterState extends State<GHFlutter> {
           return _RowRecords(record: _dataRecords[position]);
         },
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: [
-      //     BottomNavigationBarItem(
-      //      icon: Icon(Icons.home),
-      //    ),
-      //    BottomNavigationBarItem(
-      //      icon: Icon(Icons.account_box_sharp),
-      //    ),
-      //  ],
-      //  )
-
-      //   Row(
-      //   children: <Widget>[
-      //      Navigator(
-      //    pages: [
-      //      MaterialPage(
-      //        key: const ValueKey('graph_screen'),
-      //        child: GraphScreen(
-      //    onItemTapped: _handleItemTapped,
-      //  onRouteTapped: _handleRouteTapped,
-      //       ),
-      //     ),
-
-      //   ],
-      //   onPopPage: (route, result) => route.didPop(result),
-      // ),
-      //    ],
-      // ),
-    );
-  }
-
-  // todo: так не надо, перемести код в build
-  Widget addRecordDataActionButton() {
-    return FloatingActionButton(
-      child: IconButton(
-        icon: Icon(Icons.add),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return MyDialog(
-                onDone: addRecord,
-              );
-            },
-          );
-        },
-      ),
-      onPressed: () {},
     );
   }
 }
@@ -129,53 +98,61 @@ class _RowRecords extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // используем тут этот record
-    return Card(
-      child: Row(
-        children: [
-          DecoratedBox(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.red,
-            ),
-            child: SizedBox(
-              width: 10,
-              height: 60,
-            ),
-          ),
-          SizedBox(
-            width:
-                10, // тут spacer создаёт лишнее пространство, поэтому на мой взгляд SizedBox вполне удобен здесь
-          ),
-          Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: Text(
-                  'Time', // вместо Time буду подставлять позже конкретное время
-                ),
+    return GestureDetector(
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) {
+          return const RecordInfoDialog();
+        },
+      ),
+      child: Card(
+        child: Row(
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.red,
               ),
-              Text(record.sys.toString()),
-            ],
-          ),
-          Spacer(),
-          Column(
-            children: <Widget>[
-              Text('SYS'),
-              Text('мм.рт.ст'),
-            ],
-          ),
-          Spacer(),
-          Text(record.dia.toString()),
-          Spacer(),
-          Column(
-            children: <Widget>[
-              Text('DIA'),
-              Text('мм.рт.ст'),
-            ],
-          ),
-          Spacer(),
-          Text(record.pulse.toString()),
-        ],
+              child: const SizedBox(
+                width: 10,
+                height: 60,
+              ),
+            ),
+            const SizedBox(
+              width:
+                  10, // тут spacer создаёт лишнее пространство, поэтому на мой взгляд SizedBox вполне удобен здесь
+            ),
+            Column(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: Text(
+                    'Time', // вместо Time буду подставлять позже конкретное время
+                  ),
+                ),
+                Text(record.sys.toString()),
+              ],
+            ),
+            const Spacer(),
+            const Column(
+              children: <Widget>[
+                Text('SYS'),
+                Text('мм.рт.ст'),
+              ],
+            ),
+            const Spacer(),
+            Text(record.dia.toString()),
+            const Spacer(),
+            const Column(
+              children: <Widget>[
+                Text('DIA'),
+                Text('мм.рт.ст'),
+              ],
+            ),
+            const Spacer(),
+            Text(record.pulse.toString()),
+          ],
+        ),
       ),
     );
   }

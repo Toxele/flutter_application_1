@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as default_values;
 import 'package:flutter_application_1/domain/controllers.dart' as controllers;
-import 'package:flutter_application_1/domain/weather/weather_model.dart';
 import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
 
-class MyDialog extends StatefulWidget {
-  const MyDialog({super.key, required this.onDone});
+import '../../domain/weather/weather_class.dart';
+
+class InputRecordDialog extends StatefulWidget {
+  const InputRecordDialog({super.key, required this.onDone});
 
   final Function({int sys, int dia, int pulse, required Weather weather})
       onDone;
 
   @override
-  State<MyDialog> createState() => _MyDialogState();
+  State<InputRecordDialog> createState() => _InputRecordDialogState();
 }
 
-class _MyDialogState extends State<MyDialog> {
+class _InputRecordDialogState extends State<InputRecordDialog> {
   late final TextEditingController sysController;
   late final TextEditingController diaController;
   late final TextEditingController pulseController;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/ui/graph_screen.dart';
-import 'package:flutter_application_1/ui/shared/my_dialog_widget.dart';
+import 'package:flutter_application_1/ui/shared/input_record_dialog.dart';
 
 import 'ui/home.dart';
 
