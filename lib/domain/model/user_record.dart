@@ -10,16 +10,29 @@ class UserRecord {
   final int? dia;
   final int? pulse;
   final Weather? weather;
-// DateTime timeOfRecord;
-  const UserRecord({
+  @EpochDateTimeConverter()
+  final DateTime timeOfRecord;
+
+  UserRecord({
     this.sys,
     this.dia,
     this.pulse,
     this.weather,
+    required this.timeOfRecord,
   });
 
   factory UserRecord.fromJson(Map<String, dynamic> json) =>
       _$UserRecordFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserRecordToJson(this);
+}
+
+class EpochDateTimeConverter implements JsonConverter<DateTime, int> {
+  const EpochDateTimeConverter();
+
+  @override
+  DateTime fromJson(int json) => DateTime.fromMillisecondsSinceEpoch(json);
+
+  @override
+  int toJson(DateTime object) => object.millisecondsSinceEpoch;
 }

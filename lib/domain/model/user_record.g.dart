@@ -13,6 +13,8 @@ UserRecord _$UserRecordFromJson(Map<String, dynamic> json) => UserRecord(
       weather: json['weather'] == null
           ? null
           : Weather.fromJson(json['weather'] as Map<String, dynamic>),
+      timeOfRecord:
+          const EpochDateTimeConverter().fromJson(json['timeOfRecord'] as int),
     );
 
 Map<String, dynamic> _$UserRecordToJson(UserRecord instance) =>
@@ -21,4 +23,6 @@ Map<String, dynamic> _$UserRecordToJson(UserRecord instance) =>
       'dia': instance.dia,
       'pulse': instance.pulse,
       'weather': instance.weather?.toJson(),
+      'timeOfRecord':
+          const EpochDateTimeConverter().toJson(instance.timeOfRecord),
     };
