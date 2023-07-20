@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/json_loader.dart';
+import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
-import 'package:flutter_application_1/domain/user_record.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
-import 'package:http/http.dart';
 
-import '../domain/weather/weather_class.dart';
+import '../domain/weather/weather.dart';
 import 'shared/input_record_dialog.dart';
 
 class GHFlutter extends StatefulWidget {

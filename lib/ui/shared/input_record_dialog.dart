@@ -4,7 +4,7 @@ import 'package:flutter_application_1/constant/default_values.dart'
 import 'package:flutter_application_1/domain/controllers.dart' as controllers;
 import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
 
-import '../../domain/weather/weather_class.dart';
+import '../../domain/weather/weather.dart';
 
 class InputRecordDialog extends StatefulWidget {
   const InputRecordDialog({super.key, required this.onDone});
