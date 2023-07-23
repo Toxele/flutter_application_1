@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/ui/graphics/graphic.dart';
 
 class GraphScreen extends StatefulWidget {
   @override
@@ -30,7 +31,8 @@ class GraphScreenState extends State<GraphScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Мой график')),
-      body: ListenableBuilder(
+      body: LineChartSample2(),
+      /* ListenableBuilder(
         listenable: cartNotifier,
         builder: (context, child) {
           return ListView(
@@ -42,7 +44,7 @@ class GraphScreenState extends State<GraphScreen> {
         onPressed: () {
           cartNotifier.add(Item());
         },
-      ),
+      ), */
     );
   }
 }

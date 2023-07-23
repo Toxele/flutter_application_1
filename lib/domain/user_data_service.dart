@@ -39,7 +39,7 @@ class UserDataService {
       int dia = 80,
       int pulse = 75,
       required Weather weather}) async {
-    final user = UserRecord(sys: sys, dia: dia, pulse: pulse, weather: weather);
+    final user = UserRecord(sys: sys, dia: dia, pulse: pulse, weather: weather, timeOfRecord: DateTime.now());
 
     _records.add(user);
     final recordsRaw = _records.map((e) => e.toJson()).toList();
