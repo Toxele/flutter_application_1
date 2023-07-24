@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:weather_pack/weather_pack.dart';
 
+
 class WeatherRepository {
   WeatherRepository();
 
@@ -17,9 +18,11 @@ class WeatherRepository {
       latitude: latitude,
       longitude: longitude,
     );
-
+    print(currently.toJson());
+    print(latitude);
+    print(longitude);
     final Weather weather = Weather(
-        temperature: currently.temp != null ? currently.temp! - 273 : null,
+        temperature: currently.temp != null ? Temp.celsius.value(currently.temp!)! : null,
         pressure: currently.pressure,
         cloudiness: currently.cloudiness);
     return weather;
