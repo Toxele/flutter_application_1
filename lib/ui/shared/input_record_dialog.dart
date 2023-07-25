@@ -89,89 +89,44 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
             builder: (context, child) {
               return ListView(
                 children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Center(
-                    child: Text(
-                      'Давление, SYS',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  TextField(
-                    controller: sysController,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Center(
-                    child: Text(
-                      'Давление, DIA',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  TextField(
-                    controller: diaController,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Center(
-                    child: Text(
-                      'Пульс',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  TextField(
-                    controller: pulseController,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Center(
-                    child: Text(
-                      'Температура',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        hintText:
-                            '${(weatherController.weather?.temperature)}'),
-                    controller: temperatureController,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Center(
-                    child: Text(
-                      'Давление, мм. рт. ст.',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        hintText: '${(weatherController.weather?.pressure)}'),
-                    controller: pressureController,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Center(
-                    child: Text(
-                      'Облачность',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        hintText: '${(weatherController.weather?.cloudiness)}'),
-                    controller: cloudinessController,
-                  ),
+                  textFieldPattern(context, "", 'Давление, SYS', sysController),
+                  textFieldPattern(context, "", 'Давление, DIA', diaController),
+                  textFieldPattern(context, weatherController.weather?.temperature, 'Температура в градусах Цельсия', temperatureController),
+                  textFieldPattern(context, weatherController.weather?.pressure, 'Давление, мм. рт. ст.', pressureController),
+                  textFieldPattern(context, weatherController.weather?.cloudiness, 'Облачность', cloudinessController),
                 ],
               );
             }),
       ),
+    );
+  }
+
+  Widget textFieldPattern(BuildContext context, dynamic value, String valueName,
+      TextEditingController textEditingController) {
+    // ignore: parameter_assignments
+    value = value ??
+        "Данные ещё загружаются, вы можете ввести их самостоятельно при необходимости";
+    return Column(
+      children: [
+        const SizedBox(
+          height: 25,
+        ),
+        Center(
+          child: Text(
+            valueName,
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+        TextField(
+          decoration: InputDecoration(
+            hintText: '$value',
+          ),
+          controller: textEditingController,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
     );
   }
 }

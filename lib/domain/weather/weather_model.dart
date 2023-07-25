@@ -18,9 +18,6 @@ class WeatherRepository {
       latitude: latitude,
       longitude: longitude,
     );
-    print(currently.toJson());
-    print(latitude);
-    print(longitude);
     final Weather weather = Weather(
         temperature: currently.temp != null ? Temp.celsius.value(currently.temp!)! : null,
         pressure: currently.pressure,
