@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as default_values;
-import 'package:flutter_application_1/domain/controllers.dart' as controllers;
 import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
+import 'package:provider/provider.dart';
 
 import '../../domain/weather/weather.dart';
 
@@ -27,7 +27,7 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
   @override
   void initState() {
     super.initState();
-    weatherController = controllers.weatherController;
+    weatherController = context.read<WeatherNotifier>();
     sysController = TextEditingController();
     diaController = TextEditingController();
     pulseController = TextEditingController();
@@ -85,23 +85,29 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
           child: const Icon(Icons.done),
         ),
         body: ListenableBuilder(
-            listenable: weatherController,
-            builder: (context, child) {
-              return ListView(
-                children: [
-                  textFieldPattern(context, "", 'Давление, SYS', sysController),
-                  textFieldPattern(context, "", 'Давление, DIA', diaController),
-                  textFieldPattern(context, weatherController.weather?.temperature, 'Температура в градусах Цельсия', temperatureController),
-                  textFieldPattern(context, weatherController.weather?.pressure, 'Давление, мм. рт. ст.', pressureController),
-                  textFieldPattern(context, weatherController.weather?.cloudiness, 'Облачность', cloudinessController),
-                ],
-              );
-            }),
+          listenable: weatherController,
+          builder: (context, child) {
+            final weather = weatherController.weather;
+
+            return ListView(
+              children: [
+                textFieldPattern(context, "", 'Давление, SYS', sysController),
+                textFieldPattern(context, "", 'Давление, DIA', diaController),
+                textFieldPattern(context, weather?.temperature,
+                    'Температура в градусах Цельсия', temperatureController),
+                textFieldPattern(context, weather?.pressure,
+                    'Давление, мм. рт. ст.', pressureController),
+                textFieldPattern(context, weather?.cloudiness, 'Облачность',
+                    cloudinessController),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 
-  Widget textFieldPattern(BuildContext context, dynamic value, String valueName,
+  Widget textFieldPattern(BuildContext context, Object? value, String valueName,
       TextEditingController textEditingController) {
     // ignore: parameter_assignments
     value = value ??

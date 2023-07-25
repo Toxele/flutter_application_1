@@ -17,13 +17,18 @@ class WeatherNotifier extends ChangeNotifier {
   final GeolocationService geolocationRepository;
 
   Weather? weather;
+
   bool isLoading = true;
+
   Future<void> getWeather() async {
+    isLoading = true;
+    notifyListeners();
     final Position pos = await geolocationRepository.determinePosition();
     weather = await weatherRepository.getWeather(
       latitude: pos.latitude,
       longitude: pos.longitude,
     );
+    isLoading = false;
     notifyListeners();
   }
 }

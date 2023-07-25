@@ -1,9 +1,5 @@
-import 'package:flutter_application_1/data/geolocation_repository.dart';
 import 'package:flutter_application_1/domain/weather/weather.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:weather_pack/weather_pack.dart';
-
 
 class WeatherRepository {
   WeatherRepository();
@@ -19,10 +15,11 @@ class WeatherRepository {
       longitude: longitude,
     );
     final Weather weather = Weather(
-        temperature: currently.temp != null ? Temp.celsius.value(currently.temp!)! : null,
-        pressure: currently.pressure,
-        cloudiness: currently.cloudiness);
+      temperature:
+          currently.temp != null ? Temp.celsius.value(currently.temp!) : null,
+      pressure: currently.pressure,
+      cloudiness: currently.cloudiness,
+    );
     return weather;
   }
 }
-
