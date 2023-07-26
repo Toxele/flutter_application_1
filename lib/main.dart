@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
+import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,7 @@ void main() => runApp(
               weatherRepository: weatherRepository,
             ),
           ),
+          Provider<UserStatusController>(create: (_) => UserStatusController(),)
         ],
         child: const GHFlutterApp(),
       ),
