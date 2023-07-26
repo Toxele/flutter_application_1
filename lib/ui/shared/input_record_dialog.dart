@@ -97,6 +97,10 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
                       valueName: 'Давление, DIA',
                       textEditingController: diaController),
                   TextFieldPattern(
+                      value: "",
+                      valueName: 'Пульс',
+                      textEditingController: pulseController),
+                  TextFieldPattern(
                       value: weather?.temperature,
                       valueName: 'Температура в градусах Цельсия',
                       textEditingController: temperatureController),

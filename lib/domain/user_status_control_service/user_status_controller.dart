@@ -8,8 +8,8 @@ class UserStatusController {
     prefs.setInt('Dia Max', 140);
     prefs.setInt('Sys Min', 90);
     prefs.setInt('Sys Max', 170);
-    prefs.setInt('Pulse Min', 90);
-    prefs.setInt('Pulse Max', 170);
+    prefs.setInt('Pulse Min', 60);
+    prefs.setInt('Pulse Max', 130);
     int normalSysMin = await prefs.getInt('Sys Min') ?? defaultValues.defaultZero;
     int normalSysMax = await prefs.getInt('Sys Max') ?? defaultValues.defaultZero;
     int normalDiaMin = await prefs.getInt('Dia Min') ?? defaultValues.defaultZero;

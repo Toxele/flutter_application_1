@@ -3,7 +3,9 @@ import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
+import 'package:flutter_application_1/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../domain/weather/weather.dart';
 import 'shared/input_record_dialog.dart';
@@ -20,17 +22,25 @@ class GHFlutterState extends State<GHFlutter> {
   // ignore: unused_field
   late UserDataService _dataService;
   late List<UserRecord> _dataRecords = [];
+  late final SharedPreferences prefs;
   // ignore: avoid_void_async
-  void addRecordToData() async {
+  void addRecordsToData() async {
     _dataRecords = [];
     _dataRecords.addAll(await _dataService.loadRecords());
+
     setState(() {});
+  }
+
+  void initPrefs() async {
+    print('IM HEEEREEE');
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
   void initState() {
     super.initState();
     _dataService = UserDataService(const JsonLoader());
+    initPrefs();
     // addRecordToData();
 
     //_dataService.addAll([1, 2, 3, 4, 5]);
@@ -41,13 +51,20 @@ class GHFlutterState extends State<GHFlutter> {
     setState(() {
       _dataService.addRecord(
           sys: sys, dia: dia, pulse: pulse, weather: weather);
-      addRecordToData();
+      addRecordsToData();
       //    print(_dataRecords[0].dia.toString() + 'Im here');
     });
   }
 
   @override
   Widget build(BuildContext context) {
+  /*  if (prefs.getBool('OnceShow') == null) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return SetUpSharedPreferencesScreen();
+          });
+    }*/ 
     return Scaffold(
       appBar: AppBar(
         title: const Text(strings.appTitle),
