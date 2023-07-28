@@ -130,8 +130,7 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
   Widget textFieldPattern(BuildContext context, dynamic value, String valueName,
       TextEditingController textEditingController) {
     // ignore: parameter_assignments
-    value = value ??
-        "Данные ещё загружаются, вы можете ввести их самостоятельно при необходимости";
+    value = value ?? "Данные ещё загружаются";
     return Column(
       children: [
         const SizedBox(

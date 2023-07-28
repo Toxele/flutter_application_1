@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
+import 'package:flutter_application_1/data/class_instances.dart';
 import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
 import 'package:flutter_application_1/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../domain/weather/weather.dart';
@@ -41,8 +43,8 @@ class GHFlutterState extends State<GHFlutter> {
     super.initState();
     _dataService = UserDataService(const JsonLoader());
     initPrefs();
-    // addRecordToData();
-
+    addRecordsToData();
+    
     //_dataService.addAll([1, 2, 3, 4, 5]);
   }
 
@@ -58,13 +60,13 @@ class GHFlutterState extends State<GHFlutter> {
 
   @override
   Widget build(BuildContext context) {
-  /*  if (prefs.getBool('OnceShow') == null) {
+    /*  if (prefs.getBool('OnceShow') == null) {
       showDialog(
           context: context,
           builder: (context) {
             return SetUpSharedPreferencesScreen();
           });
-    }*/ 
+    }*/
     return Scaffold(
       appBar: AppBar(
         title: const Text(strings.appTitle),
@@ -108,16 +110,17 @@ class _RowRecords extends StatelessWidget {
   const _RowRecords({
     required this.record,
   });
-
   final UserRecord record;
-
   @override
   Widget build(BuildContext context) {
+    String currentTime = '${record.timeOfRecord.hour}:${record.timeOfRecord.minute}';
+    OpenInstances open = context.read<OpenInstances>();
     // используем тут этот record
     return GestureDetector(
       onTap: () => showDialog(
         context: context,
         builder: (context) {
+          open.record = record;
           return const RecordInfoDialog();
         },
       ),
@@ -140,10 +143,10 @@ class _RowRecords extends StatelessWidget {
             ),
             Column(
               children: <Widget>[
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: Text(
-                    'Time', // вместо Time буду подставлять позже конкретное время
+                    currentTime, // вместо Time буду подставлять позже конкретное время
                   ),
                 ),
                 Text(record.sys.toString()),
