@@ -97,11 +97,11 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
                       value: "",
                       valueName: 'Давление, DIA',
                       textEditingController: diaController),
-                  TextFieldPattern(
+                  TextFieldPattern<String>(
                       value: "",
                       valueName: 'Пульс',
                       textEditingController: pulseController),
-                  TextFieldPattern(
+                  TextFieldPattern<double?>(
                       value: weather?.temperature,
                       valueName: 'Температура в градусах Цельсия',
                       textEditingController: temperatureController),
@@ -129,9 +129,9 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
   }
 }
 
-class TextFieldPattern extends StatelessWidget {
+class TextFieldPattern<T> extends StatelessWidget {
   final TextEditingController textEditingController;
-  final dynamic value;
+  final T value;
   final String valueName;
   const TextFieldPattern({
     super.key,
@@ -155,7 +155,7 @@ class TextFieldPattern extends StatelessWidget {
         ),
         TextField(
           decoration: InputDecoration(
-            hintText: '$value',
+            hintText: value != null ? '$value' : 'пусто',
           ),
           controller: textEditingController,
         ),
