@@ -21,7 +21,9 @@ class _RecordInfoDialogState extends State<RecordInfoDialog> {
         appBar: AppBar(),
         body: ListView(
           children: <Widget>[
-            Card(child: Text('Данные измерения')),
+            const Card(
+              child: Text('Данные измерения', style: TextStyle(fontSize: 20),),
+            ),
             Card(
               child: Row(
                 children: <Widget>[

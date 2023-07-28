@@ -44,7 +44,7 @@ class GHFlutterState extends State<GHFlutter> {
     _dataService = UserDataService(const JsonLoader());
     initPrefs();
     addRecordsToData();
-    
+
     //_dataService.addAll([1, 2, 3, 4, 5]);
   }
 
@@ -95,7 +95,19 @@ class GHFlutterState extends State<GHFlutter> {
         ),
         onPressed: () {},
       ),
-      body: ListView.builder(
+      body: ListView.separated(
+        separatorBuilder: (context, index) {
+          DateTime time = _dataRecords[index].timeOfRecord;
+          if (index == 0 ||
+              _dataRecords[index - 1].timeOfRecord.day !=
+                  _dataRecords[index].timeOfRecord.day) {
+            return Card(
+              child: Text('${time.day} ${time.month} ${time.year} года'),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
         padding: const EdgeInsets.all(16),
         itemCount: _dataRecords.length,
         itemBuilder: (BuildContext context, int position) {
@@ -113,7 +125,8 @@ class _RowRecords extends StatelessWidget {
   final UserRecord record;
   @override
   Widget build(BuildContext context) {
-    String currentTime = '${record.timeOfRecord.hour}:${record.timeOfRecord.minute}';
+    String currentTime =
+        '${record.timeOfRecord.hour}:${record.timeOfRecord.minute}';
     OpenInstances open = context.read<OpenInstances>();
     // используем тут этот record
     return GestureDetector(

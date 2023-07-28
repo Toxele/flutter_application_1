@@ -51,6 +51,7 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
     pressureController.dispose();
     cloudinessController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Dialog.fullscreen(
@@ -124,34 +125,6 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
               );
             }),
       ),
-    );
-  }
-
-  Widget textFieldPattern(BuildContext context, dynamic value, String valueName,
-      TextEditingController textEditingController) {
-    // ignore: parameter_assignments
-    value = value ?? "Данные ещё загружаются";
-    return Column(
-      children: [
-        const SizedBox(
-          height: 25,
-        ),
-        Center(
-          child: Text(
-            valueName,
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-        TextField(
-          decoration: InputDecoration(
-            hintText: '$value',
-          ),
-          controller: textEditingController,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-      ],
     );
   }
 }

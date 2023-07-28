@@ -12,6 +12,14 @@ class _SetUpSharedPreferencesScreenState
     extends State<SetUpSharedPreferencesScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ListView(
+      children: const <Widget>[
+        Center(child: Text('Укажите ваш пол')),
+        SizedBox(
+          height: 10,
+        ),
+        Center(child: Text('Введите ваш вес')),
+      ],
+    );
   }
 }
