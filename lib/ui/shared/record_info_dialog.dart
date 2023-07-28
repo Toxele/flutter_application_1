@@ -3,6 +3,7 @@ import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/class_instances.dart';
+import 'one_user_record.dart';
 
 class RecordInfoDialog extends StatefulWidget {
   const RecordInfoDialog({super.key});
@@ -11,18 +12,20 @@ class RecordInfoDialog extends StatefulWidget {
 }
 
 class _RecordInfoDialogState extends State<RecordInfoDialog> {
-  late final UserRecord record;
+  // late final UserRecord record;
   @override
   Widget build(BuildContext context) {
-    OpenInstances open = context.read<OpenInstances>();
-    record = open.record!;
+    final record = context.watch<OneUserRecord>().value;
     return Dialog.fullscreen(
       child: Scaffold(
         appBar: AppBar(),
         body: ListView(
           children: <Widget>[
             const Card(
-              child: Text('Данные измерения', style: TextStyle(fontSize: 20),),
+              child: Text(
+                'Данные измерения',
+                style: TextStyle(fontSize: 20),
+              ),
             ),
             Card(
               child: Row(
