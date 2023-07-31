@@ -12,13 +12,36 @@ class _SetUpSharedPreferencesScreenState
     extends State<SetUpSharedPreferencesScreen> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: const <Widget>[
-        Center(child: Text('Укажите ваш пол')),
-        SizedBox(
-          height: 10,
+    return Stepper(
+      controlsBuilder: (BuildContext context, ControlsDetails details) {
+        return Row(
+          children: <Widget>[
+            TextButton(
+              onPressed: details.onStepContinue,
+              child: Text('Continue to Step ${details.stepIndex + 1}'),
+            ),
+            TextButton(
+              onPressed: details.onStepCancel,
+              child: Text('Back to Step ${details.stepIndex - 1}'),
+            ),
+          ],
+        );
+      },
+      steps: const <Step>[
+        Step(
+          title: Text('A'),
+          content: SizedBox(
+            width: 100,
+            height: 100,
+          ),
         ),
-        Center(child: Text('Введите ваш вес')),
+        Step(
+          title: Text('B'),
+          content: SizedBox(
+            width: 100,
+            height: 100,
+          ),
+        ),
       ],
     );
   }
