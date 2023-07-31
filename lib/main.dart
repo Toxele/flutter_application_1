@@ -34,9 +34,6 @@ void main() => runApp(
           Provider<UserStatusController>(
             create: (_) => UserStatusController(),
           ),
-          Provider<OpenInstances>(
-            create: (_) => OpenInstances(),
-          ),
         ],
         child: const GHFlutterApp(),
       ),

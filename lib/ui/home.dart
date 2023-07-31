@@ -127,14 +127,15 @@ class _RowRecords extends StatelessWidget {
   Widget build(BuildContext context) {
     String currentTime =
         '${record.timeOfRecord.hour}:${record.timeOfRecord.minute}';
-    OpenInstances open = context.read<OpenInstances>();
     // используем тут этот record
     return GestureDetector(
       onTap: () => showDialog(
         context: context,
         builder: (context) {
-          open.record = record;
-          return const RecordInfoDialog();
+          return Provider<UserRecordToDisplay>(
+            child: const RecordInfoDialog(),
+            create: (_) => UserRecordToDisplay(record),
+          );
         },
       ),
       child: Card(

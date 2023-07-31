@@ -133,12 +133,13 @@ class TextFieldPattern extends StatelessWidget {
   final TextEditingController textEditingController;
   final dynamic value;
   final String valueName;
-  const TextFieldPattern({
-    super.key,
-    required this.textEditingController,
-    required this.value,
-    required this.valueName,
-  });
+  final String defaultValue;
+  const TextFieldPattern(
+      {super.key,
+      required this.textEditingController,
+      required this.value,
+      required this.valueName,
+      this.defaultValue = "Данные ещё загружаются"});
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +156,7 @@ class TextFieldPattern extends StatelessWidget {
         ),
         TextField(
           decoration: InputDecoration(
-            hintText: '$value',
+            hintText: value != null ? '$value' : defaultValue,
           ),
           controller: textEditingController,
         ),

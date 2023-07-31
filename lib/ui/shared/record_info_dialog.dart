@@ -11,11 +11,9 @@ class RecordInfoDialog extends StatefulWidget {
 }
 
 class _RecordInfoDialogState extends State<RecordInfoDialog> {
-  late final UserRecord record;
   @override
   Widget build(BuildContext context) {
-    OpenInstances open = context.read<OpenInstances>();
-    record = open.record!;
+    final record = context.watch<UserRecordToDisplay>().value;
     return Dialog.fullscreen(
       child: Scaffold(
         appBar: AppBar(),
