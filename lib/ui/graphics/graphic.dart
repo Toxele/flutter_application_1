@@ -1,5 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/domain/model/user_record.dart';
+import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
+import 'package:provider/provider.dart';
+
+import '../../data/json_loader.dart';
+import '../../domain/user_data_service.dart';
 
 class LineChartSample2 extends StatefulWidget {
   const LineChartSample2({super.key});
@@ -14,9 +20,27 @@ class _LineChartSample2State extends State<LineChartSample2> {
     Colors.blue,
   ];
   bool showAvg = false;
+  late UserDataService _dataService;
+  late List<UserRecord> _dataRecords = [];
+  // ignore: avoid_void_async
+  void addRecordsToData() async {
+    _dataRecords = [];
+    _dataRecords.addAll(await _dataService.loadRecords());
+
+    setState(() {});
+  }
+  late UserStatusController? userStatusController;
+  @override
+  void initState() {
+    super.initState();
+    _dataService = UserDataService(const JsonLoader());
+    addRecordsToData();
+    //_dataService.addAll([1, 2, 3, 4, 5]);
+  }
 
   @override
   Widget build(BuildContext context) {
+    userStatusController = context.watch<UserStatusController>();
     return Stack(
       children: <Widget>[
         AspectRatio(
@@ -63,13 +87,46 @@ class _LineChartSample2State extends State<LineChartSample2> {
     Widget text;
     switch (value.toInt()) {
       case 2:
-        text = const Text('MAR', style: style);
+        text = Text(
+            _dataRecords.isNotEmpty
+                ? _dataRecords[0].timeOfRecord.hour.toString()
+                : '0',
+            style: style);
         break;
-      case 5:
-        text = const Text('JUN', style: style);
+      case 4:
+        text = Text(
+            _dataRecords.length >= 2
+                ? _dataRecords[1].timeOfRecord.hour.toString()
+                : '0',
+            style: style);
+        break;
+      case 6:
+        text = Text(
+            _dataRecords.length >= 3
+                ? _dataRecords[2].timeOfRecord.hour.toString()
+                : '0',
+            style: style);
         break;
       case 8:
-        text = const Text('SEP', style: style);
+        text = Text(
+            _dataRecords.length >= 4
+                ? _dataRecords[3].timeOfRecord.hour.toString()
+                : '0',
+            style: style);
+        break;
+      case 10:
+        text = Text(
+            _dataRecords.length >= 5
+                ? _dataRecords[4].timeOfRecord.hour.toString()
+                : '0',
+            style: style);
+        break;
+      case 12:
+        text = Text(
+            _dataRecords.length >= 6
+                ? _dataRecords[5].timeOfRecord.hour.toString()
+                : '0',
+            style: style);
         break;
       default:
         text = const Text('', style: style);
@@ -89,14 +146,26 @@ class _LineChartSample2State extends State<LineChartSample2> {
     );
     String text;
     switch (value.toInt()) {
-      case 1:
-        text = '10K';
+      case 2:
+        text = '60';
         break;
-      case 3:
-        text = '30k';
+      case 4:
+        text = '80';
         break;
-      case 5:
-        text = '50k';
+      case 6:
+        text = '100';
+        break;
+      case 8:
+        text = '120';
+        break;
+      case 10:
+        text = '140';
+        break;
+      case 12:
+        text = '160';
+        break;
+      case 14:
+        text = '180';
         break;
       default:
         return Container();
@@ -155,12 +224,12 @@ class _LineChartSample2State extends State<LineChartSample2> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: 12,
       minY: 0,
-      maxY: 6,
+      maxY: 14,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
+          spots: userStatusController?.f(_dataRecords) ?? const [
             FlSpot(0, 3),
             FlSpot(2.6, 2),
             FlSpot(4.9, 5),

@@ -1,6 +1,9 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart' as defaultValues;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/user_record.dart';
 class UserStatusController {
   late final SharedPreferences prefs;
   UserStatusController()
@@ -25,6 +28,17 @@ class UserStatusController {
     int normalPulseMin = prefs.getInt('Pulse Min') ?? defaultValues.defaultZero;
     int normalPulseMax = prefs.getInt('Pulse Max') ?? defaultValues.defaultZero;
     return normalSysMin < sys && sys < normalSysMax && normalDiaMin < dia && dia < normalDiaMax && normalPulseMin < pulse && pulse < normalPulseMax;
+  }
+  List<FlSpot> f(List<UserRecord> records)
+  {
+    List<FlSpot> spots = [];
+    double index = 2;
+    for(int i = 0; i < records.length; i++)
+    {
+      spots.add(FlSpot(index, 2.0 + (records[i].sys! - 60.0) / 10.0));
+      index += 2;
+    }
+    return spots;
   }
   Color checkColor()
   {
