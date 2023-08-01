@@ -67,7 +67,7 @@ class GHFlutterState extends State<GHFlutter> {
             return SetUpSharedPreferencesScreen();
           });
     }*/
-   
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(strings.appTitle),
@@ -129,13 +129,17 @@ class _RowRecords extends StatelessWidget {
     String currentTime =
         '${record.timeOfRecord.hour}:${record.timeOfRecord.minute}';
     // используем тут этот record
-    return Provider<UserRecordToDisplay>(
+    return ChangeNotifierProvider(
       create: (_) => UserRecordToDisplay(record),
       child: GestureDetector(
         onTap: () => showDialog(
           context: context,
           builder: (context) {
-            return const RecordInfoDialog();
+            final value = context.watch<UserRecordToDisplay>();
+            return ChangeNotifierProvider.value(
+              value: value,
+              child: const RecordInfoDialog(),
+            );
           },
         ),
         child: Card(

@@ -11,36 +11,42 @@ class SetUpSharedPreferencesScreen extends StatefulWidget {
 class _SetUpSharedPreferencesScreenState
     extends State<SetUpSharedPreferencesScreen> {
   @override
+  int _index = 0;
+
+  @override
   Widget build(BuildContext context) {
     return Stepper(
-      controlsBuilder: (BuildContext context, ControlsDetails details) {
-        return Row(
-          children: <Widget>[
-            TextButton(
-              onPressed: details.onStepContinue,
-              child: Text('Continue to Step ${details.stepIndex + 1}'),
-            ),
-            TextButton(
-              onPressed: details.onStepCancel,
-              child: Text('Back to Step ${details.stepIndex - 1}'),
-            ),
-          ],
-        );
+      currentStep: _index,
+      onStepCancel: () {
+        if (_index > 0) {
+          setState(() {
+            _index -= 1;
+          });
+        }
       },
-      steps: const <Step>[
+      onStepContinue: () {
+        if (_index <= 0) {
+          setState(() {
+            _index += 1;
+          });
+        }
+      },
+      onStepTapped: (int index) {
+        setState(() {
+          _index = index;
+        });
+      },
+      steps: <Step>[
         Step(
-          title: Text('A'),
-          content: SizedBox(
-            width: 100,
-            height: 100,
+          title: const Text('Step 1 title'),
+          content: Container(
+            alignment: Alignment.centerLeft,
+            child: const Text('Content for Step 1'),
           ),
         ),
-        Step(
-          title: Text('B'),
-          content: SizedBox(
-            width: 100,
-            height: 100,
-          ),
+        const Step(
+          title: Text('Step 2 title'),
+          content: Text('Content for Step 2'),
         ),
       ],
     );

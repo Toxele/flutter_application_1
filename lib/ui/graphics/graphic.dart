@@ -29,6 +29,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
     setState(() {});
   }
+
   late UserStatusController? userStatusController;
   @override
   void initState() {
@@ -228,35 +229,50 @@ class _LineChartSample2State extends State<LineChartSample2> {
       minY: 0,
       maxY: 14,
       lineBarsData: [
-        LineChartBarData(
-          spots: userStatusController?.f(_dataRecords) ?? const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
-          isCurved: true,
-          gradient: LinearGradient(
-            colors: gradientColors,
-          ),
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: const FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
-          ),
-        ),
+        lineChart(context, userStatusController?.makeFLSpots(_dataRecords, true) ??
+              const [
+                FlSpot(0, 3),
+                FlSpot(2.6, 2),
+                FlSpot(4.9, 5),
+                FlSpot(6.8, 3.1),
+                FlSpot(8, 4),
+                FlSpot(9.5, 3),
+                FlSpot(11, 4),
+              ],),
+        lineChart(context, userStatusController?.makeFLSpots(_dataRecords, false) ??
+              const [
+                FlSpot(0, 3),
+                FlSpot(2.6, 2),
+                FlSpot(4.9, 5),
+                FlSpot(6.8, 3.1),
+                FlSpot(8, 4),
+                FlSpot(9.5, 3),
+                FlSpot(11, 4),
+              ],),
+       
       ],
+    );
+  }
+
+  LineChartBarData lineChart(BuildContext context, List<FlSpot> spots) {
+    return LineChartBarData(
+      spots: spots,
+      isCurved: true,
+      gradient: LinearGradient(
+        colors: gradientColors,
+      ),
+      barWidth: 5,
+      isStrokeCapRound: true,
+      dotData: const FlDotData(
+        show: false,
+      ),
+      belowBarData: BarAreaData(
+        show: true,
+        gradient: LinearGradient(
+          colors:
+              gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+        ),
+      ),
     );
   }
 
