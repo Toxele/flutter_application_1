@@ -35,7 +35,9 @@ void main() => runApp(
           Provider<UserStatusController>(
             create: (_) => UserStatusController(),
           ),
-          Provider<UserRecordToDisplay>(create: (_) => UserRecordToDisplay(UserRecord(timeOfRecord: DateTime.now()))),
+          // ChangeNotifierProvider<UserRecordToDisplay>(
+          //     create: (_) => UserRecordToDisplay(
+          //         UserRecord(timeOfRecord: DateTime.now()))),
         ],
         child: const GHFlutterApp(),
       ),
@@ -50,7 +52,7 @@ class GHFlutterApp extends StatelessWidget {
       title: strings.appTitle,
       initialRoute: '/',
       routes: {
-        '/': (context) => const GHFlutter(),
+        '/': (context) => const HomePage(),
         '/graph': (context) => GraphScreen(),
         //'/recordingAdd':(context) => MyDialog(onDone: )
       },

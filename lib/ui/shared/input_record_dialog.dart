@@ -68,6 +68,8 @@ class _InputRecordDialogState extends State<InputRecordDialog> {
             final temperature = double.tryParse(temperatureController.text);
             final pressure = double.tryParse(pressureController.text);
             final cloudiness = double.tryParse(cloudinessController.text);
+            print('dwdw');
+            print(await userStatus.acceptRecord(sys, dia, pulse));
             if (await userStatus.acceptRecord(sys, dia, pulse)) {
               widget.onDone.call(
                 sys: sys,

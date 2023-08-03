@@ -12,108 +12,120 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../domain/weather/weather.dart';
 import 'shared/input_record_dialog.dart';
 
-class GHFlutter extends StatefulWidget {
-  const GHFlutter({super.key});
-
-  @override
-  GHFlutterState createState() => GHFlutterState();
+sealed class HomeState {
+  const HomeState();
 }
 
-class GHFlutterState extends State<GHFlutter> {
-  //final _biggerFont = const TextStyle(fontSize: 18.0);
-  // ignore: unused_field
-  late UserDataService _dataService;
-  late List<UserRecord> _dataRecords = [];
-  late final SharedPreferences prefs;
-  // ignore: avoid_void_async
-  void addRecordsToData() async {
-    _dataRecords = [];
-    _dataRecords.addAll(await _dataService.loadRecords());
+class HomeStateData extends HomeState {
+  const HomeStateData(this.data);
 
-    setState(() {});
+  final List<UserRecord> data;
+}
+
+class HomeStateLoading extends HomeState {
+  const HomeStateLoading();
+}
+
+class HomeStateError extends HomeState {
+  const HomeStateError(this.message);
+
+  final String message;
+}
+
+class RecordsNotifier extends ValueNotifier<HomeState> {
+  RecordsNotifier({
+    required this.dataService,
+  }) : super(const HomeStateLoading());
+
+  final UserDataService dataService;
+
+  Future<void> addRecord({
+    int sys = 120,
+    int dia = 80,
+    int pulse = 75,
+    required Weather weather,
+  }) async {
+    value = const HomeStateLoading();
+    notifyListeners();
+
+    dataService.addRecord(sys: sys, dia: dia, pulse: pulse, weather: weather);
+
+    value = HomeStateData(await dataService.loadRecords());
+    notifyListeners();
   }
+}
 
-  void initPrefs() async {
-    print('IM HEEEREEE');
-    prefs = await SharedPreferences.getInstance();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _dataService = UserDataService(const JsonLoader());
-    initPrefs();
-    addRecordsToData();
-
-    //_dataService.addAll([1, 2, 3, 4, 5]);
-  }
-
-  void addRecord(
-      {int sys = 120, int dia = 80, int pulse = 75, required Weather weather}) {
-    setState(() {
-      _dataService.addRecord(
-          sys: sys, dia: dia, pulse: pulse, weather: weather);
-      addRecordsToData();
-      //    print(_dataRecords[0].dia.toString() + 'Im here');
-    });
-  }
+class HomePage extends StatelessWidget {
+  const HomePage();
 
   @override
   Widget build(BuildContext context) {
-    /*  if (prefs.getBool('OnceShow') == null) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return SetUpSharedPreferencesScreen();
-          });
-    }*/
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(strings.appTitle),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed('/graph');
-            },
-            icon: const Icon(Icons.auto_graph_rounded),
-          )
-        ],
+    return ChangeNotifierProvider<RecordsNotifier>(
+      create: (_) => RecordsNotifier(
+        dataService: UserDataService(const JsonLoader()),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return InputRecordDialog(
-                  onDone: addRecord,
-                );
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(strings.appTitle),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/graph');
               },
-            );
+              icon: const Icon(Icons.auto_graph_rounded),
+            )
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              final recordsNotifier = context.read<RecordsNotifier>();
+
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return InputRecordDialog(
+                    onDone: recordsNotifier.addRecord,
+                  );
+                },
+              );
+            },
+          ),
+          onPressed: () {},
+        ),
+        body: Consumer<RecordsNotifier>(
+          builder: (context, recordsNotifier, child) {
+            final recordsState = recordsNotifier.value;
+
+            return switch (recordsState) {
+              HomeStateData(data: final records) => ListView.separated(
+                  separatorBuilder: (context, index) {
+                    final time = records[index].timeOfRecord;
+                    if (index == 0 ||
+                        records[index - 1].timeOfRecord.day !=
+                            records[index].timeOfRecord.day) {
+                      return Card(
+                        child:
+                            Text('${time.day} ${time.month} ${time.year} года'),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                  padding: const EdgeInsets.all(16),
+                  itemCount: records.length,
+                  itemBuilder: (BuildContext context, int position) {
+                    return _RowRecords(record: records[position]);
+                  },
+                ),
+              HomeStateLoading() =>
+                const Center(child: CircularProgressIndicator()),
+              HomeStateError(message: final message) =>
+                Center(child: Text(message)),
+            };
           },
         ),
-        onPressed: () {},
-      ),
-      body: ListView.separated(
-        separatorBuilder: (context, index) {
-          DateTime time = _dataRecords[index].timeOfRecord;
-          if (index == 0 ||
-              _dataRecords[index - 1].timeOfRecord.day !=
-                  _dataRecords[index].timeOfRecord.day) {
-            return Card(
-              child: Text('${time.day} ${time.month} ${time.year} года'),
-            );
-          } else {
-            return const SizedBox.shrink();
-          }
-        },
-        padding: const EdgeInsets.all(16),
-        itemCount: _dataRecords.length,
-        itemBuilder: (BuildContext context, int position) {
-          return _RowRecords(record: _dataRecords[position]);
-        },
       ),
     );
   }
@@ -121,75 +133,74 @@ class GHFlutterState extends State<GHFlutter> {
 
 class _RowRecords extends StatelessWidget {
   final UserRecord record;
+
   const _RowRecords({
     required this.record,
   });
+
   @override
   Widget build(BuildContext context) {
     String currentTime =
         '${record.timeOfRecord.hour}:${record.timeOfRecord.minute}';
     // используем тут этот record
-    return ChangeNotifierProvider(
-      create: (_) => UserRecordToDisplay(record),
-      child: GestureDetector(
-        onTap: () => showDialog(
-          context: context,
-          builder: (context) {
-            final value = context.watch<UserRecordToDisplay>();
-            return ChangeNotifierProvider.value(
-              value: value,
-              child: const RecordInfoDialog(),
-            );
-          },
-        ),
-        child: Card(
-          child: Row(
-            children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.red,
-                ),
-                child: const SizedBox(
-                  width: 10,
-                  height: 60,
-                ),
+    print('build: ${record.dia}');
+    return GestureDetector(
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) {
+          return ChangeNotifierProvider(
+            create: (_) => UserRecordToDisplay(record),
+            child: const RecordInfoDialog(),
+          );
+        },
+      ),
+      child: Card(
+        child: Row(
+          children: [
+            DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.red,
               ),
-              const SizedBox(
-                width:
-                    10, // тут spacer создаёт лишнее пространство, поэтому на мой взгляд SizedBox вполне удобен здесь
+              child: const SizedBox(
+                width: 10,
+                height: 60,
               ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: Text(
-                      currentTime, // вместо Time буду подставлять позже конкретное время
-                    ),
+            ),
+            const SizedBox(
+              width:
+                  10, // тут spacer создаёт лишнее пространство, поэтому на мой взгляд SizedBox вполне удобен здесь
+            ),
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(right: 20),
+                  child: Text(
+                    currentTime, // вместо Time буду подставлять позже конкретное время
                   ),
-                  Text(record.sys.toString()),
-                ],
-              ),
-              const Spacer(),
-              const Column(
-                children: <Widget>[
-                  Text('SYS'),
-                  Text('мм.рт.ст'),
-                ],
-              ),
-              const Spacer(),
-              Text(record.dia.toString()),
-              const Spacer(),
-              const Column(
-                children: <Widget>[
-                  Text('DIA'),
-                  Text('мм.рт.ст'),
-                ],
-              ),
-              const Spacer(),
-              Text(record.pulse.toString()),
-            ],
-          ),
+                ),
+                Text(record.sys.toString()),
+              ],
+            ),
+            const Spacer(),
+            const Column(
+              children: <Widget>[
+                Text('SYS'),
+                Text('мм.рт.ст'),
+              ],
+            ),
+            const Spacer(),
+            Text(record.dia.toString()),
+            const Spacer(),
+            const Column(
+              children: <Widget>[
+                Text('DIA'),
+                Text('мм.рт.ст'),
+              ],
+            ),
+            const Spacer(),
+            Text(record.pulse.toString()),
+          ],
         ),
       ),
     );
