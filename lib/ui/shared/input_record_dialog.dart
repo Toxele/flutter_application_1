@@ -31,14 +31,13 @@ class InputRecordDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider<_InputRecord>(
       create: (_) => _InputRecord(),
-      child: Dialog.fullscreen(
+      builder: (context, child) => Dialog.fullscreen(
         child: Scaffold(
           appBar: AppBar(),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final record = context.read<_InputRecord>();
               final userStatus = context.read<UserStatusController>();
-              print(record.temperature);
 
               final sys =
                   int.tryParse(record.sys) ?? default_values.defaultZero;
@@ -52,6 +51,7 @@ class InputRecordDialog extends StatelessWidget {
 
               final navigator = Navigator.of(context);
 
+              /// todo: тут возникает ошибка, но это уже другая история
               if (await userStatus.acceptRecord(sys, dia, pulse)) {
                 onDone.call(
                   sys: sys,
@@ -72,12 +72,15 @@ class InputRecordDialog extends StatelessWidget {
           body: Consumer<WeatherNotifier>(
             builder: (context, weatherNotifier, _) {
               final Weather? weather = weatherNotifier.weather;
+              final record = context.read<_InputRecord>();
+              record.temperature = weather?.temperature.toString() ?? '';
+              record.cloudiness = weather?.cloudiness.toString() ?? '';
+              record.pressure = weather?.pressure.toString() ?? '';
+
               return ListView(
                 children: [
                   TextFieldPattern(
                     onEdit: (String value) =>
-                        // todo: если такой способ не сработает, то добавь _InputRecordNotifier
-                        //  на основе ChangeNotifier и пусть _InputRecord будет там в качестве поля
                         context.read<_InputRecord>().sys = value,
                     value: "",
                     valueName: 'Давление, SYS',

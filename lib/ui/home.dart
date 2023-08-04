@@ -62,7 +62,7 @@ class HomePage extends StatelessWidget {
       create: (_) => RecordsNotifier(
         dataService: UserDataService(const JsonLoader()),
       ),
-      child: Scaffold(
+      builder: (context, _) => Scaffold(
         appBar: AppBar(
           title: const Text(strings.appTitle),
           actions: [
