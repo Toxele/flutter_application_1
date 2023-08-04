@@ -29,8 +29,6 @@ class InputRecordDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userStatus = context.read<UserStatusController>();
-
     return Provider<_InputRecord>(
       create: (_) => _InputRecord(),
       child: Dialog.fullscreen(
@@ -39,6 +37,7 @@ class InputRecordDialog extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final record = context.read<_InputRecord>();
+              final userStatus = context.read<UserStatusController>();
               print(record.temperature);
 
               final sys =
