@@ -46,12 +46,10 @@ class RecordsNotifier extends ValueNotifier<HomeState> {
     required Weather weather,
   }) async {
     value = const HomeStateLoading();
-    notifyListeners();
 
     dataService.addRecord(sys: sys, dia: dia, pulse: pulse, weather: weather);
 
     value = HomeStateData(await dataService.loadRecords());
-    notifyListeners();
   }
 }
 
