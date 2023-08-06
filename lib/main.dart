@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/class_instances.dart';
+import 'package:flutter_application_1/data/shared_preferences_repository.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/geolocation_repository.dart';
 import 'domain/weather/weather_model.dart';
@@ -34,6 +36,9 @@ void main() => runApp(
           ),
           Provider<UserStatusController>(
             create: (_) => UserStatusController(),
+          ),
+          Provider<SPController>(
+            create: (_) => SPController(),
           ),
           // ChangeNotifierProvider<UserRecordToDisplay>(
           //     create: (_) => UserRecordToDisplay(

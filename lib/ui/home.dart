@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/class_instances.dart';
 import 'package:flutter_application_1/data/json_loader.dart';
+import 'package:flutter_application_1/data/shared_preferences_repository.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
 import 'package:flutter_application_1/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
+import 'package:http/retry.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,13 +34,18 @@ class HomeStateError extends HomeState {
   final String message;
 }
 
+class HomeStateSetUpPrefs extends HomeState {
+  const HomeStateSetUpPrefs();
+  //final SPController sp;
+}
+
 class RecordsNotifier extends ValueNotifier<HomeState> {
+  SharedPreferences? prefs;
   RecordsNotifier({
     required this.dataService,
   }) : super(const HomeStateLoading());
-
+  Future<void> initPrefs() async {}
   final UserDataService dataService;
-
   Future<void> addRecord({
     int sys = 120,
     int dia = 80,
@@ -51,6 +58,7 @@ class RecordsNotifier extends ValueNotifier<HomeState> {
     value = HomeStateData(await dataService.loadRecords());
     notifyListeners();
   }
+
   Future<void> loadRecords() async {
     value = HomeStateData(await dataService.loadRecords());
     notifyListeners();
@@ -59,6 +67,7 @@ class RecordsNotifier extends ValueNotifier<HomeState> {
 
 class HomePage extends StatelessWidget {
   const HomePage();
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<RecordsNotifier>(
@@ -124,6 +133,7 @@ class HomePage extends StatelessWidget {
                 loadingRecordsWidget(context, recordsNotifier),
               HomeStateError(message: final message) =>
                 Center(child: Text(message)),
+              HomeStateSetUpPrefs() => const SetUpSharedPreferencesScreen(),
             };
           },
         ),
@@ -131,7 +141,11 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget loadingRecordsWidget(BuildContext context, RecordsNotifier recordsNotifier) {
+  Widget loadingRecordsWidget(
+    BuildContext context,
+    RecordsNotifier recordsNotifier,
+  ) {
+   
     recordsNotifier.loadRecords();
     return const Center(
       child: CircularProgressIndicator(),

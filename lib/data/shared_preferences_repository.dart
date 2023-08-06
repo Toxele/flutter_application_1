@@ -10,6 +10,7 @@ class SPController
   Future<void> initPrefs() async
   { 
     prefs = await SharedPreferences.getInstance();
+    print('12412341241241');
   }
 }
 class SPDefault 

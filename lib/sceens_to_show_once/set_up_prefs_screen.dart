@@ -38,10 +38,10 @@ class _SetUpSharedPreferencesScreenState
       },
       steps: <Step>[
         Step(
-          title: const Text('Step 1 title'),
-          content: Container(
+          title: const Text('Укажите ваш пол'),
+          content: Container( // TODO: add radio
             alignment: Alignment.centerLeft,
-            child: const Text('Content for Step 1'),
+            child: const Text('Продолжить'),
           ),
         ),
         const Step(
