@@ -28,7 +28,9 @@ class UserDataService {
       for (final record in jsonDecode(rawRecordsList) as List) {
         recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
       }
+      recordList.reversed;
       _records = recordList;
+
       return recordList;
     }
     return [];

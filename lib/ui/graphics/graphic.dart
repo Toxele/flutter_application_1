@@ -87,45 +87,52 @@ class _LineChartSample2State extends State<LineChartSample2> {
     );
     Widget text;
     switch (value.toInt()) {
-      case 2:
+      case 0:
         text = Text(
             _dataRecords.isNotEmpty
                 ? _dataRecords[0].timeOfRecord.hour.toString()
                 : '0',
             style: style);
         break;
-      case 4:
+      case 2:
         text = Text(
             _dataRecords.length >= 2
                 ? _dataRecords[1].timeOfRecord.hour.toString()
                 : '0',
             style: style);
         break;
-      case 6:
+      case 4:
         text = Text(
             _dataRecords.length >= 3
                 ? _dataRecords[2].timeOfRecord.hour.toString()
                 : '0',
             style: style);
         break;
-      case 8:
+      case 6:
         text = Text(
             _dataRecords.length >= 4
                 ? _dataRecords[3].timeOfRecord.hour.toString()
                 : '0',
             style: style);
         break;
-      case 10:
+      case 8:
         text = Text(
             _dataRecords.length >= 5
                 ? _dataRecords[4].timeOfRecord.hour.toString()
                 : '0',
             style: style);
         break;
-      case 12:
+      case 10:
         text = Text(
             _dataRecords.length >= 6
                 ? _dataRecords[5].timeOfRecord.hour.toString()
+                : '0',
+            style: style);
+        break;
+      case 12:
+        text = Text(
+            _dataRecords.length >= 7
+                ? _dataRecords[6].timeOfRecord.hour.toString()
                 : '0',
             style: style);
         break;
@@ -177,6 +184,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   LineChartData mainData() {
     return LineChartData(
+    //  lineTouchData: LineTouchData(),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -229,7 +237,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
       minY: 0,
       maxY: 14,
       lineBarsData: [
-        lineChart(context, userStatusController?.makeFLSpots(_dataRecords, true) ??
+        lineChart(
+          context,
+          userStatusController?.makeFLSpots(_dataRecords, true) ??
               const [
                 FlSpot(0, 3),
                 FlSpot(2.6, 2),
@@ -238,8 +248,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
                 FlSpot(8, 4),
                 FlSpot(9.5, 3),
                 FlSpot(11, 4),
-              ],),
-        lineChart(context, userStatusController?.makeFLSpots(_dataRecords, false) ??
+              ],
+        ),
+        lineChart(
+          context,
+          userStatusController?.makeFLSpots(_dataRecords, false) ??
               const [
                 FlSpot(0, 3),
                 FlSpot(2.6, 2),
@@ -248,8 +261,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
                 FlSpot(8, 4),
                 FlSpot(9.5, 3),
                 FlSpot(11, 4),
-              ],),
-       
+              ],
+        ),
       ],
     );
   }
