@@ -46,16 +46,19 @@ class RecordsNotifier extends ValueNotifier<HomeState> {
     required Weather weather,
   }) async {
     value = const HomeStateLoading();
-
     dataService.addRecord(sys: sys, dia: dia, pulse: pulse, weather: weather);
 
     value = HomeStateData(await dataService.loadRecords());
+    notifyListeners();
+  }
+  Future<void> loadRecords() async {
+    value = HomeStateData(await dataService.loadRecords());
+    notifyListeners();
   }
 }
 
 class HomePage extends StatelessWidget {
   const HomePage();
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<RecordsNotifier>(
@@ -118,13 +121,20 @@ class HomePage extends StatelessWidget {
                   },
                 ),
               HomeStateLoading() =>
-                const Center(child: CircularProgressIndicator()),
+                loadingRecordsWidget(context, recordsNotifier),
               HomeStateError(message: final message) =>
                 Center(child: Text(message)),
             };
           },
         ),
       ),
+    );
+  }
+
+  Widget loadingRecordsWidget(BuildContext context, RecordsNotifier recordsNotifier) {
+    recordsNotifier.loadRecords();
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 }
