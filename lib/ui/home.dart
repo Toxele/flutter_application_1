@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/class_instances.dart';
 import 'package:flutter_application_1/data/json_loader.dart';
-import 'package:flutter_application_1/data/shared_preferences_repository.dart';
+import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
 import 'package:flutter_application_1/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
-import 'package:http/retry.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../domain/weather/weather.dart';
 import 'shared/input_record_dialog.dart';
@@ -40,12 +38,16 @@ class HomeStateSetUpPrefs extends HomeState {
 }
 
 class RecordsNotifier extends ValueNotifier<HomeState> {
-  SharedPreferences? prefs;
+  StorageRepository? storage;
   RecordsNotifier({
     required this.dataService,
-  }) : super(const HomeStateLoading());
-  Future<void> initPrefs() async {}
+    this.storage = null, // todo: внедрить через провайдера
+  }) : super(const HomeStateLoading()) {
+    loadRecords();
+  }
+
   final UserDataService dataService;
+
   Future<void> addRecord({
     int sys = 120,
     int dia = 80,
@@ -56,12 +58,10 @@ class RecordsNotifier extends ValueNotifier<HomeState> {
     dataService.addRecord(sys: sys, dia: dia, pulse: pulse, weather: weather);
 
     value = HomeStateData(await dataService.loadRecords());
-    notifyListeners();
   }
 
   Future<void> loadRecords() async {
     value = HomeStateData(await dataService.loadRecords());
-    notifyListeners();
   }
 }
 
@@ -145,7 +145,6 @@ class HomePage extends StatelessWidget {
     BuildContext context,
     RecordsNotifier recordsNotifier,
   ) {
-   
     recordsNotifier.loadRecords();
     return const Center(
       child: CircularProgressIndicator(),

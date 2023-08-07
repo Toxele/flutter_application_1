@@ -6,7 +6,6 @@ import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/weather/weather.dart';
-import '../home.dart';
 
 class _InputRecord {
   String sys = '';
@@ -143,6 +142,8 @@ class TextFieldPattern extends StatefulWidget {
   State<TextFieldPattern> createState() => _TextFieldPatternState();
 }
 
+/// todo: я подумал о том, что нам тут даже контроллер не нужен
+/// по умолчанию контроллер текста уже есть внутри TextField
 class _TextFieldPatternState extends State<TextFieldPattern> {
   late final TextEditingController textController;
   @override
