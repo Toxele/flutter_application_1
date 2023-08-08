@@ -36,7 +36,7 @@ class InputRecordDialog extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final record = context.read<_InputRecord>();
-              final userStatus = context.read<UserStatusController>();
+              final userStatus = context.read<UserStatusNotifier>();
 
               final sys =
                   int.tryParse(record.sys) ?? default_values.defaultZero;
@@ -48,9 +48,6 @@ class InputRecordDialog extends StatelessWidget {
               final pressure = double.tryParse(record.pressure);
               final cloudiness = double.tryParse(record.cloudiness);
 
-              final navigator = Navigator.of(context);
-
-              /// todo: тут возникает ошибка, но это уже другая история
               if (await userStatus.acceptRecord(sys, dia, pulse)) {
                 onDone.call(
                   sys: sys,
@@ -63,7 +60,9 @@ class InputRecordDialog extends StatelessWidget {
                   ),
                 );
 
-                navigator.pop();
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
               }
             },
             child: const Icon(Icons.done),
@@ -79,38 +78,32 @@ class InputRecordDialog extends StatelessWidget {
               return ListView(
                 children: [
                   TextFieldPattern(
-                    onEdit: (String value) =>
-                        context.read<_InputRecord>().sys = value,
+                    onEdit: (String value) => record.sys = value,
                     value: "",
                     valueName: 'Давление, SYS',
                   ),
                   TextFieldPattern(
-                    onEdit: (String value) =>
-                        context.read<_InputRecord>().dia = value,
+                    onEdit: (String value) => record.dia = value,
                     value: "",
                     valueName: 'Давление, DIA',
                   ),
                   TextFieldPattern(
-                    onEdit: (String value) =>
-                        context.read<_InputRecord>().pulse = value,
+                    onEdit: (String value) => record.pulse = value,
                     value: "",
                     valueName: 'Пульс',
                   ),
                   TextFieldPattern(
-                    onEdit: (String value) =>
-                        context.read<_InputRecord>().temperature = value,
+                    onEdit: (String value) => record.temperature = value,
                     value: weather?.temperature.toString() ?? _defaultText,
                     valueName: 'Температура в градусах Цельсия',
                   ),
                   TextFieldPattern(
-                    onEdit: (String value) =>
-                        context.read<_InputRecord>().pressure = value,
+                    onEdit: (String value) => record.pressure = value,
                     value: weather?.pressure.toString() ?? _defaultText,
                     valueName: 'Давление, мм. рт. ст.',
                   ),
                   TextFieldPattern(
-                    onEdit: (String value) =>
-                        context.read<_InputRecord>().cloudiness = value,
+                    onEdit: (String value) => record.cloudiness = value,
                     value: weather?.cloudiness.toString() ?? _defaultText,
                     valueName: 'Облачность, %',
                   ),
@@ -126,11 +119,7 @@ class InputRecordDialog extends StatelessWidget {
   static const _defaultText = "Данные ещё загружаются";
 }
 
-class TextFieldPattern extends StatefulWidget {
-  final String value;
-  final String valueName;
-  final Function(String value) onEdit;
-
+class TextFieldPattern extends StatelessWidget {
   const TextFieldPattern({
     super.key,
     required this.onEdit,
@@ -138,25 +127,9 @@ class TextFieldPattern extends StatefulWidget {
     required this.valueName,
   });
 
-  @override
-  State<TextFieldPattern> createState() => _TextFieldPatternState();
-}
-
-/// todo: я подумал о том, что нам тут даже контроллер не нужен
-/// по умолчанию контроллер текста уже есть внутри TextField
-class _TextFieldPatternState extends State<TextFieldPattern> {
-  late final TextEditingController textController;
-  @override
-  void initState() {
-    super.initState();
-    textController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    textController.dispose();
-  }
+  final String value;
+  final String valueName;
+  final Function(String value) onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -165,16 +138,15 @@ class _TextFieldPatternState extends State<TextFieldPattern> {
         const SizedBox(height: 25),
         Center(
           child: Text(
-            widget.valueName,
+            valueName,
             style: const TextStyle(fontSize: 20),
           ),
         ),
         TextField(
           decoration: InputDecoration(
-            hintText: widget.value,
+            hintText: value,
           ),
-          controller: textController,
-          onChanged: widget.onEdit,
+          onChanged: onEdit,
         ),
         const SizedBox(height: 10),
       ],
