@@ -11,6 +11,7 @@ import 'domain/weather/weather_notifier.dart';
 import 'ui/home.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final storageRepo = StorageRepository();
   await storageRepo.init();
 

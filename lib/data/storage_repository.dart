@@ -3,19 +3,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 class StorageRepository {
   StorageRepository();
 
-  late final SharedPreferences _prefs;
+  late final SharedPreferences storage;
 
-  SharedPreferences get storage => _prefs;
-
-  Future<void> init() async => _prefs = await SharedPreferences.getInstance();
+  Future<void> init() async => storage = await SharedPreferences.getInstance();
 }
 
 class StorageStore {
   StorageStore._();
-  String minPulseKey = 'minPulseKey';
-  int minPulseDefaultValue = 80;
+  static const String minPulseKey = 'minPulseKey';
+  static const int minPulseDefaultValue = 80;
 
   // todo тут лежат все твои ключи и значения. Далее для примера
-  String minPulseKey1 = 'minPulseKey';
-  int minPulseDefaultValue1 = 80;
+  static const String minPulseKey1 = 'minPulseKey';
+  static const int minPulseDefaultValue1 = 80;
 }
