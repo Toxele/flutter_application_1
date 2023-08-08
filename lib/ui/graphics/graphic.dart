@@ -30,7 +30,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
     setState(() {});
   }
 
-  late UserStatusController? userStatusController;
+  late UserStatusNotifier? userStatusController;
   @override
   void initState() {
     super.initState();
@@ -41,7 +41,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   @override
   Widget build(BuildContext context) {
-    userStatusController = context.watch<UserStatusController>();
+    userStatusController = context.watch<UserStatusNotifier>();
     return Stack(
       children: <Widget>[
         AspectRatio(
@@ -184,7 +184,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   LineChartData mainData() {
     return LineChartData(
-    //  lineTouchData: LineTouchData(),
+      //  lineTouchData: LineTouchData(),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,

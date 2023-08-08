@@ -5,6 +5,7 @@ import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
+import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
 import 'package:flutter_application_1/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:provider/provider.dart';
@@ -91,12 +92,16 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.add),
             onPressed: () {
               final recordsNotifier = context.read<RecordsNotifier>();
+              final userStatusNotifier = context.read<UserStatusNotifier>();
 
               showDialog(
                 context: context,
                 builder: (context) {
-                  return InputRecordDialog(
-                    onDone: recordsNotifier.addRecord,
+                  return Provider.value(
+                    value: userStatusNotifier,
+                    child: InputRecordDialog(
+                      onDone: recordsNotifier.addRecord,
+                    ),
                   );
                 },
               );

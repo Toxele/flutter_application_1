@@ -39,8 +39,8 @@ Future<void> main() async {
             weatherRepository: weatherRepository,
           ),
         ),
-        Provider<UserStatusController>(
-          create: (_) => UserStatusController(),
+        Provider<UserStatusNotifier>(
+          create: (_) => UserStatusNotifier(storageRepo),
         ),
       ],
       child: const GHFlutterApp(),

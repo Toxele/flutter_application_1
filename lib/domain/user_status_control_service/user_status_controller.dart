@@ -2,32 +2,35 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as defaultValues;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_1/data/storage_repository.dart';
 
 import '../model/user_record.dart';
 
-class UserStatusController {
-  late final SharedPreferences prefs;
-  UserStatusController() {
-    initPrefs();
-  }
-  Future<void> initPrefs() async {
-    prefs = await SharedPreferences.getInstance();
-  }
+class UserStatusNotifier {
+  UserStatusNotifier(this.storageRepo);
+
+  final StorageRepository storageRepo;
 
   Future<bool> acceptRecord(int sys, int dia, int pulse) async {
-    prefs.setInt('Dia Min', 70); // это временно
-    prefs.setInt('Dia Max', 140);
-    prefs.setInt('Sys Min', 90);
-    prefs.setInt('Sys Max', 170);
-    prefs.setInt('Pulse Min', 60);
-    prefs.setInt('Pulse Max', 130);
-    int normalSysMin = prefs.getInt('Sys Min') ?? defaultValues.defaultZero;
-    int normalSysMax = prefs.getInt('Sys Max') ?? defaultValues.defaultZero;
-    int normalDiaMin = prefs.getInt('Dia Min') ?? defaultValues.defaultZero;
-    int normalDiaMax = prefs.getInt('Dia Max') ?? defaultValues.defaultZero;
-    int normalPulseMin = prefs.getInt('Pulse Min') ?? defaultValues.defaultZero;
-    int normalPulseMax = prefs.getInt('Pulse Max') ?? defaultValues.defaultZero;
+    /// todo: это всё исправить на нормальные ключи и значения по умолчанию.
+    storageRepo.storage.setInt('Dia Min', 70); // это временно
+    storageRepo.storage.setInt('Dia Max', 140);
+    storageRepo.storage.setInt('Sys Min', 90);
+    storageRepo.storage.setInt('Sys Max', 170);
+    storageRepo.storage.setInt('Pulse Min', 60);
+    storageRepo.storage.setInt('Pulse Max', 130);
+    int normalSysMin =
+        storageRepo.storage.getInt('Sys Min') ?? defaultValues.defaultZero;
+    int normalSysMax =
+        storageRepo.storage.getInt('Sys Max') ?? defaultValues.defaultZero;
+    int normalDiaMin =
+        storageRepo.storage.getInt('Dia Min') ?? defaultValues.defaultZero;
+    int normalDiaMax =
+        storageRepo.storage.getInt('Dia Max') ?? defaultValues.defaultZero;
+    int normalPulseMin =
+        storageRepo.storage.getInt('Pulse Min') ?? defaultValues.defaultZero;
+    int normalPulseMax =
+        storageRepo.storage.getInt('Pulse Max') ?? defaultValues.defaultZero;
     return normalSysMin < sys &&
         sys < normalSysMax &&
         normalDiaMin < dia &&
