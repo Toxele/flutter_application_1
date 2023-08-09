@@ -9,6 +9,7 @@ import 'data/storage_repository.dart';
 import 'domain/weather/weather_model.dart';
 import 'domain/weather/weather_notifier.dart';
 import 'ui/home.dart';
+import 'ui/theme_notifier.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,16 +54,30 @@ class GHFlutterApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      themeMode: ThemeMode.light, // todo: поиграть с этим
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      title: strings.appTitle,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomePage(),
-        '/graph': (context) => GraphScreen(),
-        //'/recordingAdd':(context) => MyDialog(onDone: )
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeModeNotifier>(
+          create: (context) {
+            return ThemeModeNotifier(
+              storageRepo: context.read<StorageRepository>(),
+            );
+          },
+        ),
+      ],
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          themeMode: context.watch<ThemeModeNotifier>().value,
+          theme: ThemeData.light(), // todo: поиграть с этим
+          darkTheme: ThemeData.dark(),
+          title: strings.appTitle,
+          initialRoute: '/',
+          routes: {
+            '/': (context) => const HomePage(),
+            '/graph': (context) => GraphScreen(),
+            //'/recordingAdd':(context) => MyDialog(onDone: )
+          },
+        );
       },
     );
   }

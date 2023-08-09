@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../domain/weather/weather.dart';
 import 'shared/input_record_dialog.dart';
+import 'theme_notifier.dart';
 
 sealed class HomeState {
   const HomeState();
@@ -75,74 +76,112 @@ class HomePage extends StatelessWidget {
       create: (_) => RecordsNotifier(
         dataService: UserDataService(const JsonLoader()),
       ),
-      builder: (context, _) => Scaffold(
-        appBar: AppBar(
-          title: const Text(strings.appTitle),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed('/graph');
-              },
-              icon: const Icon(Icons.auto_graph_rounded),
-            )
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              final recordsNotifier = context.read<RecordsNotifier>();
-              final userStatusNotifier = context.read<UserStatusNotifier>();
-
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return Provider.value(
-                    value: userStatusNotifier,
-                    child: InputRecordDialog(
-                      onDone: recordsNotifier.addRecord,
-                    ),
-                  );
+      builder: (context, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(strings.appTitle),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/graph');
                 },
-              );
+                icon: const Icon(Icons.auto_graph_rounded),
+              )
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                final recordsNotifier = context.read<RecordsNotifier>();
+                final userStatusNotifier = context.read<UserStatusNotifier>();
+
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Provider.value(
+                      value: userStatusNotifier,
+                      child: InputRecordDialog(
+                        onDone: recordsNotifier.addRecord,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            onPressed: () {},
+          ),
+          body: Consumer<RecordsNotifier>(
+            builder: (context, recordsNotifier, child) {
+              final recordsState = recordsNotifier.value;
+
+              return switch (recordsState) {
+                HomeStateData(data: final records) => ListView.separated(
+                    separatorBuilder: (context, index) {
+                      final time = records[index].timeOfRecord;
+                      if (index == 0 ||
+                          records[index - 1].timeOfRecord.day !=
+                              records[index].timeOfRecord.day) {
+                        return Card(
+                          child: Text(
+                              '${time.day} ${time.month} ${time.year} года'),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                    padding: const EdgeInsets.all(16),
+                    itemCount: records.length,
+                    itemBuilder: (BuildContext context, int position) {
+                      return _RowRecords(record: records[position]);
+                    },
+                  ),
+                HomeStateLoading() =>
+                  loadingRecordsWidget(context, recordsNotifier),
+                HomeStateError(message: final message) =>
+                  Center(child: Text(message)),
+                HomeStateSetUpPrefs() => const SetUpSharedPreferencesScreen(),
+              };
             },
           ),
-          onPressed: () {},
-        ),
-        body: Consumer<RecordsNotifier>(
-          builder: (context, recordsNotifier, child) {
-            final recordsState = recordsNotifier.value;
+          drawer: SafeArea(
+            child: Drawer(
+              child: ListView(
+                children: [
+                  const FlutterLogo(
+                    size: 50,
+                    style: FlutterLogoStyle.horizontal,
+                  ),
+                  const Divider(),
+                  const ListTile(
+                    title: Text('Настройки'),
+                  ),
+                  const ListTile(
+                    title: Text('Уведомления'),
+                  ),
+                  Builder(
+                    builder: (context) {
+                      final isDark =
+                          Theme.of(context).brightness == Brightness.dark;
 
-            return switch (recordsState) {
-              HomeStateData(data: final records) => ListView.separated(
-                  separatorBuilder: (context, index) {
-                    final time = records[index].timeOfRecord;
-                    if (index == 0 ||
-                        records[index - 1].timeOfRecord.day !=
-                            records[index].timeOfRecord.day) {
-                      return Card(
-                        child:
-                            Text('${time.day} ${time.month} ${time.year} года'),
+                      return SwitchListTile(
+                        title: const Text('Тема'),
+                        subtitle: Text(isDark ? 'Тёмная' : 'Светлая'),
+                        value: isDark,
+                        onChanged: (value) {
+                          context.read<ThemeModeNotifier>().setTheme(
+                                value ? ThemeMode.dark : ThemeMode.light,
+                              );
+                        },
                       );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                  padding: const EdgeInsets.all(16),
-                  itemCount: records.length,
-                  itemBuilder: (BuildContext context, int position) {
-                    return _RowRecords(record: records[position]);
-                  },
-                ),
-              HomeStateLoading() =>
-                loadingRecordsWidget(context, recordsNotifier),
-              HomeStateError(message: final message) =>
-                Center(child: Text(message)),
-              HomeStateSetUpPrefs() => const SetUpSharedPreferencesScreen(),
-            };
-          },
-        ),
-      ),
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -200,7 +239,7 @@ class _RowRecords extends StatelessWidget {
             Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(right: 20),
+                  padding: const EdgeInsets.only(right: 20),
                   child: Text(
                     currentTime, // вместо Time буду подставлять позже конкретное время
                   ),

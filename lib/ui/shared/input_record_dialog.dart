@@ -19,7 +19,7 @@ class _InputRecord {
 class InputRecordDialog extends StatelessWidget {
   const InputRecordDialog({super.key, required this.onDone});
 
-  final Function({
+  final void Function({
     int sys,
     int dia,
     int pulse,
