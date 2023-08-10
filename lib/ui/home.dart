@@ -153,12 +153,11 @@ class HomePage extends StatelessWidget {
                     style: FlutterLogoStyle.horizontal,
                   ),
                   const Divider(),
-                  const ListTile(
-                    title: Text('Настройки'),
+                  ListTile(
+                    title: const Text('Настройки'),
+                    onTap: () => Navigator.of(context).pushNamed('/settings'),
                   ),
-                  const ListTile(
-                    title: Text('Уведомления'),
-                  ),
+                  ListTile(title: const Text('Уведомления'), onTap: () {}),
                   Builder(
                     builder: (context) {
                       final isDark =

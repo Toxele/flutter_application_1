@@ -9,6 +9,7 @@ import 'data/storage_repository.dart';
 import 'domain/weather/weather_model.dart';
 import 'domain/weather/weather_notifier.dart';
 import 'ui/home.dart';
+import 'ui/settings/settings_screen.dart';
 import 'ui/theme_notifier.dart';
 
 Future<void> main() async {
@@ -75,6 +76,7 @@ class GHFlutterApp extends StatelessWidget {
           routes: {
             '/': (context) => const HomePage(),
             '/graph': (context) => GraphScreen(),
+            '/settings': (context) => const SettingsScreen(),
             //'/recordingAdd':(context) => MyDialog(onDone: )
           },
         );
