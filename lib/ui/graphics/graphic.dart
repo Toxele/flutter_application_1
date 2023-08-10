@@ -182,9 +182,28 @@ class _LineChartSample2State extends State<LineChartSample2> {
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
+  List<LineTooltipItem> lineTooltipItem(List<LineBarSpot> touchedSpots) {
+    return touchedSpots.map((LineBarSpot touchedSpot) {
+      final textStyle = TextStyle(
+        color: touchedSpot.bar.gradient?.colors.first ??
+            touchedSpot.bar.color ??
+            Colors.blueGrey,
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      );
+      // todo: настроить отображение y
+      print(touchedSpot);
+      return LineTooltipItem(touchedSpot.y.toString(), textStyle);
+    }).toList();
+  }
+
   LineChartData mainData() {
     return LineChartData(
-      //  lineTouchData: LineTouchData(),
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipItems: lineTooltipItem,
+        ),
+      ),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,

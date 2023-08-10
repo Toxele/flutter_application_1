@@ -146,6 +146,11 @@ class TextFieldPattern extends StatelessWidget {
           decoration: InputDecoration(
             hintText: value,
           ),
+          // todo: сделать в качестве параметров виджета, потому что
+          // каждой формочке нужны свои настройки
+          textAlign: TextAlign.center,
+          textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.number,
           onChanged: onEdit,
         ),
         const SizedBox(height: 10),
