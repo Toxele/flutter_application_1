@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'data/geolocation_repository.dart';
 import 'data/storage_repository.dart';
+import 'domain/notification_service/notification_service.dart';
 import 'domain/weather/weather_model.dart';
 import 'domain/weather/weather_notifier.dart';
 import 'ui/home.dart';
@@ -17,11 +18,17 @@ Future<void> main() async {
   final storageRepo = StorageRepository();
   await storageRepo.init();
 
+  final notificationService = NotificationService();
+  await notificationService.init();
+
   runApp(
     MultiProvider(
       providers: [
         Provider<StorageRepository>(
           create: (_) => storageRepo,
+        ),
+        Provider<NotificationService>(
+          create: (_) => notificationService,
         ),
         Provider<GeolocationService>(
           create: (_) => const GeolocationService(),

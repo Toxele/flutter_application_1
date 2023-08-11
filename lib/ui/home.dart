@@ -4,6 +4,7 @@ import 'package:flutter_application_1/data/class_instances.dart';
 import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
+import 'package:flutter_application_1/domain/notification_service/notification_service.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
 import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
 import 'package:flutter_application_1/sceens_to_show_once/set_up_prefs_screen.dart';
@@ -81,6 +82,14 @@ class HomePage extends StatelessWidget {
           appBar: AppBar(
             title: const Text(strings.appTitle),
             actions: [
+              IconButton(
+                onPressed: () {
+                  context
+                      .read<NotificationService>()
+                      .showNotificationWithActions();
+                },
+                icon: const Icon(Icons.notification_add),
+              ),
               IconButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed('/graph');
