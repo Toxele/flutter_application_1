@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_final_locals, file_names, cast_nullable_to_non_nullable, unused_field
 
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_application_1/domain/weather/weather.dart';
@@ -10,14 +11,20 @@ import 'model/user_record.dart';
 
 class UserDataService {
   UserDataService(this._serviceLoader);
+
   final JsonLoader _serviceLoader;
+
   List<UserRecord> _records = [];
-  List<UserRecord> get records => _records;
+  UnmodifiableListView<UserRecord> get records =>
+      UnmodifiableListView(_records);
+
   static const String _fileName = '\\records.json';
 
+  // todo: воспользоваться пакетом https://pub.dev/packages/path
   Future<String> get _getPath async =>
       '${(await getApplicationDocumentsDirectory()).path}$_fileName';
 
+  /// todo эта функция ничего не должна возвращать. Используй [records] вместо этого
   Future<List<UserRecord>> loadRecords() async {
     final path = await _getPath;
     final file = File(path);
@@ -28,18 +35,26 @@ class UserDataService {
       for (final record in jsonDecode(rawRecordsList) as List) {
         recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
       }
+      recordList.reversed;
       _records = recordList;
       return recordList;
     }
     return [];
   }
 
-  Future addRecord(
-      {int sys = 120,
-      int dia = 80,
-      int pulse = 75,
-      required Weather weather}) async {
-    final user = UserRecord(sys: sys, dia: dia, pulse: pulse, weather: weather, timeOfRecord: DateTime.now());
+  Future<bool> addRecord({
+    int sys = 120,
+    int dia = 80,
+    int pulse = 75,
+    required Weather weather,
+  }) async {
+    final user = UserRecord(
+      sys: sys,
+      dia: dia,
+      pulse: pulse,
+      weather: weather,
+      timeOfRecord: DateTime.now(),
+    );
 
     _records.add(user);
     final recordsRaw = _records.map((e) => e.toJson()).toList();
