@@ -26,7 +26,7 @@ class GraphScreenState extends State<GraphScreen> {
     super.dispose();
     cartNotifier.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

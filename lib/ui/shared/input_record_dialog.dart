@@ -7,161 +7,153 @@ import 'package:provider/provider.dart';
 
 import '../../domain/weather/weather.dart';
 
-class InputRecordDialog extends StatefulWidget {
-  const InputRecordDialog({super.key, required this.onDone});
-
-  final Function({int sys, int dia, int pulse, required Weather weather})
-      onDone;
-
-  @override
-  State<InputRecordDialog> createState() => _InputRecordDialogState();
+class _InputRecord {
+  String sys = '';
+  String dia = '';
+  String pulse = '';
+  String temperature = '';
+  String pressure = '';
+  String cloudiness = '';
 }
 
-class _InputRecordDialogState extends State<InputRecordDialog> {
-  late final TextEditingController sysController;
-  late final TextEditingController diaController;
-  late final TextEditingController pulseController;
-  late final TextEditingController temperatureController;
-  late final TextEditingController pressureController;
-  late final TextEditingController cloudinessController;
-  late final UserStatusController userStatus;
-  late final WeatherNotifier weatherController;
-  late final Weather? weather;
-  @override
-  void initState() {
-    super.initState();
-    weatherController = context.read<WeatherNotifier>();
-    userStatus = context.read<UserStatusController>();
-    weather = weatherController.weather;
-    sysController = TextEditingController();
-    diaController = TextEditingController();
-    pulseController = TextEditingController();
-    temperatureController = TextEditingController();
-    pressureController = TextEditingController();
-    cloudinessController = TextEditingController();
-  }
+class InputRecordDialog extends StatelessWidget {
+  const InputRecordDialog({super.key, required this.onDone});
 
-  @override
-  void dispose() {
-    super.dispose();
-    sysController.dispose();
-    diaController.dispose();
-    pulseController.dispose();
-    temperatureController.dispose();
-    pressureController.dispose();
-    cloudinessController.dispose();
-  }
+  final void Function({
+    int sys,
+    int dia,
+    int pulse,
+    required Weather weather,
+  }) onDone;
 
   @override
   Widget build(BuildContext context) {
-    return Dialog.fullscreen(
-      child: Scaffold(
-        appBar: AppBar(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final sys =
-                int.tryParse(sysController.text) ?? default_values.defaultZero;
-            final dia =
-                int.tryParse(diaController.text) ?? default_values.defaultZero;
-            final pulse = int.tryParse(pulseController.text) ??
-                default_values.defaultZero;
-            final temperature = double.tryParse(temperatureController.text);
-            final pressure = double.tryParse(pressureController.text);
-            final cloudiness = double.tryParse(cloudinessController.text);
-            if (await userStatus.acceptRecord(sys, dia, pulse)) {
-              widget.onDone.call(
-                sys: sys,
-                dia: dia,
-                pulse: pulse,
-                weather: Weather(
+    return Provider<_InputRecord>(
+      create: (_) => _InputRecord(),
+      builder: (context, child) => Dialog.fullscreen(
+        child: Scaffold(
+          appBar: AppBar(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final record = context.read<_InputRecord>();
+              final userStatus = context.read<UserStatusNotifier>();
+
+              final sys =
+                  int.tryParse(record.sys) ?? default_values.defaultZero;
+              final dia =
+                  int.tryParse(record.dia) ?? default_values.defaultZero;
+              final pulse =
+                  int.tryParse(record.pulse) ?? default_values.defaultZero;
+              final temperature = double.tryParse(record.temperature);
+              final pressure = double.tryParse(record.pressure);
+              final cloudiness = double.tryParse(record.cloudiness);
+
+              if (await userStatus.acceptRecord(sys, dia, pulse)) {
+                onDone.call(
+                  sys: sys,
+                  dia: dia,
+                  pulse: pulse,
+                  weather: Weather(
                     temperature: temperature,
                     pressure: pressure,
-                    cloudiness: cloudiness),
-              );
+                    cloudiness: cloudiness,
+                  ),
+                );
 
-              Navigator.of(context).pop();
-            }
-          },
-          child: const Icon(Icons.done),
-        ),
-        body: ListenableBuilder(
-            listenable: weatherController,
-            builder: (context, child) {
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              }
+            },
+            child: const Icon(Icons.done),
+          ),
+          body: Consumer<WeatherNotifier>(
+            builder: (context, weatherNotifier, _) {
+              final Weather? weather = weatherNotifier.weather;
+              final record = context.read<_InputRecord>();
+              record.temperature = weather?.temperature.toString() ?? '';
+              record.cloudiness = weather?.cloudiness.toString() ?? '';
+              record.pressure = weather?.pressure.toString() ?? '';
+
               return ListView(
                 children: [
                   TextFieldPattern(
-                      value: "",
-                      valueName: 'Давление, SYS',
-                      textEditingController: sysController),
+                    onEdit: (String value) => record.sys = value,
+                    value: "",
+                    valueName: 'Давление, SYS',
+                  ),
                   TextFieldPattern(
-                      value: "",
-                      valueName: 'Давление, DIA',
-                      textEditingController: diaController),
+                    onEdit: (String value) => record.dia = value,
+                    value: "",
+                    valueName: 'Давление, DIA',
+                  ),
                   TextFieldPattern(
-                      value: "",
-                      valueName: 'Пульс',
-                      textEditingController: pulseController),
+                    onEdit: (String value) => record.pulse = value,
+                    value: "",
+                    valueName: 'Пульс',
+                  ),
                   TextFieldPattern(
-                      value: weather?.temperature,
-                      valueName: 'Температура в градусах Цельсия',
-                      textEditingController: temperatureController),
+                    onEdit: (String value) => record.temperature = value,
+                    value: weather?.temperature.toString() ?? _defaultText,
+                    valueName: 'Температура в градусах Цельсия',
+                  ),
                   TextFieldPattern(
-                      value: weather?.pressure,
-                      valueName: 'Давление, мм. рт. ст.',
-                      textEditingController: pressureController),
+                    onEdit: (String value) => record.pressure = value,
+                    value: weather?.pressure.toString() ?? _defaultText,
+                    valueName: 'Давление, мм. рт. ст.',
+                  ),
                   TextFieldPattern(
-                      value: weather?.cloudiness,
-                      valueName: 'Облачность, %',
-                      textEditingController: cloudinessController),
-                  // textFieldPattern(context, "", 'Давление, DIA', diaController),
-                  //textFieldPattern(context, weatherController.weather?.temperature, 'Температура в градусах Цельсия', temperatureController),
-                  //textFieldPattern(context, weatherController.weather?.pressure, 'Давление, мм. рт. ст.', pressureController),
-                  /*textFieldPattern(
-                      context,
-                      weatherController.weather?.cloudiness,
-                      'Облачность',
-                      cloudinessController),*/
+                    onEdit: (String value) => record.cloudiness = value,
+                    value: weather?.cloudiness.toString() ?? _defaultText,
+                    valueName: 'Облачность, %',
+                  ),
                 ],
               );
-            }),
+            },
+          ),
+        ),
       ),
     );
   }
+
+  static const _defaultText = "Данные ещё загружаются";
 }
 
 class TextFieldPattern extends StatelessWidget {
-  final TextEditingController textEditingController;
-  final dynamic value;
-  final String valueName;
   const TextFieldPattern({
     super.key,
-    required this.textEditingController,
+    required this.onEdit,
     required this.value,
     required this.valueName,
   });
+
+  final String value;
+  final String valueName;
+  final Function(String value) onEdit;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(
-          height: 25,
-        ),
+        const SizedBox(height: 25),
         Center(
           child: Text(
             valueName,
-            style: TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20),
           ),
         ),
         TextField(
           decoration: InputDecoration(
-            hintText: '$value',
+            hintText: value,
           ),
-          controller: textEditingController,
+          // todo: сделать в качестве параметров виджета, потому что
+          // каждой формочке нужны свои настройки
+          textAlign: TextAlign.center,
+          textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.number,
+          onChanged: onEdit,
         ),
-        const SizedBox(
-          height: 10,
-        ),
+        const SizedBox(height: 10),
       ],
     );
   }

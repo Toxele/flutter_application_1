@@ -37,6 +37,7 @@ class UserDataService {
       }
       recordList.reversed;
       _records = recordList;
+
       return recordList;
     }
     return [];
