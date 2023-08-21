@@ -6,7 +6,7 @@ import 'package:flutter_application_1/data/storage_repository.dart';
 
 import '../model/user_record.dart';
 
-class UserStatusNotifier {
+class UserStatusNotifier { 
   UserStatusNotifier(this.storageRepo);
 
   final StorageRepository storageRepo;

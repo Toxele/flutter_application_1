@@ -84,6 +84,7 @@ class GHFlutterApp extends StatelessWidget {
             '/': (context) => const HomePage(),
             '/graph': (context) => GraphScreen(),
             '/settings': (context) => const SettingsScreen(),
+            '/notifications': (context) => const SettingsScreen(),
             //'/recordingAdd':(context) => MyDialog(onDone: )
           },
         );
