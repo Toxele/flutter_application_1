@@ -9,8 +9,9 @@ part of 'user_notification_record.dart';
 UserNotificationRecord _$UserNotificationRecordFromJson(
         Map<String, dynamic> json) =>
     UserNotificationRecord(
-      json['text'] as String?,
-      const EpochDateTimeConverter().fromJson(json['timeToNotificate'] as int),
+      text: json['text'] as String?,
+      timeToNotificate: const EpochDateTimeConverter()
+          .fromJson(json['timeToNotificate'] as int),
     );
 
 Map<String, dynamic> _$UserNotificationRecordToJson(

@@ -7,7 +7,7 @@ import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/notification_service/notification_service.dart';
 import 'package:flutter_application_1/domain/user_data_service.dart';
 import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
-import 'package:flutter_application_1/sceens_to_show_once/set_up_prefs_screen.dart';
+import 'package:flutter_application_1/ui/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -166,7 +166,7 @@ class HomePage extends StatelessWidget {
                     title: const Text('Настройки'),
                     onTap: () => Navigator.of(context).pushNamed('/settings'),
                   ),
-                  ListTile(title: const Text('Уведомления'), onTap: () {}),
+                  ListTile(title: const Text('Уведомления'), onTap: () => Navigator.of(context).pushNamed('/notifications'),),
                   Builder(
                     builder: (context) {
                       final isDark =

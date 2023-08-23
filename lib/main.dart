@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
+import 'package:flutter_application_1/ui/notifications_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'data/geolocation_repository.dart';
@@ -84,7 +85,7 @@ class GHFlutterApp extends StatelessWidget {
             '/': (context) => const HomePage(),
             '/graph': (context) => GraphScreen(),
             '/settings': (context) => const SettingsScreen(),
-            '/notifications': (context) => const SettingsScreen(),
+            '/notifications': (context) => const NotificationsScreen(),
             //'/recordingAdd':(context) => MyDialog(onDone: )
           },
         );
