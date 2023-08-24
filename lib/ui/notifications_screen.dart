@@ -31,10 +31,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     records = [];
     getRecords();
   }
-  void onDone(String text, DateTime time)
-  {
 
-  }
+  void onDone({required String text, required DateTime time}) {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,23 +46,22 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-            child: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
+        child: IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
             //    final recordsNotifier = context.read<RecordsNotifier>();
-           //     final userStatusNotifier = context.read<UserStatusNotifier>();
+            //     final userStatusNotifier = context.read<UserStatusNotifier>();
 
-                /*showDialog(
-                  context: context,
-                  builder: (context) {
-                    return UserNotifyRecord(onDone: onDone); // help
-                  },
-                );*/
+            showDialog(
+              context: context,
+              builder: (context) {
+                return UserNotifyRecord(onDone: onDone); // help
               },
-            ),
-            onPressed: () {},
-          ),
-    
+            );
+          },
+        ),
+        onPressed: () {},
+      ),
     );
   }
 }

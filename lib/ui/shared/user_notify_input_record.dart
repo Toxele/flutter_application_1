@@ -17,9 +17,10 @@ class UserNotifyRecord extends StatelessWidget {
   const UserNotifyRecord({super.key, required this.onDone});
 
   final void Function({
-    String text,
-    DateTime time,
+    required String text,
+    required DateTime time,
   }) onDone;
+
   @override
   Widget build(BuildContext context) {
     return Provider<_InputNotificationRecord>(
@@ -30,7 +31,7 @@ class UserNotifyRecord extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final record = context.read<_InputNotificationRecord>();
-              onDone.call();
+              // onDone.call();
               if (context.mounted) {
                 Navigator.of(context).pop();
               }
