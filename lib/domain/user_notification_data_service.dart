@@ -7,40 +7,29 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../data/json_loader.dart';
 import 'model/user_notification_record.dart';
+import 'user_data_service.dart';
 
-class UserNotifyDataService {
-  UserNotifyDataService(this._serviceLoader);
-
-  final JsonLoader _serviceLoader;
-
+base class UserNotifyDataService
+    extends RecordsNotifier<List<UserNotificationRecord>> {
+  UserNotifyDataService({required super.serviceLoader});
   List<UserNotificationRecord> _records = [];
   UnmodifiableListView<UserNotificationRecord> get records =>
       UnmodifiableListView(_records);
+  @override
+  String get _fileName => '\\notification_records.json';
 
-  static const String _fileName = '\\notification_records.json';
-
-  Future<String> get _getPath async =>
-      '${(await getApplicationDocumentsDirectory()).path}$_fileName';
-
-  Future<List<UserNotificationRecord>> loadRecords() async {
-    final path = await _getPath;
-    final file = File(path);
-    if (await file.exists()) {
-      String rawRecordsList = await file.readAsString();
-
-      final recordList = <UserNotificationRecord>[];
-      for (final record in jsonDecode(rawRecordsList) as List) {
-        recordList.add(UserNotificationRecord.fromJson(record as Map<String, dynamic>));
-      }
-      recordList.reversed;
-      _records = recordList;
-
-      return recordList;
+  @override
+  Future<List<UserNotificationRecord>> _serializeData(String data) async {
+    final recordList = <UserNotificationRecord>[];
+    for (final record in jsonDecode(data) as List) {
+      recordList
+          .add(UserNotificationRecord.fromJson(record as Map<String, dynamic>));
     }
-    return [];
+    recordList.reversed;
+    return recordList;
   }
 
-  Future addRecord({
+  Future<void> addRecord({
     String text = "",
     required DateTime timeToNotificate,
   }) async {
@@ -49,15 +38,16 @@ class UserNotifyDataService {
       timeToNotificate: timeToNotificate,
     );
 
-    _records.add(user);
-    final recordsRaw = _records.map((e) => e.toJson()).toList();
-    final path = await _getPath;
-    final file = File(path);
-    if (!await file.exists()) {
-      await file.create();
+    if (value case RecordsNotifierData(data: final data)) {
+      value = const RecordsNotifierLoading();
+
+      final user = UserNotificationRecord(
+          timeToNotificate: timeToNotificate, text: text);
+
+      data.add(user);
+      final recordsRaw = data.map((e) => e.toJson()).toList();
+
+   //   _addRecord(recordsRaw); // It don't works
     }
-    String encoded = json.encode(recordsRaw); // преобразуем в json
-    await file.writeAsString(encoded); // запись в файл
-    return true;
   }
 }

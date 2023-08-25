@@ -21,13 +21,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   UserNotifyDataService? dataService;
   List<UserNotificationRecord>? records;
   void getRecords() async {
-    records = await dataService?.loadRecords();
+    await dataService?.load();
+    records = dataService!.records;
   }
 
   @override
   void initState() {
     super.initState();
-    dataService = UserNotifyDataService(const JsonLoader());
+    dataService = UserNotifyDataService(serviceLoader: const JsonLoader());
     records = [];
     getRecords();
   }

@@ -59,12 +59,13 @@ class RecordsNotifier extends ValueNotifier<HomeState> {
   }) async {
     value = const HomeStateLoading();
     dataService.addRecord(sys: sys, dia: dia, pulse: pulse, weather: weather);
-
-    value = HomeStateData(await dataService.loadRecords());
+    await dataService.load();
+    value = HomeStateData(dataService.value as List<UserRecord>);
   }
 
   Future<void> loadRecords() async {
-    value = HomeStateData(await dataService.loadRecords());
+    await dataService.load();
+    value = HomeStateData(dataService.records);
   }
 }
 
@@ -75,7 +76,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<RecordsNotifier>(
       create: (_) => RecordsNotifier(
-        dataService: UserDataService(const JsonLoader()),
+        dataService: UserDataService(serviceLoader: const JsonLoader()),
       ),
       builder: (context, _) {
         return Scaffold(

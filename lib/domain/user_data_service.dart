@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_final_locals, file_names, cast_nullable_to_non_nullable, unused_field
 
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
@@ -67,7 +68,9 @@ abstract base class RecordsNotifier<T>
 
 base class UserDataService extends RecordsNotifier<List<UserRecord>> {
   UserDataService({required super.serviceLoader});
-
+  List<UserRecord> _records = [];
+  UnmodifiableListView<UserRecord> get records =>
+      UnmodifiableListView(_records);
   @override
   String get _fileName => '\\records.json';
 

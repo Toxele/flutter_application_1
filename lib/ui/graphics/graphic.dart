@@ -21,12 +21,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
   ];
   bool showAvg = false;
   late UserDataService _dataService;
-  late List<UserRecord> _dataRecords = [];
+  late List<UserRecord> _dataRecords;
   // ignore: avoid_void_async
   void addRecordsToData() async {
-    _dataRecords = [];
-    _dataRecords.addAll(await _dataService.loadRecords());
-
+    _dataService.load();
+    _dataRecords = _dataService.records;
     setState(() {});
   }
 
@@ -34,7 +33,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
   @override
   void initState() {
     super.initState();
-    _dataService = UserDataService(const JsonLoader());
+    _dataService = UserDataService(serviceLoader: JsonLoader());
     addRecordsToData();
     //_dataService.addAll([1, 2, 3, 4, 5]);
   }
