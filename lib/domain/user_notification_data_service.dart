@@ -29,7 +29,7 @@ base class UserNotifyDataService
     return recordList;
   }
 
-  Future<void> addRecord({
+  Future<void> saveRecord({ 
     String text = "",
     required DateTime timeToNotificate,
   }) async {
@@ -47,7 +47,7 @@ base class UserNotifyDataService
       data.add(user);
       final recordsRaw = data.map((e) => e.toJson()).toList();
 
-   //   _addRecord(recordsRaw); // It don't works
+       addRecord(recordsRaw); // It don't works
     }
   }
 }

@@ -51,7 +51,8 @@ abstract base class RecordsNotifier<T>
     // todo: value = пустой список
   }
 
-  Future<void> _addRecord(Object? data) async {
+  @protected
+  Future<void> addRecord(Object? data) async {
     final path = await _getPath;
     final file = File(path);
 
@@ -84,7 +85,7 @@ base class UserDataService extends RecordsNotifier<List<UserRecord>> {
     return recordList;
   }
 
-  Future<void> addRecord({
+  Future<void> saveRecord({
     int sys = 120,
     int dia = 80,
     int pulse = 75,
@@ -104,7 +105,7 @@ base class UserDataService extends RecordsNotifier<List<UserRecord>> {
       data.add(user);
       final recordsRaw = data.map((e) => e.toJson()).toList();
 
-      _addRecord(recordsRaw);
+      addRecord(recordsRaw);
     }
   }
 }
