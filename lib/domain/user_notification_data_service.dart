@@ -15,21 +15,22 @@ base class UserNotifyDataService
   List<UserNotificationRecord> _records = [];
   UnmodifiableListView<UserNotificationRecord> get records =>
       UnmodifiableListView(_records);
-  @override
-  String get _fileName => '\\notification_records.json';
 
   @override
-  Future<List<UserNotificationRecord>> _serializeData(String data) async {
+  String get fileName => '\\notification_records.json';
+
+  @override
+  Future<List<UserNotificationRecord>> serializeData(String data) async {
     final recordList = <UserNotificationRecord>[];
     for (final record in jsonDecode(data) as List) {
       recordList
           .add(UserNotificationRecord.fromJson(record as Map<String, dynamic>));
-    } 
+    }
     recordList.reversed;
     return recordList;
   }
 
-  Future<void> saveRecord({ 
+  Future<void> saveRecord({
     String text = "",
     required DateTime timeToNotificate,
   }) async {
@@ -47,7 +48,7 @@ base class UserNotifyDataService
       data.add(user);
       final recordsRaw = data.map((e) => e.toJson()).toList();
 
-       addRecord(recordsRaw); // It don't works
+      addRecord(recordsRaw); // It don't works
     }
   }
 }

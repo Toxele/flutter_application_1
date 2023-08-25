@@ -28,24 +28,27 @@ abstract base class RecordsNotifier<T>
     extends ValueNotifier<RecordsNotifierState<T>> {
   RecordsNotifier({required JsonLoader serviceLoader})
       : _serviceLoader = serviceLoader,
-        super(const RecordsNotifierLoading());
+        super(const RecordsNotifierLoading()) {
+    load();
+  }
 
   // todo: реализовать
   final JsonLoader _serviceLoader;
 
-  String get _fileName;
+  String get fileName;
 
   // todo: воспользоваться пакетом https://pub.dev/packages/path
   Future<String> get _getPath async =>
-      '${(await getApplicationDocumentsDirectory()).path}$_fileName';
+      '${(await getApplicationDocumentsDirectory()).path}$fileName';
 
+  @protected
   Future<void> load() async {
     final path = await _getPath;
     final file = File(path);
     if (await file.exists()) {
       String rawRecordsList = await file.readAsString();
 
-      value = RecordsNotifierData(await _serializeData(rawRecordsList));
+      value = RecordsNotifierData(await serializeData(rawRecordsList));
     }
 
     // todo: value = пустой список
@@ -64,19 +67,17 @@ abstract base class RecordsNotifier<T>
     await file.writeAsString(encoded);
   }
 
-  Future<T> _serializeData(String data);
+  Future<T> serializeData(String data);
 }
 
 base class UserDataService extends RecordsNotifier<List<UserRecord>> {
   UserDataService({required super.serviceLoader});
-  List<UserRecord> _records = [];
-  UnmodifiableListView<UserRecord> get records =>
-      UnmodifiableListView(_records);
-  @override
-  String get _fileName => '\\records.json';
 
   @override
-  Future<List<UserRecord>> _serializeData(String data) async {
+  String get fileName => '\\records.json';
+
+  @override
+  Future<List<UserRecord>> serializeData(String data) async {
     final recordList = <UserRecord>[];
     for (final record in jsonDecode(data) as List) {
       recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));

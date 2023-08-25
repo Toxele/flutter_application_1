@@ -24,8 +24,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
   late List<UserRecord> _dataRecords;
   // ignore: avoid_void_async
   void addRecordsToData() async {
-    _dataService.load();
-    _dataRecords = _dataService.records;
+    _dataRecords = _dataService.records; // получаем аналогично home
     setState(() {});
   }
 

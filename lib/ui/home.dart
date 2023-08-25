@@ -40,13 +40,13 @@ class HomeStateSetUpPrefs extends HomeState {
   //final SPController sp;
 }
 
-class RecordsNotifier extends ValueNotifier<HomeState> {
+class HomeStateNotifier extends ValueNotifier<HomeState> {
   StorageRepository? storage;
-  RecordsNotifier({
+  HomeStateNotifier({
     required this.dataService,
     this.storage = null, // todo: внедрить через провайдера
   }) : super(const HomeStateLoading()) {
-    loadRecords();
+    load();
   }
 
   final UserDataService dataService;
@@ -63,9 +63,11 @@ class RecordsNotifier extends ValueNotifier<HomeState> {
     value = HomeStateData(dataService.value as List<UserRecord>);
   }
 
-  Future<void> loadRecords() async {
-    await dataService.load();
-    value = HomeStateData(dataService.value as List<UserRecord>);
+  Future<void> load() async {
+    value = switch (dataService.value) {
+      RecordsNotifierData(data: final records) => HomeStateData(records),
+      RecordsNotifierLoading() => const HomeStateLoading(),
+    };
   }
 }
 
@@ -74,10 +76,22 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<RecordsNotifier>(
-      create: (_) => RecordsNotifier(
-        dataService: UserDataService(serviceLoader: const JsonLoader()),
-      ),
+    // todo: я внедрил это здесь. Но если тебе нужна UserDataService в другом месте,
+    //  то здесь ты её можешь получить через `context.watch<UserDataService>()`
+    // и тогда ты автоматически избавишься от Proxy
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserDataService>(
+          create: (_) => UserDataService(serviceLoader: const JsonLoader()),
+        ),
+        ChangeNotifierProxyProvider<UserDataService, HomeStateNotifier>(
+          create: (context) => HomeStateNotifier(
+            dataService: context.read<UserDataService>(),
+          ),
+          update: (_, userDataService, __) =>
+              HomeStateNotifier(dataService: userDataService),
+        ),
+      ],
       builder: (context, _) {
         return Scaffold(
           appBar: AppBar(
@@ -103,7 +117,7 @@ class HomePage extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                final recordsNotifier = context.read<RecordsNotifier>();
+                final recordsNotifier = context.read<HomeStateNotifier>();
                 final userStatusNotifier = context.read<UserStatusNotifier>();
 
                 showDialog(
@@ -121,7 +135,7 @@ class HomePage extends StatelessWidget {
             ),
             onPressed: () {},
           ),
-          body: Consumer<RecordsNotifier>(
+          body: Consumer<HomeStateNotifier>(
             builder: (context, recordsNotifier, child) {
               final recordsState = recordsNotifier.value;
 
@@ -147,7 +161,7 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                 HomeStateLoading() =>
-                  loadingRecordsWidget(context, recordsNotifier),
+                  const Center(child: CircularProgressIndicator()),
                 HomeStateError(message: final message) =>
                   Center(child: Text(message)),
                 HomeStateSetUpPrefs() => const SetUpSharedPreferencesScreen(),
@@ -167,7 +181,11 @@ class HomePage extends StatelessWidget {
                     title: const Text('Настройки'),
                     onTap: () => Navigator.of(context).pushNamed('/settings'),
                   ),
-                  ListTile(title: const Text('Уведомления'), onTap: () => Navigator.of(context).pushNamed('/notifications'),),
+                  ListTile(
+                    title: const Text('Уведомления'),
+                    onTap: () =>
+                        Navigator.of(context).pushNamed('/notifications'),
+                  ),
                   Builder(
                     builder: (context) {
                       final isDark =
@@ -191,16 +209,6 @@ class HomePage extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget loadingRecordsWidget(
-    BuildContext context,
-    RecordsNotifier recordsNotifier,
-  ) {
-    recordsNotifier.loadRecords();
-    return const Center(
-      child: CircularProgressIndicator(),
     );
   }
 }
