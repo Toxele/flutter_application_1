@@ -93,6 +93,8 @@ class HomePage extends StatelessWidget {
         ),
       ],
       builder: (context, _) {
+        UserStatusNotifier userStatusNotifier = context.watch<UserStatusNotifier>(); //...
+
         return Scaffold(
           appBar: AppBar(
             title: const Text(strings.appTitle),
@@ -138,11 +140,12 @@ class HomePage extends StatelessWidget {
           body: Consumer<HomeStateNotifier>(
             builder: (context, recordsNotifier, child) {
               final recordsState = recordsNotifier.value;
-
               return switch (recordsState) {
                 HomeStateData(data: final records) => ListView.separated(
                     separatorBuilder: (context, index) {
                       final time = records[index].timeOfRecord;
+                      userStatusNotifier.records = records; // Костыль))
+
                       if (index == 0 ||
                           records[index - 1].timeOfRecord.day !=
                               records[index].timeOfRecord.day) {

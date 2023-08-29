@@ -76,6 +76,7 @@ base class UserDataService extends RecordsNotifier<List<UserRecord>> {
   @override
   String get fileName => '\\records.json';
 
+
   @override
   Future<List<UserRecord>> serializeData(String data) async {
     final recordList = <UserRecord>[];

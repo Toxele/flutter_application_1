@@ -20,26 +20,17 @@ class _LineChartSample2State extends State<LineChartSample2> {
     Colors.blue,
   ];
   bool showAvg = false;
-  late UserDataService _dataService;
+  //late UserStatusNotifier _statusNotifier;
   late List<UserRecord> _dataRecords;
   // ignore: avoid_void_async
-  void addRecordsToData() async {
-    _dataRecords = _dataService.records; // получаем аналогично home
-    setState(() {});
-  }
-
+ 
   late UserStatusNotifier? userStatusController;
-  @override
-  void initState() {
-    super.initState();
-    _dataService = UserDataService(serviceLoader: JsonLoader());
-    addRecordsToData();
-    //_dataService.addAll([1, 2, 3, 4, 5]);
-  }
-
+ 
+  
   @override
   Widget build(BuildContext context) {
     userStatusController = context.watch<UserStatusNotifier>();
+    _dataRecords = userStatusController!.records;
     return Stack(
       children: <Widget>[
         AspectRatio(

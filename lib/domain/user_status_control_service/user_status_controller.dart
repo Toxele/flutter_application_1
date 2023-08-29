@@ -10,7 +10,7 @@ class UserStatusNotifier {
   UserStatusNotifier(this.storageRepo);
 
   final StorageRepository storageRepo;
-
+  late List<UserRecord> records;
   Future<bool> acceptRecord(int sys, int dia, int pulse) async {
     /// todo: это всё исправить на нормальные ключи и значения по умолчанию.
     storageRepo.storage.setInt('Dia Min', 70); // это временно
