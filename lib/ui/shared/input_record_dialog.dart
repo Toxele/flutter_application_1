@@ -6,7 +6,7 @@ import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/weather/weather.dart';
-import '../../service classes/text_field_pattern.dart';
+import '../../utils/text_field_pattern.dart';
 
 class _InputRecord {
   String sys = '';

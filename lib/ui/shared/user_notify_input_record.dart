@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constant/default_values.dart'
-    as default_values;
-import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
-import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../../domain/weather/weather.dart';
-import '../../service classes/text_field_pattern.dart';
+import '../../utils/text_field_pattern.dart';
 
 class _InputNotificationRecord {
   String text = "";

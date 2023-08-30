@@ -1,5 +1,5 @@
 import 'package:flutter_application_1/domain/weather/weather.dart';
-import 'package:flutter_application_1/service classes/date_time_converter.dart';
+import 'package:flutter_application_1/utils/date_time_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_record.g.dart';
