@@ -5,8 +5,8 @@ import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/notification_service/notification_service.dart';
-import 'package:flutter_application_1/domain/user_data_service.dart';
-import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
+import 'package:flutter_application_1/domain/records_notifier.dart';
+import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
 import 'package:flutter_application_1/ui/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:provider/provider.dart';
@@ -43,13 +43,13 @@ class HomeStateSetUpPrefs extends HomeState {
 class HomeStateNotifier extends ValueNotifier<HomeState> {
   StorageRepository? storage;
   HomeStateNotifier({
-    required this.dataService,
+    required this.userRecordsNotifier,
     this.storage = null, // todo: внедрить через провайдера
   }) : super(const HomeStateLoading()) {
     load();
   }
 
-  final UserDataService dataService;
+  final UserRecordsNotifier userRecordsNotifier;
 
   Future<void> addRecord({
     int sys = 120,
@@ -58,15 +58,21 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
     required Weather weather,
   }) async {
     value = const HomeStateLoading();
-    dataService.saveRecord(sys: sys, dia: dia, pulse: pulse, weather: weather);
-    await dataService.load();
-    value = HomeStateData(dataService.value as List<UserRecord>);
+    userRecordsNotifier.saveRecord(
+        sys: sys, dia: dia, pulse: pulse, weather: weather);
+    await userRecordsNotifier.load();
+    value = HomeStateData(
+        userRecordsNotifier.value as List<UserRecord>); // это неправильно
   }
 
   Future<void> load() async {
-    value = switch (dataService.value) {
-      RecordsNotifierData(data: final records) => const HomeStateSetUpPrefs(), //  HomeStateData(records)
-      RecordsNotifierLoading() => storage?.storage.getString('Stepper loaded') != null ? const HomeStateLoading() : const HomeStateSetUpPrefs(),
+    value = switch (userRecordsNotifier.value) {
+      RecordsNotifierData(data: final records) =>
+        const HomeStateSetUpPrefs(), //  HomeStateData(records)
+      RecordsNotifierLoading() =>
+        storage?.storage.getString('Stepper loaded') != null
+            ? const HomeStateLoading()
+            : const HomeStateSetUpPrefs(),
     };
   }
 }
@@ -81,20 +87,20 @@ class HomePage extends StatelessWidget {
     // и тогда ты автоматически избавишься от Proxy
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserDataService>(
-          create: (_) => UserDataService(serviceLoader: const JsonLoader()),
+        ChangeNotifierProvider<UserRecordsNotifier>(
+          create: (_) => UserRecordsNotifier(
+              serviceLoader: const JsonLoader(),
+              storageRepo: context.read<StorageRepository>()),
         ),
-        ChangeNotifierProxyProvider<UserDataService, HomeStateNotifier>(
+        ChangeNotifierProxyProvider<UserRecordsNotifier, HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
-            dataService: context.read<UserDataService>(),
+            userRecordsNotifier: context.read<UserRecordsNotifier>(),
           ),
-          update: (_, userDataService, __) =>
-              HomeStateNotifier(dataService: userDataService),
+          update: (_, userRecordsNotifier, __) =>
+              HomeStateNotifier(userRecordsNotifier: userRecordsNotifier),
         ),
       ],
       builder: (context, _) {
-        UserStatusNotifier userStatusNotifier = context.watch<UserStatusNotifier>(); //...
-
         return Scaffold(
           appBar: AppBar(
             title: const Text(strings.appTitle),
@@ -120,7 +126,7 @@ class HomePage extends StatelessWidget {
               icon: const Icon(Icons.add),
               onPressed: () {
                 final recordsNotifier = context.read<HomeStateNotifier>();
-                final userStatusNotifier = context.read<UserStatusNotifier>();
+                final userStatusNotifier = context.read<UserRecordsNotifier>();
 
                 showDialog(
                   context: context,
@@ -141,10 +147,9 @@ class HomePage extends StatelessWidget {
             builder: (context, homeStateNotifier, child) {
               final recordsState = homeStateNotifier.value;
               Widget child;
-               switch (recordsState) {
+              switch (recordsState) {
                 case HomeStateData(data: final records):
-                 userStatusNotifier.records = records; 
-                 child = ListView.separated(
+                  child = ListView.separated(
                     separatorBuilder: (context, index) {
                       final time = records[index].timeOfRecord;
 
@@ -169,9 +174,10 @@ class HomePage extends StatelessWidget {
                   child = const Center(child: CircularProgressIndicator());
                 case HomeStateError(message: final message):
                   child = Center(child: Text(message));
-                case HomeStateSetUpPrefs(): 
-                child =  const SetUpSharedPreferencesScreen();
-              };
+                case HomeStateSetUpPrefs():
+                  child = const SetUpSharedPreferencesScreen();
+              }
+              ;
               return child;
             },
           ),

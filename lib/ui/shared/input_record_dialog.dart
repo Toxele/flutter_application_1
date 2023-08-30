@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as default_values;
-import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
+import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
 import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +37,7 @@ class InputRecordDialog extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final record = context.read<_InputRecord>();
-              final userStatus = context.read<UserStatusNotifier>();
+              final userStatus = context.read<UserRecordsNotifier>();
 
               final sys =
                   int.tryParse(record.sys) ?? default_values.defaultZero;

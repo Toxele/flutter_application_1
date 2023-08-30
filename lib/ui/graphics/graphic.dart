@@ -1,11 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
-import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
+import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/json_loader.dart';
-import '../../domain/user_data_service.dart';
+import '../../domain/records_notifier.dart';
 
 class LineChartSample2 extends StatefulWidget {
   const LineChartSample2({super.key});
@@ -24,12 +24,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
   late List<UserRecord> _dataRecords;
   // ignore: avoid_void_async
 
-  late UserStatusNotifier? userStatusController;
+  late UserRecordsNotifier userStatusController;
 
   @override
   Widget build(BuildContext context) {
-    userStatusController = context.watch<UserStatusNotifier>();
-    _dataRecords = userStatusController!.records;
+    userStatusController = context.watch<UserRecordsNotifier>();
+    _dataRecords =
+        userStatusController.value; // todo обработать состояние через switch
     return Stack(
       children: <Widget>[
         AspectRatio(

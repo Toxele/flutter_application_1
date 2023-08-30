@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../data/json_loader.dart';
 import 'model/user_notification_record.dart';
-import 'user_data_service.dart';
+import 'records_notifier.dart';
 
 base class UserNotifyDataService
     extends RecordsNotifier<List<UserNotificationRecord>> {
