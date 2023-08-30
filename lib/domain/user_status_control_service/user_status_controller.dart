@@ -6,7 +6,7 @@ import 'package:flutter_application_1/data/storage_repository.dart';
 
 import '../model/user_record.dart';
 
-class UserStatusNotifier { 
+class UserStatusNotifier {
   UserStatusNotifier(this.storageRepo);
 
   final StorageRepository storageRepo;
@@ -37,23 +37,5 @@ class UserStatusNotifier {
         dia < normalDiaMax &&
         normalPulseMin < pulse &&
         pulse < normalPulseMax;
-  }
-
-  List<FlSpot> makeFLSpots(List<UserRecord> records, bool isSys) {
-    List<FlSpot> spots = [];
-    double index = 2;
-    for (int i = 0; i < records.length; i++) {
-      if (isSys) {
-        spots.add(FlSpot(index, 2.0 + (records[i].sys! - 60.0) / 10.0));
-      } else {
-        spots.add(FlSpot(index, 2.0 + (records[i].dia! - 60.0) / 10.0));
-      }
-      index += 2;
-    }
-    return spots;
-  }
-
-  Color checkColor() {
-    return Colors.red;
   }
 }

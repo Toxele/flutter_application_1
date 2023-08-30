@@ -23,10 +23,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
   //late UserStatusNotifier _statusNotifier;
   late List<UserRecord> _dataRecords;
   // ignore: avoid_void_async
- 
+
   late UserStatusNotifier? userStatusController;
- 
-  
+
   @override
   Widget build(BuildContext context) {
     userStatusController = context.watch<UserStatusNotifier>();
@@ -247,7 +246,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       lineBarsData: [
         lineChart(
           context,
-          userStatusController?.makeFLSpots(_dataRecords, true) ??
+          _makeFLSpots(_dataRecords, true) ??
               const [
                 FlSpot(0, 3),
                 FlSpot(2.6, 2),
@@ -260,7 +259,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         ),
         lineChart(
           context,
-          userStatusController?.makeFLSpots(_dataRecords, false) ??
+          _makeFLSpots(_dataRecords, false) ??
               const [
                 FlSpot(0, 3),
                 FlSpot(2.6, 2),
@@ -273,6 +272,20 @@ class _LineChartSample2State extends State<LineChartSample2> {
         ),
       ],
     );
+  }
+
+  List<FlSpot> _makeFLSpots(List<UserRecord> records, bool isSys) {
+    final List<FlSpot> spots = [];
+    double index = 2;
+    for (int i = 0; i < records.length; i++) {
+      if (isSys) {
+        spots.add(FlSpot(index - 2, 2.0 + (records[i].sys! - 60.0) / 10.0));
+      } else {
+        spots.add(FlSpot(index - 2, 2.0 + (records[i].dia! - 60.0) / 10.0));
+      }
+      index += 2;
+    }
+    return spots;
   }
 
   LineChartBarData lineChart(BuildContext context, List<FlSpot> spots) {
