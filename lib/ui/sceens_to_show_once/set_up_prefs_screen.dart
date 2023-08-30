@@ -1,4 +1,8 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/storage_repository.dart';
+import 'package:provider/provider.dart';
 
 class SetUpSharedPreferencesScreen extends StatefulWidget {
   const SetUpSharedPreferencesScreen({super.key});
@@ -51,8 +55,8 @@ class _SetUpSharedPreferencesScreenState
           ),
         ),
         const Step(
-          title: Text('Step 2 title'),
-          content: Text('Content for Step 2'),
+          title: Text('Укажите ваш вес'),
+          content: Text('12345'),
         ),
       ],
     );
@@ -73,6 +77,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
 
   @override
   Widget build(BuildContext context) {
+    final storage = context.watch<StorageRepository>();
     return Column(
       children: <Widget>[
         RadioListTile<User>(
@@ -82,6 +87,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
           onChanged: (User? value) {
             setState(() {
               _character = value;
+              storage.storage.setBool('IsMan', true);
             });
           },
         ),
@@ -92,6 +98,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
           onChanged: (User? value) {
             setState(() {
               _character = value;
+              storage.storage.setBool('IsMan', false);
             });
           },
         ),

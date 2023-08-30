@@ -65,8 +65,8 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
 
   Future<void> load() async {
     value = switch (dataService.value) {
-      RecordsNotifierData(data: final records) => HomeStateData(records),
-      RecordsNotifierLoading() => const HomeStateLoading(),
+      RecordsNotifierData(data: final records) => const HomeStateSetUpPrefs(), //  HomeStateData(records)
+      RecordsNotifierLoading() => storage?.storage.getString('Stepper loaded') != null ? const HomeStateLoading() : const HomeStateSetUpPrefs(),
     };
   }
 }
@@ -138,13 +138,15 @@ class HomePage extends StatelessWidget {
             onPressed: () {},
           ),
           body: Consumer<HomeStateNotifier>(
-            builder: (context, recordsNotifier, child) {
-              final recordsState = recordsNotifier.value;
-              return switch (recordsState) {
-                HomeStateData(data: final records) => ListView.separated(
+            builder: (context, homeStateNotifier, child) {
+              final recordsState = homeStateNotifier.value;
+              Widget child;
+               switch (recordsState) {
+                case HomeStateData(data: final records):
+                 userStatusNotifier.records = records; 
+                 child = ListView.separated(
                     separatorBuilder: (context, index) {
                       final time = records[index].timeOfRecord;
-                      userStatusNotifier.records = records; // Костыль))
 
                       if (index == 0 ||
                           records[index - 1].timeOfRecord.day !=
@@ -162,13 +164,15 @@ class HomePage extends StatelessWidget {
                     itemBuilder: (BuildContext context, int position) {
                       return _RowRecords(record: records[position]);
                     },
-                  ),
-                HomeStateLoading() =>
-                  const Center(child: CircularProgressIndicator()),
-                HomeStateError(message: final message) =>
-                  Center(child: Text(message)),
-                HomeStateSetUpPrefs() => const SetUpSharedPreferencesScreen(),
+                  );
+                case HomeStateLoading():
+                  child = const Center(child: CircularProgressIndicator());
+                case HomeStateError(message: final message):
+                  child = Center(child: Text(message));
+                case HomeStateSetUpPrefs(): 
+                child =  const SetUpSharedPreferencesScreen();
               };
+              return child;
             },
           ),
           drawer: SafeArea(
