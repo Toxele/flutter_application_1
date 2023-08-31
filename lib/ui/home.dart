@@ -61,14 +61,18 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
     userRecordsNotifier.saveRecord(
         sys: sys, dia: dia, pulse: pulse, weather: weather);
     await userRecordsNotifier.load();
-    value = HomeStateData(
-        userRecordsNotifier.value as List<UserRecord>); // это неправильно
+    switch (userRecordsNotifier.value) {
+      case RecordsNotifierData(data: final data):
+        value = HomeStateData(data);
+      default:
+        break;
+    }
   }
 
   Future<void> load() async {
     value = switch (userRecordsNotifier.value) {
       RecordsNotifierData(data: final records) =>
-        const HomeStateSetUpPrefs(), //  HomeStateData(records)
+        HomeStateData(records), //  const HomeStateSetUpPrefs(),
       RecordsNotifierLoading() =>
         storage?.storage.getString('Stepper loaded') != null
             ? const HomeStateLoading()

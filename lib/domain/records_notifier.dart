@@ -13,7 +13,7 @@ sealed class RecordsNotifierState<T> {
 
 class RecordsNotifierData<T> extends RecordsNotifierState<T> {
   const RecordsNotifierData(this.data);
-
+ 
   final T data;
 }
 
