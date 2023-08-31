@@ -5,8 +5,10 @@ import 'package:flutter_application_1/ui/notifications_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'data/geolocation_repository.dart';
+import 'data/json_loader.dart';
 import 'data/storage_repository.dart';
 import 'domain/notification_service/notification_service.dart';
+import 'domain/user_records_notifier/user_records_notifier.dart';
 import 'domain/weather/weather_model.dart';
 import 'domain/weather/weather_notifier.dart';
 import 'ui/home.dart';
@@ -35,6 +37,12 @@ Future<void> main() async {
         ),
         Provider<WeatherRepository>(
           create: (_) => WeatherRepository(),
+        ),
+        ChangeNotifierProvider<UserRecordsNotifier>(
+          create: (_) => UserRecordsNotifier(
+            serviceLoader: const JsonLoader(),
+            storageRepo: storageRepo,
+          ),
         ),
         ChangeNotifierProxyProvider2<GeolocationService, WeatherRepository,
             WeatherNotifier>(

@@ -91,14 +91,9 @@ class HomePage extends StatelessWidget {
     // и тогда ты автоматически избавишься от Proxy
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserRecordsNotifier>(
-          create: (_) => UserRecordsNotifier(
-              serviceLoader: const JsonLoader(),
-              storageRepo: context.read<StorageRepository>()),
-        ),
         ChangeNotifierProxyProvider<UserRecordsNotifier, HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
-            userRecordsNotifier: context.read<UserRecordsNotifier>(),
+            userRecordsNotifier: context.watch<UserRecordsNotifier>(),
           ),
           update: (_, userRecordsNotifier, __) =>
               HomeStateNotifier(userRecordsNotifier: userRecordsNotifier),
