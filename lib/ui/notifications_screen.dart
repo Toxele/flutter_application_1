@@ -4,65 +4,149 @@ import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/domain/model/user_notification_record.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_notification_data_service.dart';
+import 'package:flutter_application_1/ui/home.dart';
 import 'package:flutter_application_1/ui/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/input_record_dialog.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:flutter_application_1/ui/shared/user_notify_input_record.dart';
 import 'package:provider/provider.dart';
 
-class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({super.key});
+import '../data/storage_repository.dart';
+import '../domain/records_notifier.dart';
 
-  @override
-  State<NotificationsScreen> createState() => _NotificationsScreenState();
+sealed class HomeState {
+  const HomeState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen> {
-  UserNotifyDataService? dataService;
-  List<UserNotificationRecord>? records;
-  void getRecords() async {
-    await dataService?.load();
-    records = dataService!.records;
+class HomeStateData extends HomeState {
+  const HomeStateData(this.data);
+
+  final List<UserNotificationRecord> data;
+}
+
+class HomeStateLoading extends HomeState {
+  const HomeStateLoading();
+}
+
+class HomeStateError extends HomeState {
+  const HomeStateError(this.message);
+
+  final String message;
+}
+
+class HomeStateNotifier extends ValueNotifier<HomeState> {
+  StorageRepository? storage;
+  HomeStateNotifier({
+    required this.userNotificationRecordsNotifier,
+    this.storage, // todo: внедрить через провайдера
+  }) : super(const HomeStateLoading()) {
+    load();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    dataService = UserNotifyDataService(serviceLoader: const JsonLoader());
-    records = [];
-    getRecords();
+  final UserNotifyDataService userNotificationRecordsNotifier;
+
+  Future<void> addRecord(
+      {required String message, required DateTime timeToNotificate}) async {
+    value = const HomeStateLoading();
+    userNotificationRecordsNotifier.saveRecord(
+        text: message, timeToNotificate: timeToNotificate);
+    await userNotificationRecordsNotifier.load();
+    switch (userNotificationRecordsNotifier.value) {
+      case RecordsNotifierData(data: final data):
+        value = HomeStateData(data);
+      default:
+        break;
+    }
   }
 
-  void onDone({required String text, required DateTime time}) {}
+  Future<void> load() async {
+    value = switch (userNotificationRecordsNotifier.value) {
+      RecordsNotifierData(data: final records) =>
+        HomeStateData(records), //  const HomeStateSetUpPrefs(),
+      RecordsNotifierLoading() => const HomeStateLoading()
+    };
+  }
+}
+
+
+
+class NotificationsScreen extends StatelessWidget {
+  const NotificationsScreen();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: records?.length,
-        itemBuilder: (BuildContext context, int position) {
-          return _RowUserRecords(record: records![position]);
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            //    final recordsNotifier = context.read<RecordsNotifier>();
-            //     final userStatusNotifier = context.read<UserStatusNotifier>();
-
-            showDialog(
-              context: context,
-              builder: (context) {
-                return UserNotifyRecord(onDone: onDone); // help
-              },
-            );
-          },
+    // todo: я внедрил это здесь. Но если тебе нужна UserDataService в другом месте,
+    //  то здесь ты её можешь получить через `context.watch<UserDataService>()`
+    // и тогда ты автоматически избавишься от Proxy
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserNotifyDataService>(
+          create: (_) => UserNotifyDataService(
+              serviceLoader: const JsonLoader(),
+              storageRepo: context.read<StorageRepository>()),
         ),
-        onPressed: () {},
-      ),
+        ChangeNotifierProxyProvider<UserNotifyDataService, HomeStateNotifier>(
+          create: (context) => HomeStateNotifier(
+            userNotificationRecordsNotifier: context.read<UserNotifyDataService>(),
+          ),
+          update: (_, userRecordsNotifier, __) =>
+              HomeStateNotifier(userNotificationRecordsNotifier: userRecordsNotifier),
+        ),
+      ],
+      builder: (context, _) {
+        return Scaffold(
+          appBar: AppBar(
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                final recordsNotifier = context.read<HomeStateNotifier>();
+                final userStatusNotifier = context.read<UserNotifyDataService>();
+
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return Provider.value(
+                      value: userStatusNotifier,
+                      child: UserNotifyRecord(
+                        onDone: recordsNotifier.addRecord,
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            onPressed: () {},
+          ),
+          body: Consumer<HomeStateNotifier>(
+            builder: (context, homeStateNotifier, child) {
+              final recordsState = homeStateNotifier.value;
+              Widget child;
+              switch (recordsState) {
+                case HomeStateData(data: final records):
+                  child = ListView.builder(
+                    
+                    padding: const EdgeInsets.all(16),
+                    itemCount: records.length,
+                    itemBuilder: (BuildContext context, int position) {
+                      return _RowUserRecords(record: records[position]);
+                    },
+                  );
+                case HomeStateLoading():
+                  child = const Center(child: CircularProgressIndicator());
+                case HomeStateError(message: final message):
+                  child = Center(child: Text(message));
+                case HomeStateSetUpPrefs():
+                  child = const SetUpSharedPreferencesScreen();
+              }
+              ;
+              return child;
+            },
+          ),
+          
+          );
+      },
     );
   }
 }

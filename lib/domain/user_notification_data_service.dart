@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import '../data/json_loader.dart';
 import 'model/user_notification_record.dart';
@@ -11,7 +12,7 @@ import 'records_notifier.dart';
 
 base class UserNotifyDataService
     extends RecordsNotifier<List<UserNotificationRecord>> {
-  UserNotifyDataService({required super.serviceLoader});
+  UserNotifyDataService({required super.serviceLoader, required StorageRepository storageRepo});
   List<UserNotificationRecord> _records = [];
   UnmodifiableListView<UserNotificationRecord> get records =>
       UnmodifiableListView(_records);

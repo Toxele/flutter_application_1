@@ -12,8 +12,8 @@ class UserNotifyRecord extends StatelessWidget {
   const UserNotifyRecord({super.key, required this.onDone});
 
   final void Function({
-    required String text,
-    required DateTime time,
+    required String message,
+    required DateTime timeToNotificate,
   }) onDone;
 
   @override
@@ -26,7 +26,7 @@ class UserNotifyRecord extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final record = context.read<_InputNotificationRecord>();
-              // onDone.call();
+                onDone.call(message: record.text, timeToNotificate: record.time);
               if (context.mounted) {
                 Navigator.of(context).pop();
               }
