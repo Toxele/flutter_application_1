@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
+import 'package:flutter_application_1/trash/code_ruiner.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
 import 'package:flutter_application_1/ui/notifications_screen.dart';
 import 'package:provider/provider.dart';
@@ -89,7 +90,7 @@ class GHFlutterApp extends StatelessWidget {
             '/': (context) => const HomePage(),
             '/graph': (context) => GraphScreen(),
             '/settings': (context) => const SettingsScreen(),
-            '/notifications': (context) => NotificationsScreen(),
+            '/notifications': (context) => const NotificationsScreen(),
             //'/recordingAdd':(context) => MyDialog(onDone: )
           },
         );

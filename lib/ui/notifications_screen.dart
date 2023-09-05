@@ -107,7 +107,7 @@ class NotificationsScreen extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) {
-                    return Provider.value(
+                    return ChangeNotifierProvider.value(
                       value: userStatusNotifier,
                       child: UserNotifyRecord(
                         onDone: recordsNotifier.addRecord,
@@ -137,10 +137,8 @@ class NotificationsScreen extends StatelessWidget {
                   child = const Center(child: CircularProgressIndicator());
                 case HomeStateError(message: final message):
                   child = Center(child: Text(message));
-                case HomeStateSetUpPrefs():
-                  child = const SetUpSharedPreferencesScreen();
+               
               }
-              ;
               return child;
             },
           ),

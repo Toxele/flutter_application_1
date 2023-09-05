@@ -93,7 +93,7 @@ class HomePage extends StatelessWidget {
       providers: [
         ChangeNotifierProxyProvider<UserRecordsNotifier, HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
-            userRecordsNotifier: context.watch<UserRecordsNotifier>(),
+            userRecordsNotifier: context.read<UserRecordsNotifier>(),
           ),
           update: (_, userRecordsNotifier, __) =>
               HomeStateNotifier(userRecordsNotifier: userRecordsNotifier),
@@ -130,7 +130,7 @@ class HomePage extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) {
-                    return Provider.value(
+                    return ChangeNotifierProvider.value(
                       value: userStatusNotifier,
                       child: InputRecordDialog(
                         onDone: recordsNotifier.addRecord,
