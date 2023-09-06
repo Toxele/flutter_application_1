@@ -35,13 +35,11 @@ class HomeStateError extends HomeState {
   final String message;
 }
 
-class HomeStateSetUpPrefs extends HomeState {
-  const HomeStateSetUpPrefs();
-  //final SPController sp;
+class StepperHomeState extends HomeState {
+  const StepperHomeState();
 }
 
 class HomeStateNotifier extends ValueNotifier<HomeState> {
-  StorageRepository? storage;
   HomeStateNotifier({
     required this.userRecordsNotifier,
     required this.storage, // todo: внедрить через провайдера
@@ -50,6 +48,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
   }
 
   final UserRecordsNotifier userRecordsNotifier;
+  final StorageRepository storage;
 
   Future<void> addRecord({
     int sys = 120,
@@ -63,13 +62,17 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
   }
 
   Future<void> load() async {
+    final isTimeToStepper =
+        storage.storage.getBool(StorageStore.isTimeToStepperKey) ??
+            StorageStore.isTimeToStepperDefaultValue;
+    if (isTimeToStepper) {
+      value = const StepperHomeState();
+      return;
+    }
+
     value = switch (userRecordsNotifier.value) {
-      RecordsNotifierData(data: final records) =>
-        HomeStateData(records), //  const HomeStateSetUpPrefs(),
-      RecordsNotifierLoading() =>
-        storage?.storage.getString('Stepper loaded') != null
-            ? const HomeStateLoading()
-            : const HomeStateSetUpPrefs(), 
+      RecordsNotifierData(data: final records) => HomeStateData(records),
+      RecordsNotifierLoading() => const HomeStateLoading(),
     };
   }
 }
@@ -90,7 +93,9 @@ class HomePage extends StatelessWidget {
             userRecordsNotifier: context.read<UserRecordsNotifier>(),
             storage: context.read<StorageRepository>(),
           ),
-          update: (context, userRecordsNotifier, storage, oldHomeStateNotifier) => HomeStateNotifier(
+          update:
+              (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
+                  HomeStateNotifier(
             userRecordsNotifier: userRecordsNotifier,
             storage: storage,
           ),
@@ -170,7 +175,7 @@ class HomePage extends StatelessWidget {
                   child = const Center(child: CircularProgressIndicator());
                 case HomeStateError(message: final message):
                   child = Center(child: Text(message));
-                case HomeStateSetUpPrefs():
+                case StepperHomeState():
                   child = const SetUpSharedPreferencesScreen();
               }
               ;
