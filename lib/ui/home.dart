@@ -44,7 +44,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
   StorageRepository? storage;
   HomeStateNotifier({
     required this.userRecordsNotifier,
-    this.storage = null, // todo: внедрить через провайдера
+    required this.storage, // todo: внедрить через провайдера
   }) : super(const HomeStateLoading()) {
     load();
   }
@@ -60,13 +60,6 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
     value = const HomeStateLoading();
     userRecordsNotifier.saveRecord(
         sys: sys, dia: dia, pulse: pulse, weather: weather);
-    await userRecordsNotifier.load();
-    switch (userRecordsNotifier.value) {
-      case RecordsNotifierData(data: final data):
-        value = HomeStateData(data);
-      default:
-        break;
-    }
   }
 
   Future<void> load() async {
@@ -76,7 +69,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
       RecordsNotifierLoading() =>
         storage?.storage.getString('Stepper loaded') != null
             ? const HomeStateLoading()
-            : const HomeStateSetUpPrefs(),
+            : const HomeStateSetUpPrefs(), 
     };
   }
 }
@@ -91,12 +84,16 @@ class HomePage extends StatelessWidget {
     // и тогда ты автоматически избавишься от Proxy
     return MultiProvider(
       providers: [
-        ChangeNotifierProxyProvider<UserRecordsNotifier, HomeStateNotifier>(
+        ChangeNotifierProxyProvider2<UserRecordsNotifier, StorageRepository,
+            HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
             userRecordsNotifier: context.read<UserRecordsNotifier>(),
+            storage: context.read<StorageRepository>(),
           ),
-          update: (_, userRecordsNotifier, __) =>
-              HomeStateNotifier(userRecordsNotifier: userRecordsNotifier),
+          update: (context, userRecordsNotifier, storage, oldHomeStateNotifier) => HomeStateNotifier(
+            userRecordsNotifier: userRecordsNotifier,
+            storage: storage,
+          ),
         ),
       ],
       builder: (context, _) {

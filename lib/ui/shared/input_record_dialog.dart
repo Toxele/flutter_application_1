@@ -49,7 +49,6 @@ class InputRecordDialog extends StatelessWidget {
               final temperature = double.tryParse(record.temperature);
               final pressure = double.tryParse(record.pressure);
               final cloudiness = double.tryParse(record.cloudiness);
-
               if (await userStatus.acceptRecord(sys, dia, pulse)) {
                 onDone.call(
                   sys: sys,
@@ -61,7 +60,6 @@ class InputRecordDialog extends StatelessWidget {
                     cloudiness: cloudiness,
                   ),
                 );
-
                 if (context.mounted) {
                   Navigator.of(context).pop();
                 }
