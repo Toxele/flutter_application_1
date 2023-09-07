@@ -12,6 +12,11 @@ class StorageStore {
   StorageStore._();
   static const String minPulseKey = 'minPulseKey';
   static const int minPulseDefaultValue = 80;
+
+  static const String isTimeToStepperKey = 'isTimeToStepperKey';
+  static const bool isTimeToStepperDefaultValue = true;
+
+
   // todo тут лежат все твои ключи и значения. Далее для примера
   static const String minPulseKey1 = 'minPulseKey';
   static const int minPulseDefaultValue1 = 80;
