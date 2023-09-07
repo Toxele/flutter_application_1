@@ -44,7 +44,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
   StorageRepository? storage;
   HomeStateNotifier({
     required this.userRecordsNotifier,
-    required this.storage, // todo: внедрить через провайдера
+    required this.storage,
   }) : super(const HomeStateLoading()) {
     load();
   }
