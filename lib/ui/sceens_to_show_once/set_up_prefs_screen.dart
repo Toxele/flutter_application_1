@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
+import 'package:flutter_application_1/utils/text_field_pattern.dart';
 import 'package:provider/provider.dart';
 
 class SetUpSharedPreferencesScreen extends StatefulWidget {
@@ -18,6 +18,8 @@ class _SetUpSharedPreferencesScreenState
 
   @override
   Widget build(BuildContext context) {
+    final StorageRepository storageRepository =
+        context.watch<StorageRepository>();
     return Stepper(
       currentStep: _index,
       onStepCancel: () {
@@ -28,10 +30,13 @@ class _SetUpSharedPreferencesScreenState
         }
       },
       onStepContinue: () {
-        if (_index <= 0) {
+        if (_index <= 1) {
           setState(() {
             _index += 1;
           });
+        }else
+        {
+          storageRepository.storage.setBool(StorageStore.isTimeToStepperKey, true);
         }
       },
       onStepTapped: (int index) {
@@ -40,22 +45,26 @@ class _SetUpSharedPreferencesScreenState
         });
       },
       steps: <Step>[
+        const Step(
+          title: Text('Укажите ваш пол'),
+          content: RadioListTileUser(),
+        ),
         Step(
-          title: const Text('Укажите ваш пол'),
-          content: Column(
-            children: [
-              // TODO: add radio
-              const RadioListTileUser(),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: const Text('Продолжить'),
-              ),
-            ],
+          title: const Text('Укажите ваш вес в килограммах'),
+          content: TextFieldPattern(
+            onEdit: (String value) => storageRepository.storage.setDouble(
+                StorageStore.weigthKey, double.tryParse(value) ?? 0.0),
+            value: StorageStore.weigth.toString(),
+            valueName: '',
           ),
         ),
-        const Step(
-          title: Text('Укажите ваш вес'),
-          content: Text('12345'),
+        Step(
+          title: const Text('Укажите ваш рост в сантиметрах'),
+          content: TextFieldPattern(
+              onEdit: (String value) => storageRepository.storage.setDouble(
+                  StorageStore.heightKey, double.tryParse(value) ?? 0.0),
+              value: StorageStore.height.toString(),
+              valueName: ''),
         ),
       ],
     );
@@ -86,7 +95,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
           onChanged: (User? value) {
             setState(() {
               _character = value;
-              storage.storage.setBool('IsMan', true);
+              storage.storage.setBool(StorageStore.isManKey, true);
             });
           },
         ),
@@ -97,7 +106,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
           onChanged: (User? value) {
             setState(() {
               _character = value;
-              storage.storage.setBool('IsMan', false);
+              storage.storage.setBool(StorageStore.isManKey, false);
             });
           },
         ),

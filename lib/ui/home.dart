@@ -58,7 +58,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
   }) async {
     value = const HomeStateLoading();
     userRecordsNotifier.saveRecord(
-        sys: sys, dia: dia, pulse: pulse, weather: weather);
+        sys: sys, dia: dia, pulse: pulse, weather: weather,);
   }
 
   Future<void> load() async {
