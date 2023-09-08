@@ -15,7 +15,8 @@ class _SetUpSharedPreferencesScreenState
     extends State<SetUpSharedPreferencesScreen> {
   @override
   int _index = 0;
-
+  double _weight = 0.0;
+  double _height = 0.0;
   @override
   Widget build(BuildContext context) {
     final StorageRepository storageRepository =
@@ -34,9 +35,13 @@ class _SetUpSharedPreferencesScreenState
           setState(() {
             _index += 1;
           });
-        }else
-        {
-          storageRepository.storage.setBool(StorageStore.isTimeToStepperKey, true);
+        } else {
+          storageRepository.storage.setDouble(
+                StorageStore.weigthKey, _weight ?? 0.0);
+          storageRepository.storage
+              .setDouble(StorageStore.heightKey, _height ?? 0.0);
+          storageRepository.storage
+              .setBool(StorageStore.isTimeToStepperKey, true);
         }
       },
       onStepTapped: (int index) {
@@ -52,8 +57,7 @@ class _SetUpSharedPreferencesScreenState
         Step(
           title: const Text('Укажите ваш вес в килограммах'),
           content: TextFieldPattern(
-            onEdit: (String value) => storageRepository.storage.setDouble(
-                StorageStore.weigthKey, double.tryParse(value) ?? 0.0),
+            onEdit: (String value) => _weight = double.tryParse(value) ?? StorageStore.weigth,
             value: StorageStore.weigth.toString(),
             valueName: '',
           ),
@@ -61,10 +65,10 @@ class _SetUpSharedPreferencesScreenState
         Step(
           title: const Text('Укажите ваш рост в сантиметрах'),
           content: TextFieldPattern(
-              onEdit: (String value) => storageRepository.storage.setDouble(
-                  StorageStore.heightKey, double.tryParse(value) ?? 0.0),
-              value: StorageStore.height.toString(),
-              valueName: ''),
+            onEdit: (String value) => _height = double.tryParse(value) ?? StorageStore.height,
+            value: StorageStore.height.toString(),
+            valueName: '',
+          ),
         ),
       ],
     );

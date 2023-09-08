@@ -46,6 +46,7 @@ base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
       final recordsRaw = data.map((e) => e.toJson()).toList();
 
       addRecord(recordsRaw);
+      load();
     }
   }
 

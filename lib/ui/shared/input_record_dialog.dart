@@ -16,6 +16,7 @@ class _InputRecord {
   String temperature = '';
   String pressure = '';
   String cloudiness = '';
+  
 }
 
 class InputRecordDialog extends StatelessWidget {
@@ -71,6 +72,10 @@ class InputRecordDialog extends StatelessWidget {
             builder: (context, weatherNotifier, _) {
               final Weather? weather = weatherNotifier.weather;
               final record = context.read<_InputRecord>();
+              //TODO : покрутить этот момент
+              record.temperature = weather?.temperature.toString() ?? ''; 
+              record.pressure = weather?.pressure.toString() ?? ''; 
+              record.cloudiness = weather?.cloudiness.toString() ?? ''; 
              
               return ListView(
                 children: [

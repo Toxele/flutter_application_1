@@ -58,7 +58,11 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
   }) async {
     value = const HomeStateLoading();
     userRecordsNotifier.saveRecord(
-        sys: sys, dia: dia, pulse: pulse, weather: weather,);
+      sys: sys,
+      dia: dia,
+      pulse: pulse,
+      weather: weather,
+    );
   }
 
   Future<void> load() async {
@@ -237,7 +241,7 @@ class _RowRecords extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String currentTime =
-        '${record.timeOfRecord.hour}:${record.timeOfRecord.minute}';
+        '${record.timeOfRecord.hour}:${record.timeOfRecord.minute > 9 ? record.timeOfRecord.minute : '0${record.timeOfRecord.minute}'}';
     // используем тут этот record
     print('build: ${record.dia}');
     return GestureDetector(
@@ -251,8 +255,10 @@ class _RowRecords extends StatelessWidget {
         },
       ),
       child: Card(
-        child: Row(
+        
+        child: Row(  
           children: [
+            const SizedBox(width: 4,),
             DecoratedBox(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -264,38 +270,63 @@ class _RowRecords extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              width:
-                  10, // тут spacer создаёт лишнее пространство, поэтому на мой взгляд SizedBox вполне удобен здесь
+              width: 7,
             ),
             Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(right: 20),
+                  padding: const EdgeInsets.only(
+                    right: 5,
+                    bottom: 3,
+                  ),
                   child: Text(
-                    currentTime, // вместо Time буду подставлять позже конкретное время
+                    currentTime,
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ),
-                Text(record.sys.toString()),
+                Text(
+                  record.sys.toString(),
+                  style: const TextStyle(fontSize: 20),
+                ),
               ],
             ),
-            const Spacer(),
+            const SizedBox(
+              width: 7,
+            ),
             const Column(
               children: <Widget>[
-                Text('SYS'),
-                Text('мм.рт.ст'),
+                Text(
+                  'SYS',
+                  style: TextStyle(fontSize: 13),
+                ),
+                Text(
+                  'мм.рт.ст',
+                  style: TextStyle(fontSize: 13),
+                ),
               ],
             ),
-            const Spacer(),
-            Text(record.dia.toString()),
-            const Spacer(),
+            const SizedBox(
+              width: 50,
+            ),
+            Text(record.dia.toString(), style: const TextStyle(fontSize: 20)),
+            const SizedBox(
+              width: 10,
+            ),
             const Column(
               children: <Widget>[
-                Text('DIA'),
-                Text('мм.рт.ст'),
+                Text(
+                  'DIA',
+                  style: TextStyle(fontSize: 13),
+                ),
+                Text(
+                  'мм.рт.ст',
+                  style: TextStyle(fontSize: 13),
+                ),
               ],
             ),
             const Spacer(),
-            Text(record.pulse.toString()),
+            Text(record.pulse.toString(), style: const TextStyle(fontSize: 20)),
+            const SizedBox(width: 30,),
           ],
         ),
       ),

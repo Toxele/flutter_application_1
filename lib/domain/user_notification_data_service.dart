@@ -49,7 +49,8 @@ base class UserNotifyDataService
       data.add(user);
       final recordsRaw = data.map((e) => e.toJson()).toList();
 
-      addRecord(recordsRaw); // It don't works
+      addRecord(recordsRaw);
+      load();
     }
   }
 }
