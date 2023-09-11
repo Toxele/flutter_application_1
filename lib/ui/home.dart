@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/class_instances.dart';
-import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/notification_service/notification_service.dart';
@@ -33,6 +32,10 @@ class HomeStateError extends HomeState {
   const HomeStateError(this.message);
 
   final String message;
+}
+
+class HomeStateDataEmpty extends HomeState {
+  const HomeStateDataEmpty();
 }
 
 class StepperHomeState extends HomeState {
@@ -77,6 +80,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
     value = switch (userRecordsNotifier.value) {
       RecordsNotifierData(data: final records) => HomeStateData(records),
       RecordsNotifierLoading() => const HomeStateLoading(),
+      RecordsNotifierEmpty() => const HomeStateDataEmpty(),
     };
   }
 }
@@ -163,7 +167,8 @@ class HomePage extends StatelessWidget {
                               records[index].timeOfRecord.day) {
                         return Card(
                           child: Text(
-                              '${time.day} ${time.month} ${time.year} года'),
+                            '${time.day} ${time.month} ${time.year} года',
+                          ),
                         );
                       } else {
                         return const SizedBox.shrink();
@@ -176,13 +181,18 @@ class HomePage extends StatelessWidget {
                     },
                   );
                 case HomeStateLoading():
-                  child = const Center(child: CircularProgressIndicator());
+                  child = const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 case HomeStateError(message: final message):
                   child = Center(child: Text(message));
                 case StepperHomeState():
                   child = const SetUpSharedPreferencesScreen();
+                case HomeStateDataEmpty():
+                  child = const Center(
+                    child: Text('У вас нет сохранений'),
+                  );
               }
-              ;
               return child;
             },
           ),
@@ -255,10 +265,11 @@ class _RowRecords extends StatelessWidget {
         },
       ),
       child: Card(
-        
-        child: Row(  
+        child: Row(
           children: [
-            const SizedBox(width: 4,),
+            const SizedBox(
+              width: 4,
+            ),
             DecoratedBox(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -326,7 +337,9 @@ class _RowRecords extends StatelessWidget {
             ),
             const Spacer(),
             Text(record.pulse.toString(), style: const TextStyle(fontSize: 20)),
-            const SizedBox(width: 30,),
+            const SizedBox(
+              width: 30,
+            ),
           ],
         ),
       ),

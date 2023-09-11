@@ -34,6 +34,10 @@ class HomeStateError extends HomeState {
   final String message;
 }
 
+class HomeStateDataEmpty extends HomeState {
+  const HomeStateDataEmpty();
+}
+
 class HomeStateNotifier extends ValueNotifier<HomeState> {
   StorageRepository? storage;
   HomeStateNotifier({
@@ -63,12 +67,11 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
     value = switch (userNotificationRecordsNotifier.value) {
       RecordsNotifierData(data: final records) =>
         HomeStateData(records), //  const HomeStateSetUpPrefs(),
-      RecordsNotifierLoading() => const HomeStateLoading()
+      RecordsNotifierLoading() => const HomeStateLoading(),
+      RecordsNotifierEmpty() => const HomeStateDataEmpty(),
     };
   }
 }
-
-
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen();
@@ -87,22 +90,23 @@ class NotificationsScreen extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<UserNotifyDataService, HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
-            userNotificationRecordsNotifier: context.read<UserNotifyDataService>(),
+            userNotificationRecordsNotifier:
+                context.read<UserNotifyDataService>(),
           ),
-          update: (_, userRecordsNotifier, __) =>
-              HomeStateNotifier(userNotificationRecordsNotifier: userRecordsNotifier),
+          update: (_, userRecordsNotifier, __) => HomeStateNotifier(
+              userNotificationRecordsNotifier: userRecordsNotifier),
         ),
       ],
       builder: (context, _) {
         return Scaffold(
-          appBar: AppBar(
-          ),
+          appBar: AppBar(),
           floatingActionButton: FloatingActionButton(
             child: IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
                 final recordsNotifier = context.read<HomeStateNotifier>();
-                final userStatusNotifier = context.read<UserNotifyDataService>();
+                final userStatusNotifier =
+                    context.read<UserNotifyDataService>();
 
                 showDialog(
                   context: context,
@@ -126,7 +130,6 @@ class NotificationsScreen extends StatelessWidget {
               switch (recordsState) {
                 case HomeStateData(data: final records):
                   child = ListView.builder(
-                    
                     padding: const EdgeInsets.all(16),
                     itemCount: records.length,
                     itemBuilder: (BuildContext context, int position) {
@@ -137,13 +140,15 @@ class NotificationsScreen extends StatelessWidget {
                   child = const Center(child: CircularProgressIndicator());
                 case HomeStateError(message: final message):
                   child = Center(child: Text(message));
-               
+                case HomeStateDataEmpty():
+                  child = const Center(
+                    child: Text('У вас нет сохранений'),
+                  );
               }
               return child;
             },
           ),
-          
-          );
+        );
       },
     );
   }

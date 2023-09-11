@@ -21,8 +21,8 @@ base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
     for (final record in jsonDecode(data) as List) {
       recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
     }
-    recordList.reversed;
-    return recordList;
+    
+    return recordList.reversed.toList();
   }
 
   Future<void> saveRecord({

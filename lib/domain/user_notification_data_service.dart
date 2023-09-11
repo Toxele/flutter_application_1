@@ -27,8 +27,7 @@ base class UserNotifyDataService
       recordList
           .add(UserNotificationRecord.fromJson(record as Map<String, dynamic>));
     }
-    recordList.reversed;
-    return recordList;
+    return recordList.reversed.toList();
   }
 
   Future<void> saveRecord({

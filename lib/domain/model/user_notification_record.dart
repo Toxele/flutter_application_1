@@ -10,7 +10,8 @@ class UserNotificationRecord {
   String? text;
   @EpochDateTimeConverter()
   final DateTime timeToNotificate;
-  UserNotificationRecord({this.text, required this.timeToNotificate});
+  bool? notificateThis;
+  UserNotificationRecord({this.text, required this.timeToNotificate, this.notificateThis});
   factory UserNotificationRecord.fromJson(Map<String, dynamic> json) =>
       _$UserNotificationRecordFromJson(json);
 

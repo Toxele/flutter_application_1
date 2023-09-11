@@ -12,6 +12,7 @@ UserNotificationRecord _$UserNotificationRecordFromJson(
       text: json['text'] as String?,
       timeToNotificate: const EpochDateTimeConverter()
           .fromJson(json['timeToNotificate'] as int),
+      notificateThis: json['notificateThis'] as bool?,
     );
 
 Map<String, dynamic> _$UserNotificationRecordToJson(
@@ -20,4 +21,5 @@ Map<String, dynamic> _$UserNotificationRecordToJson(
       'text': instance.text,
       'timeToNotificate':
           const EpochDateTimeConverter().toJson(instance.timeToNotificate),
+      'notificateThis': instance.notificateThis,
     };

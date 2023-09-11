@@ -5,7 +5,7 @@ import '../../utils/text_field_pattern.dart';
 
 class _InputNotificationRecord {
   String text = "";
-  DateTime time = DateTime(2023);
+  DateTime time = DateTime(2023, 1, 2);
 }
 
 class UserNotifyRecord extends StatelessWidget {
@@ -26,7 +26,7 @@ class UserNotifyRecord extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final record = context.read<_InputNotificationRecord>();
-                onDone.call(message: record.text, timeToNotificate: record.time);
+              onDone.call(message: record.text, timeToNotificate: record.time);
               if (context.mounted) {
                 Navigator.of(context).pop();
               }
@@ -41,11 +41,6 @@ class UserNotifyRecord extends StatelessWidget {
                     onEdit: (String value) => record.text = value,
                     value: "Введите текст",
                     valueName: 'Текст отложенного уведомления',
-                  ),
-                  TextFieldPattern(
-                    onEdit: (String value) => record.time = value as DateTime,
-                    value: "Время получения уведомления",
-                    valueName: '12:00:00',
                   ),
                 ],
               );

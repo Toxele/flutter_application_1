@@ -20,6 +20,9 @@ class RecordsNotifierData<T> extends RecordsNotifierState<T> {
 class RecordsNotifierLoading<T> extends RecordsNotifierState<T> {
   const RecordsNotifierLoading();
 }
+class RecordsNotifierEmpty<T> extends RecordsNotifierState<T> {
+  const RecordsNotifierEmpty();
+}
 
 abstract base class RecordsNotifier<T>
     extends ValueNotifier<RecordsNotifierState<T>> {
@@ -47,7 +50,10 @@ abstract base class RecordsNotifier<T>
 
       value = RecordsNotifierData(await serializeData(rawRecordsList));
     }
-
+    else
+    {
+      value = const RecordsNotifierEmpty();
+    }
     // todo: value = пустой список
   }
 
