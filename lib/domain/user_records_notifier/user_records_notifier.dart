@@ -30,7 +30,7 @@ base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
     int dia = 80,
     int pulse = 75,
     required Weather weather,
-  }) async {
+  }) async { 
     if (value case RecordsNotifierData(data: final data)) {
       value = const RecordsNotifierLoading();
 
@@ -40,7 +40,7 @@ base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
         pulse: pulse,
         weather: weather,
         timeOfRecord: DateTime.now(),
-      );
+      ); 
 
       data.add(user);
       final recordsRaw = data.map((e) => e.toJson()).toList();

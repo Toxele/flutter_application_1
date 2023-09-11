@@ -12,7 +12,10 @@ import 'records_notifier.dart';
 
 base class UserNotifyDataService
     extends RecordsNotifier<List<UserNotificationRecord>> {
-  UserNotifyDataService({required super.serviceLoader, required StorageRepository storageRepo});
+  UserNotifyDataService({
+    required super.serviceLoader,
+    required StorageRepository storageRepo,
+  });
   List<UserNotificationRecord> _records = [];
   UnmodifiableListView<UserNotificationRecord> get records =>
       UnmodifiableListView(_records);
@@ -34,12 +37,8 @@ base class UserNotifyDataService
     String text = "",
     required DateTime timeToNotificate,
   }) async {
-    final user = UserNotificationRecord(
-      text: text,
-      timeToNotificate: timeToNotificate,
-    );
-
     if (value case RecordsNotifierData(data: final data)) {
+      // TODO : пофиксить if - value принимает состояние RecordsNotifierEmpty, в user_records_notifier.dart скорее всего та же проблема
       value = const RecordsNotifierLoading();
 
       final user = UserNotificationRecord(
@@ -47,7 +46,6 @@ base class UserNotifyDataService
 
       data.add(user);
       final recordsRaw = data.map((e) => e.toJson()).toList();
-
       addRecord(recordsRaw);
       load();
     }

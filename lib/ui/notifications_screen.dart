@@ -49,18 +49,15 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
 
   final UserNotifyDataService userNotificationRecordsNotifier;
 
-  Future<void> addRecord(
-      {required String message, required DateTime timeToNotificate}) async {
+  Future<void> addRecord({
+    required String message,
+    required DateTime timeToNotificate,
+  }) async {
     value = const HomeStateLoading();
     userNotificationRecordsNotifier.saveRecord(
-        text: message, timeToNotificate: timeToNotificate);
-    await userNotificationRecordsNotifier.load();
-    switch (userNotificationRecordsNotifier.value) {
-      case RecordsNotifierData(data: final data):
-        value = HomeStateData(data);
-      default:
-        break;
-    }
+      text: message,
+      timeToNotificate: timeToNotificate,
+    );
   }
 
   Future<void> load() async {
@@ -171,9 +168,7 @@ class _RowUserRecords extends StatelessWidget {
         context: context,
         builder: (context) {
           return ChangeNotifierProvider(
-            create: (_) => UserRecordToDisplay(UserRecord(
-                timeOfRecord:
-                    record.timeToNotificate)), // TODO: replace UserRecord
+            create: (_) => UserNotificationRecordToDisplay(record),
             child: const RecordInfoDialog(),
           );
         },

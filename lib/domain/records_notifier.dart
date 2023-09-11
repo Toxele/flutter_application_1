@@ -13,13 +13,14 @@ sealed class RecordsNotifierState<T> {
 
 class RecordsNotifierData<T> extends RecordsNotifierState<T> {
   const RecordsNotifierData(this.data);
- 
+
   final T data;
 }
 
 class RecordsNotifierLoading<T> extends RecordsNotifierState<T> {
   const RecordsNotifierLoading();
 }
+
 class RecordsNotifierEmpty<T> extends RecordsNotifierState<T> {
   const RecordsNotifierEmpty();
 }
@@ -47,12 +48,11 @@ abstract base class RecordsNotifier<T>
     final file = File(path);
     if (await file.exists()) {
       String rawRecordsList = await file.readAsString();
-
-      value = RecordsNotifierData(await serializeData(rawRecordsList));
-    }
-    else
-    {
-      value = const RecordsNotifierEmpty();
+      if (rawRecordsList.isNotEmpty) {
+        value = RecordsNotifierData(await serializeData(rawRecordsList));
+      } else {
+        value = const RecordsNotifierEmpty();
+      }
     }
     // todo: value = пустой список
   }

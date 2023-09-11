@@ -27,4 +27,6 @@ class GeolocationService {
     }
     return Geolocator.getCurrentPosition();
   }
+
+  
 }
