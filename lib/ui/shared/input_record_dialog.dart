@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as default_values;
 import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
-import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
-import 'package:flutter_application_1/trash/code_ruiner.dart';
+import 'package:flutter_application_1/domain/weather_notifier/weather_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../../domain/weather/weather.dart';
+import '../../domain/weather_notifier/weather.dart';
 import '../../utils/text_field_pattern.dart';
 
 class _InputRecord {
@@ -16,7 +15,6 @@ class _InputRecord {
   String temperature = '';
   String pressure = '';
   String cloudiness = '';
-  
 }
 
 class InputRecordDialog extends StatelessWidget {
@@ -73,10 +71,10 @@ class InputRecordDialog extends StatelessWidget {
               final Weather? weather = weatherNotifier.weather;
               final record = context.read<_InputRecord>();
               //TODO : покрутить этот момент
-              record.temperature = weather?.temperature.toString() ?? ''; 
-              record.pressure = weather?.pressure.toString() ?? ''; 
-              record.cloudiness = weather?.cloudiness.toString() ?? ''; 
-             
+              record.temperature = weather?.temperature.toString() ?? '';
+              record.pressure = weather?.pressure.toString() ?? '';
+              record.cloudiness = weather?.cloudiness.toString() ?? '';
+
               return ListView(
                 children: [
                   TextFieldPattern(

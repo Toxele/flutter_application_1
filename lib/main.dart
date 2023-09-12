@@ -9,7 +9,7 @@ import 'data/storage_repository.dart';
 import 'data/weather_repository.dart';
 import 'domain/notification_service/notification_service.dart';
 import 'domain/user_records_notifier/user_records_notifier.dart';
-import 'domain/weather/weather_notifier.dart';
+import 'domain/weather_notifier/weather_notifier.dart';
 import 'ui/home.dart';
 import 'ui/settings/settings_screen.dart';
 import 'ui/theme_notifier.dart';

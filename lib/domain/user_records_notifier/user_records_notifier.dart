@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
-import 'package:flutter_application_1/domain/weather/weather.dart';
+import 'package:flutter_application_1/domain/weather_notifier/weather.dart';
 
 import '../records_notifier.dart';
 

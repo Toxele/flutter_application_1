@@ -10,7 +10,7 @@ import 'package:flutter_application_1/ui/sceens_to_show_once/set_up_prefs_screen
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:provider/provider.dart';
 
-import '../domain/weather/weather.dart';
+import '../domain/weather_notifier/weather.dart';
 import 'shared/input_record_dialog.dart';
 import 'theme_notifier.dart';
 

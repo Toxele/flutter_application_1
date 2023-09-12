@@ -1,4 +1,4 @@
-import 'package:flutter_application_1/domain/weather/weather.dart';
+import 'package:flutter_application_1/domain/weather_notifier/weather.dart';
 import 'package:weather_pack/weather_pack.dart';
 
 class WeatherRepository {
