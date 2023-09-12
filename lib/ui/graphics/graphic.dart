@@ -1,11 +1,13 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
-import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
+import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/json_loader.dart';
-import '../../domain/user_data_service.dart';
+import '../../domain/records_notifier.dart';
 
 class LineChartSample2 extends StatefulWidget {
   const LineChartSample2({super.key});
@@ -20,28 +22,22 @@ class _LineChartSample2State extends State<LineChartSample2> {
     Colors.blue,
   ];
   bool showAvg = false;
-  late UserDataService _dataService;
-  late List<UserRecord> _dataRecords = [];
+  //late UserStatusNotifier _statusNotifier;
+  late List<UserRecord> _dataRecords;
   // ignore: avoid_void_async
-  void addRecordsToData() async {
-    _dataRecords = [];
-    _dataRecords.addAll(await _dataService.loadRecords());
 
-    setState(() {});
-  }
-
-  late UserStatusNotifier? userStatusController;
-  @override
-  void initState() {
-    super.initState();
-    _dataService = UserDataService(const JsonLoader());
-    addRecordsToData();
-    //_dataService.addAll([1, 2, 3, 4, 5]);
-  }
+  late UserRecordsNotifier? userStatusNotifier;
 
   @override
   Widget build(BuildContext context) {
-    userStatusController = context.watch<UserStatusNotifier>();
+    userStatusNotifier = context.watch<UserRecordsNotifier>(); // не хочет работать
+    switch (userStatusNotifier?.value) {
+      case RecordsNotifierData(data: final data):
+        _dataRecords = data;
+      default:
+        _dataRecords = [];
+        break;
+    }
     return Stack(
       children: <Widget>[
         AspectRatio(
@@ -88,53 +84,25 @@ class _LineChartSample2State extends State<LineChartSample2> {
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text = Text(
-            _dataRecords.isNotEmpty
-                ? _dataRecords[0].timeOfRecord.hour.toString()
-                : '0',
-            style: style);
+        text = linePattirnWidget(0);
         break;
       case 2:
-        text = Text(
-            _dataRecords.length >= 2
-                ? _dataRecords[1].timeOfRecord.hour.toString()
-                : '0',
-            style: style);
+        text = text = linePattirnWidget(1);
         break;
       case 4:
-        text = Text(
-            _dataRecords.length >= 3
-                ? _dataRecords[2].timeOfRecord.hour.toString()
-                : '0',
-            style: style);
+        text = linePattirnWidget(2);
         break;
       case 6:
-        text = Text(
-            _dataRecords.length >= 4
-                ? _dataRecords[3].timeOfRecord.hour.toString()
-                : '0',
-            style: style);
+        text = linePattirnWidget(3);
         break;
       case 8:
-        text = Text(
-            _dataRecords.length >= 5
-                ? _dataRecords[4].timeOfRecord.hour.toString()
-                : '0',
-            style: style);
+        text = linePattirnWidget(4);
         break;
       case 10:
-        text = Text(
-            _dataRecords.length >= 6
-                ? _dataRecords[5].timeOfRecord.hour.toString()
-                : '0',
-            style: style);
+        text = linePattirnWidget(5);
         break;
       case 12:
-        text = Text(
-            _dataRecords.length >= 7
-                ? _dataRecords[6].timeOfRecord.hour.toString()
-                : '0',
-            style: style);
+        text = linePattirnWidget(6);
         break;
       default:
         text = const Text('', style: style);
@@ -145,6 +113,19 @@ class _LineChartSample2State extends State<LineChartSample2> {
       axisSide: meta.axisSide,
       child: text,
     );
+  }
+
+  Widget linePattirnWidget(int idx) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    return Text(
+        _dataRecords.length >= idx + 1
+            ? _dataRecords[idx].timeOfRecord.hour.toString()
+            : '0',
+        style: style);
+    ;
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
@@ -258,29 +239,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
       lineBarsData: [
         lineChart(
           context,
-          userStatusController?.makeFLSpots(_dataRecords, true) ??
-              const [
-                FlSpot(0, 3),
-                FlSpot(2.6, 2),
-                FlSpot(4.9, 5),
-                FlSpot(6.8, 3.1),
-                FlSpot(8, 4),
-                FlSpot(9.5, 3),
-                FlSpot(11, 4),
-              ],
+          makeFLSpots(_dataRecords, true),
         ),
         lineChart(
           context,
-          userStatusController?.makeFLSpots(_dataRecords, false) ??
-              const [
-                FlSpot(0, 3),
-                FlSpot(2.6, 2),
-                FlSpot(4.9, 5),
-                FlSpot(6.8, 3.1),
-                FlSpot(8, 4),
-                FlSpot(9.5, 3),
-                FlSpot(11, 4),
-              ],
+          makeFLSpots(_dataRecords, false),
         ),
       ],
     );
@@ -403,5 +366,19 @@ class _LineChartSample2State extends State<LineChartSample2> {
         ),
       ],
     );
+  }
+
+  List<FlSpot> makeFLSpots(List<UserRecord> records, bool isSys) {
+    List<FlSpot> spots = [];
+    double index = 2;
+    for (int i = 0; i < records.length; i++) {
+      if (isSys) {
+        spots.add(FlSpot(index - 2, 2.0 + (records[i].sys! - 60.0) / 10.0));
+      } else {
+        spots.add(FlSpot(index - 2, 2.0 + (records[i].dia! - 60.0) / 10.0));
+      }
+      index += 2;
+    }
+    return spots;
   }
 }

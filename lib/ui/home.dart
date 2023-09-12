@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/class_instances.dart';
-import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/notification_service/notification_service.dart';
-import 'package:flutter_application_1/domain/user_data_service.dart';
-import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
-import 'package:flutter_application_1/sceens_to_show_once/set_up_prefs_screen.dart';
+import 'package:flutter_application_1/domain/records_notifier.dart';
+import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
+import 'package:flutter_application_1/ui/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -35,21 +34,24 @@ class HomeStateError extends HomeState {
   final String message;
 }
 
-class HomeStateSetUpPrefs extends HomeState {
-  const HomeStateSetUpPrefs();
-  //final SPController sp;
+class HomeStateDataEmpty extends HomeState {
+  const HomeStateDataEmpty();
 }
 
-class RecordsNotifier extends ValueNotifier<HomeState> {
-  StorageRepository? storage;
-  RecordsNotifier({
-    required this.dataService,
-    this.storage = null, // todo: внедрить через провайдера
+class StepperHomeState extends HomeState {
+  const StepperHomeState();
+}
+
+class HomeStateNotifier extends ValueNotifier<HomeState> {
+  HomeStateNotifier({
+    required this.userRecordsNotifier,
+    required this.storage,
   }) : super(const HomeStateLoading()) {
-    loadRecords();
+    load();
   }
 
-  final UserDataService dataService;
+  final UserRecordsNotifier userRecordsNotifier;
+  final StorageRepository storage;
 
   Future<void> addRecord({
     int sys = 120,
@@ -58,13 +60,28 @@ class RecordsNotifier extends ValueNotifier<HomeState> {
     required Weather weather,
   }) async {
     value = const HomeStateLoading();
-    dataService.addRecord(sys: sys, dia: dia, pulse: pulse, weather: weather);
-
-    value = HomeStateData(await dataService.loadRecords());
+    userRecordsNotifier.saveRecord(
+      sys: sys,
+      dia: dia,
+      pulse: pulse,
+      weather: weather,
+    );
   }
 
-  Future<void> loadRecords() async {
-    value = HomeStateData(await dataService.loadRecords());
+  Future<void> load() async {
+    final isTimeToStepper =
+        storage.storage.getBool(StorageStore.isTimeToStepperKey) ??
+            StorageStore.isTimeToStepperDefaultValue;
+    if (isTimeToStepper) {
+      value = const StepperHomeState();
+      return;
+    }
+
+    value = switch (userRecordsNotifier.value) {
+      RecordsNotifierData(data: final records) => HomeStateData(records),
+      RecordsNotifierLoading() => const HomeStateLoading(),
+      RecordsNotifierEmpty() => const HomeStateDataEmpty(),
+    };
   }
 }
 
@@ -73,10 +90,25 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<RecordsNotifier>(
-      create: (_) => RecordsNotifier(
-        dataService: UserDataService(const JsonLoader()),
-      ),
+    // todo: я внедрил это здесь. Но если тебе нужна UserDataService в другом месте,
+    //  то здесь ты её можешь получить через `context.watch<UserDataService>()`
+    // и тогда ты автоматически избавишься от Proxy
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProxyProvider2<UserRecordsNotifier, StorageRepository,
+            HomeStateNotifier>(
+          create: (context) => HomeStateNotifier(
+            userRecordsNotifier: context.read<UserRecordsNotifier>(),
+            storage: context.read<StorageRepository>(),
+          ),
+          update:
+              (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
+                  HomeStateNotifier(
+            userRecordsNotifier: userRecordsNotifier,
+            storage: storage,
+          ),
+        ),
+      ],
       builder: (context, _) {
         return Scaffold(
           appBar: AppBar(
@@ -102,13 +134,13 @@ class HomePage extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                final recordsNotifier = context.read<RecordsNotifier>();
-                final userStatusNotifier = context.read<UserStatusNotifier>();
+                final recordsNotifier = context.read<HomeStateNotifier>();
+                final userStatusNotifier = context.read<UserRecordsNotifier>();
 
                 showDialog(
                   context: context,
                   builder: (context) {
-                    return Provider.value(
+                    return ChangeNotifierProvider.value(
                       value: userStatusNotifier,
                       child: InputRecordDialog(
                         onDone: recordsNotifier.addRecord,
@@ -120,20 +152,23 @@ class HomePage extends StatelessWidget {
             ),
             onPressed: () {},
           ),
-          body: Consumer<RecordsNotifier>(
-            builder: (context, recordsNotifier, child) {
-              final recordsState = recordsNotifier.value;
-
-              return switch (recordsState) {
-                HomeStateData(data: final records) => ListView.separated(
+          body: Consumer<HomeStateNotifier>(
+            builder: (context, homeStateNotifier, child) {
+              final recordsState = homeStateNotifier.value;
+              Widget child;
+              switch (recordsState) {
+                case HomeStateData(data: final records):
+                  child = ListView.separated(
                     separatorBuilder: (context, index) {
                       final time = records[index].timeOfRecord;
+
                       if (index == 0 ||
                           records[index - 1].timeOfRecord.day !=
                               records[index].timeOfRecord.day) {
                         return Card(
                           child: Text(
-                              '${time.day} ${time.month} ${time.year} года'),
+                            '${time.day} ${time.month} ${time.year} года',
+                          ),
                         );
                       } else {
                         return const SizedBox.shrink();
@@ -144,13 +179,21 @@ class HomePage extends StatelessWidget {
                     itemBuilder: (BuildContext context, int position) {
                       return _RowRecords(record: records[position]);
                     },
-                  ),
-                HomeStateLoading() =>
-                  loadingRecordsWidget(context, recordsNotifier),
-                HomeStateError(message: final message) =>
-                  Center(child: Text(message)),
-                HomeStateSetUpPrefs() => const SetUpSharedPreferencesScreen(),
-              };
+                  );
+                case HomeStateLoading():
+                  child = const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                case HomeStateError(message: final message):
+                  child = Center(child: Text(message));
+                case StepperHomeState():
+                  child = const SetUpSharedPreferencesScreen();
+                case HomeStateDataEmpty():
+                  child = const Center(
+                    child: Text('У вас нет сохранений'),
+                  );
+              }
+              return child;
             },
           ),
           drawer: SafeArea(
@@ -166,7 +209,11 @@ class HomePage extends StatelessWidget {
                     title: const Text('Настройки'),
                     onTap: () => Navigator.of(context).pushNamed('/settings'),
                   ),
-                  ListTile(title: const Text('Уведомления'), onTap: () {}),
+                  ListTile(
+                    title: const Text('Уведомления'),
+                    onTap: () =>
+                        Navigator.of(context).pushNamed('/notifications'),
+                  ),
                   Builder(
                     builder: (context) {
                       final isDark =
@@ -192,16 +239,6 @@ class HomePage extends StatelessWidget {
       },
     );
   }
-
-  Widget loadingRecordsWidget(
-    BuildContext context,
-    RecordsNotifier recordsNotifier,
-  ) {
-    recordsNotifier.loadRecords();
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
 }
 
 class _RowRecords extends StatelessWidget {
@@ -214,7 +251,7 @@ class _RowRecords extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String currentTime =
-        '${record.timeOfRecord.hour}:${record.timeOfRecord.minute}';
+        '${record.timeOfRecord.hour}:${record.timeOfRecord.minute > 9 ? record.timeOfRecord.minute : '0${record.timeOfRecord.minute}'}';
     // используем тут этот record
     print('build: ${record.dia}');
     return GestureDetector(
@@ -230,6 +267,9 @@ class _RowRecords extends StatelessWidget {
       child: Card(
         child: Row(
           children: [
+            const SizedBox(
+              width: 4,
+            ),
             DecoratedBox(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -241,38 +281,65 @@ class _RowRecords extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              width:
-                  10, // тут spacer создаёт лишнее пространство, поэтому на мой взгляд SizedBox вполне удобен здесь
+              width: 7,
             ),
             Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(right: 20),
+                  padding: const EdgeInsets.only(
+                    right: 5,
+                    bottom: 3,
+                  ),
                   child: Text(
-                    currentTime, // вместо Time буду подставлять позже конкретное время
+                    currentTime,
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ),
-                Text(record.sys.toString()),
+                Text(
+                  record.sys.toString(),
+                  style: const TextStyle(fontSize: 20),
+                ),
               ],
             ),
-            const Spacer(),
+            const SizedBox(
+              width: 7,
+            ),
             const Column(
               children: <Widget>[
-                Text('SYS'),
-                Text('мм.рт.ст'),
+                Text(
+                  'SYS',
+                  style: TextStyle(fontSize: 13),
+                ),
+                Text(
+                  'мм.рт.ст',
+                  style: TextStyle(fontSize: 13),
+                ),
               ],
             ),
-            const Spacer(),
-            Text(record.dia.toString()),
-            const Spacer(),
+            const SizedBox(
+              width: 50,
+            ),
+            Text(record.dia.toString(), style: const TextStyle(fontSize: 20)),
+            const SizedBox(
+              width: 10,
+            ),
             const Column(
               children: <Widget>[
-                Text('DIA'),
-                Text('мм.рт.ст'),
+                Text(
+                  'DIA',
+                  style: TextStyle(fontSize: 13),
+                ),
+                Text(
+                  'мм.рт.ст',
+                  style: TextStyle(fontSize: 13),
+                ),
               ],
             ),
             const Spacer(),
-            Text(record.pulse.toString()),
+            Text(record.pulse.toString(), style: const TextStyle(fontSize: 20)),
+            const SizedBox(
+              width: 30,
+            ),
           ],
         ),
       ),

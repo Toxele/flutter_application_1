@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
-import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
+import 'package:flutter_application_1/trash/code_ruiner.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
+import 'package:flutter_application_1/ui/notifications_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'data/geolocation_repository.dart';
+import 'data/json_loader.dart';
 import 'data/storage_repository.dart';
 import 'domain/notification_service/notification_service.dart';
+import 'domain/user_records_notifier/user_records_notifier.dart';
 import 'domain/weather/weather_model.dart';
 import 'domain/weather/weather_notifier.dart';
 import 'ui/home.dart';
@@ -36,6 +39,12 @@ Future<void> main() async {
         Provider<WeatherRepository>(
           create: (_) => WeatherRepository(),
         ),
+        ChangeNotifierProvider<UserRecordsNotifier>(
+          create: (_) => UserRecordsNotifier(
+            serviceLoader: const JsonLoader(),
+            storageRepo: storageRepo,
+          ),
+        ),
         ChangeNotifierProxyProvider2<GeolocationService, WeatherRepository,
             WeatherNotifier>(
           create: (context) => WeatherNotifier(
@@ -47,9 +56,6 @@ Future<void> main() async {
             geolocationRepository: geolocationRepo,
             weatherRepository: weatherRepository,
           ),
-        ),
-        Provider<UserStatusNotifier>(
-          create: (_) => UserStatusNotifier(storageRepo),
         ),
       ],
       child: const GHFlutterApp(),
@@ -84,6 +90,7 @@ class GHFlutterApp extends StatelessWidget {
             '/': (context) => const HomePage(),
             '/graph': (context) => GraphScreen(),
             '/settings': (context) => const SettingsScreen(),
+            '/notifications': (context) => const NotificationsScreen(),
             //'/recordingAdd':(context) => MyDialog(onDone: )
           },
         );

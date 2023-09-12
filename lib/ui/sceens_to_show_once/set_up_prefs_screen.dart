@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/storage_repository.dart';
+import 'package:flutter_application_1/utils/text_field_pattern.dart';
+import 'package:provider/provider.dart';
 
 class SetUpSharedPreferencesScreen extends StatefulWidget {
   const SetUpSharedPreferencesScreen({super.key});
@@ -12,9 +15,12 @@ class _SetUpSharedPreferencesScreenState
     extends State<SetUpSharedPreferencesScreen> {
   @override
   int _index = 0;
-
+  double _weight = 0.0;
+  double _height = 0.0;
   @override
   Widget build(BuildContext context) {
+    final StorageRepository storageRepository =
+        context.watch<StorageRepository>();
     return Stepper(
       currentStep: _index,
       onStepCancel: () {
@@ -25,10 +31,17 @@ class _SetUpSharedPreferencesScreenState
         }
       },
       onStepContinue: () {
-        if (_index <= 0) {
+        if (_index <= 1) {
           setState(() {
             _index += 1;
           });
+        } else {
+          storageRepository.storage.setDouble(
+                StorageStore.weigthKey, _weight ?? 0.0);
+          storageRepository.storage
+              .setDouble(StorageStore.heightKey, _height ?? 0.0);
+          storageRepository.storage
+              .setBool(StorageStore.isTimeToStepperKey, true);
         }
       },
       onStepTapped: (int index) {
@@ -37,22 +50,25 @@ class _SetUpSharedPreferencesScreenState
         });
       },
       steps: <Step>[
+        const Step(
+          title: Text('Укажите ваш пол'),
+          content: RadioListTileUser(),
+        ),
         Step(
-          title: const Text('Укажите ваш пол'),
-          content: Column(
-            children: [
-              // TODO: add radio
-              const RadioListTileUser(),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: const Text('Продолжить'),
-              ),
-            ],
+          title: const Text('Укажите ваш вес в килограммах'),
+          content: TextFieldPattern(
+            onEdit: (String value) => _weight = double.tryParse(value) ?? StorageStore.weigth,
+            value: StorageStore.weigth.toString(),
+            valueName: '',
           ),
         ),
-        const Step(
-          title: Text('Step 2 title'),
-          content: Text('Content for Step 2'),
+        Step(
+          title: const Text('Укажите ваш рост в сантиметрах'),
+          content: TextFieldPattern(
+            onEdit: (String value) => _height = double.tryParse(value) ?? StorageStore.height,
+            value: StorageStore.height.toString(),
+            valueName: '',
+          ),
         ),
       ],
     );
@@ -73,6 +89,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
 
   @override
   Widget build(BuildContext context) {
+    final storage = context.watch<StorageRepository>();
     return Column(
       children: <Widget>[
         RadioListTile<User>(
@@ -82,6 +99,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
           onChanged: (User? value) {
             setState(() {
               _character = value;
+              storage.storage.setBool(StorageStore.isManKey, true);
             });
           },
         ),
@@ -92,6 +110,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
           onChanged: (User? value) {
             setState(() {
               _character = value;
+              storage.storage.setBool(StorageStore.isManKey, false);
             });
           },
         ),

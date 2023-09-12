@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as default_values;
-import 'package:flutter_application_1/domain/user_status_control_service/user_status_controller.dart';
+import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
 import 'package:flutter_application_1/domain/weather/weather_notifier.dart';
+import 'package:flutter_application_1/trash/code_ruiner.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/weather/weather.dart';
+import '../../utils/text_field_pattern.dart';
 
 class _InputRecord {
   String sys = '';
@@ -14,6 +16,7 @@ class _InputRecord {
   String temperature = '';
   String pressure = '';
   String cloudiness = '';
+  
 }
 
 class InputRecordDialog extends StatelessWidget {
@@ -36,7 +39,7 @@ class InputRecordDialog extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final record = context.read<_InputRecord>();
-              final userStatus = context.read<UserStatusNotifier>();
+              final userStatus = context.read<UserRecordsNotifier>();
 
               final sys =
                   int.tryParse(record.sys) ?? default_values.defaultZero;
@@ -47,7 +50,6 @@ class InputRecordDialog extends StatelessWidget {
               final temperature = double.tryParse(record.temperature);
               final pressure = double.tryParse(record.pressure);
               final cloudiness = double.tryParse(record.cloudiness);
-
               if (await userStatus.acceptRecord(sys, dia, pulse)) {
                 onDone.call(
                   sys: sys,
@@ -59,7 +61,6 @@ class InputRecordDialog extends StatelessWidget {
                     cloudiness: cloudiness,
                   ),
                 );
-
                 if (context.mounted) {
                   Navigator.of(context).pop();
                 }
@@ -71,10 +72,11 @@ class InputRecordDialog extends StatelessWidget {
             builder: (context, weatherNotifier, _) {
               final Weather? weather = weatherNotifier.weather;
               final record = context.read<_InputRecord>();
-              record.temperature = weather?.temperature.toString() ?? '';
-              record.cloudiness = weather?.cloudiness.toString() ?? '';
-              record.pressure = weather?.pressure.toString() ?? '';
-
+              //TODO : покрутить этот момент
+              record.temperature = weather?.temperature.toString() ?? ''; 
+              record.pressure = weather?.pressure.toString() ?? ''; 
+              record.cloudiness = weather?.cloudiness.toString() ?? ''; 
+             
               return ListView(
                 children: [
                   TextFieldPattern(
@@ -117,44 +119,4 @@ class InputRecordDialog extends StatelessWidget {
   }
 
   static const _defaultText = "Данные ещё загружаются";
-}
-
-class TextFieldPattern extends StatelessWidget {
-  const TextFieldPattern({
-    super.key,
-    required this.onEdit,
-    required this.value,
-    required this.valueName,
-  });
-
-  final String value;
-  final String valueName;
-  final Function(String value) onEdit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 25),
-        Center(
-          child: Text(
-            valueName,
-            style: const TextStyle(fontSize: 20),
-          ),
-        ),
-        TextField(
-          decoration: InputDecoration(
-            hintText: value,
-          ),
-          // todo: сделать в качестве параметров виджета, потому что
-          // каждой формочке нужны свои настройки
-          textAlign: TextAlign.center,
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-          onChanged: onEdit,
-        ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
 }
