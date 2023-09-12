@@ -36,8 +36,8 @@ class _SetUpSharedPreferencesScreenState
             _index += 1;
           });
         } else {
-          storageRepository.storage.setDouble(
-                StorageStore.weigthKey, _weight ?? 0.0);
+          storageRepository.storage
+              .setDouble(StorageStore.weightKey, _weight ?? 0.0);
           storageRepository.storage
               .setDouble(StorageStore.heightKey, _height ?? 0.0);
           storageRepository.storage
@@ -57,15 +57,17 @@ class _SetUpSharedPreferencesScreenState
         Step(
           title: const Text('Укажите ваш вес в килограммах'),
           content: TextFieldPattern(
-            onEdit: (String value) => _weight = double.tryParse(value) ?? StorageStore.weigth,
-            value: StorageStore.weigth.toString(),
+            onEdit: (String value) =>
+                _weight = double.tryParse(value) ?? StorageStore.weight,
+            value: StorageStore.weight.toString(),
             valueName: '',
           ),
         ),
         Step(
           title: const Text('Укажите ваш рост в сантиметрах'),
           content: TextFieldPattern(
-            onEdit: (String value) => _height = double.tryParse(value) ?? StorageStore.height,
+            onEdit: (String value) =>
+                _height = double.tryParse(value) ?? StorageStore.height,
             value: StorageStore.height.toString(),
             valueName: '',
           ),

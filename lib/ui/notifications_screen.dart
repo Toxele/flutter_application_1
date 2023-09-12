@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/class_instances.dart';
+import 'package:flutter_application_1/domain/class_instances.dart';
 import 'package:flutter_application_1/domain/model/user_notification_record.dart';
 import 'package:flutter_application_1/domain/user_notification_data_service.dart';
 import 'package:flutter_application_1/ui/shared/notification_record_info_dialog.dart';

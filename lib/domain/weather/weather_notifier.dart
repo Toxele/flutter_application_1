@@ -13,7 +13,7 @@ class WeatherNotifier extends ChangeNotifier {
   }
 
   final WeatherRepository weatherRepository;
-  final GeolocationService geolocationRepository;
+  final GeolocationRepository geolocationRepository;
 
   Weather? weather;
 

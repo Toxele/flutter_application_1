@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 
-class GeolocationService {
-  const GeolocationService();
+class GeolocationRepository {
+  const GeolocationRepository();
 
   Future<Position> determinePosition() async {
     bool serviceEnabled;
@@ -27,6 +27,4 @@ class GeolocationService {
     }
     return Geolocator.getCurrentPosition();
   }
-
-  
 }

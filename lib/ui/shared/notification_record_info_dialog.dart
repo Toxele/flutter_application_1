@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/class_instances.dart';
+import '../../domain/class_instances.dart';
 import '../../domain/notification_service/notification_service.dart';
 
 class NotificationRecordInfoDialog extends StatefulWidget {
@@ -21,7 +21,8 @@ class _NotificationRecordInfoDialogState
         appBar: AppBar(
           actions: [
             IconButton(
-              onPressed: () { // TODO: реализовать передачу в модельку
+              onPressed: () {
+                // TODO: реализовать передачу в модельку
                 context
                     .read<NotificationService>()
                     .showNotificationWithActions();

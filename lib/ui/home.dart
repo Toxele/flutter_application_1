@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
-import 'package:flutter_application_1/data/class_instances.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
+import 'package:flutter_application_1/domain/class_instances.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/notification_service/notification_service.dart';
 import 'package:flutter_application_1/domain/records_notifier.dart';

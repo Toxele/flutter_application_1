@@ -31,8 +31,8 @@ Future<void> main() async {
         Provider<NotificationService>(
           create: (_) => notificationService,
         ),
-        Provider<GeolocationService>(
-          create: (_) => const GeolocationService(),
+        Provider<GeolocationRepository>(
+          create: (_) => const GeolocationRepository(),
         ),
         Provider<WeatherRepository>(
           create: (_) => WeatherRepository(),
@@ -42,10 +42,10 @@ Future<void> main() async {
             storageRepo: storageRepo,
           ),
         ),
-        ChangeNotifierProxyProvider2<GeolocationService, WeatherRepository,
+        ChangeNotifierProxyProvider2<GeolocationRepository, WeatherRepository,
             WeatherNotifier>(
           create: (context) => WeatherNotifier(
-            geolocationRepository: context.read<GeolocationService>(),
+            geolocationRepository: context.read<GeolocationRepository>(),
             weatherRepository: context.read<WeatherRepository>(),
           ),
           update: (_, geolocationRepo, weatherRepository, previousNotifier) =>
