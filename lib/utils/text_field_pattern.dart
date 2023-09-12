@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldPattern extends StatelessWidget {
@@ -27,6 +26,12 @@ class TextFieldPattern extends StatelessWidget {
         TextField(
           decoration: InputDecoration(
             hintText: value,
+            filled: true,
+            fillColor: const Color.fromARGB(255, 86, 87, 87),
+            border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
           // todo: сделать в качестве параметров виджета, потому что
           // каждой формочке нужны свои настройки
