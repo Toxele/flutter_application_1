@@ -3,9 +3,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import '../data/json_loader.dart';
 
 sealed class RecordsNotifierState<T> {
   const RecordsNotifierState();
@@ -27,14 +27,9 @@ class RecordsNotifierEmpty<T> extends RecordsNotifierState<T> {
 
 abstract base class RecordsNotifier<T>
     extends ValueNotifier<RecordsNotifierState<T>> {
-  RecordsNotifier({required JsonLoader serviceLoader})
-      : _serviceLoader = serviceLoader,
-        super(const RecordsNotifierLoading()) {
+  RecordsNotifier() : super(const RecordsNotifierLoading()) {
     load();
   }
-
-  // todo: реализовать
-  final JsonLoader _serviceLoader;
 
   String get fileName;
 

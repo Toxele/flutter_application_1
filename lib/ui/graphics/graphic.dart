@@ -1,12 +1,9 @@
-import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/json_loader.dart';
 import '../../domain/records_notifier.dart';
 
 class LineChartSample2 extends StatefulWidget {
@@ -30,7 +27,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   @override
   Widget build(BuildContext context) {
-    userStatusNotifier = context.watch<UserRecordsNotifier>(); // не хочет работать
+    userStatusNotifier =
+        context.watch<UserRecordsNotifier>(); // не хочет работать
     switch (userStatusNotifier?.value) {
       case RecordsNotifierData(data: final data):
         _dataRecords = data;

@@ -7,8 +7,9 @@ import 'package:flutter_application_1/domain/weather/weather.dart';
 import '../records_notifier.dart';
 
 base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
-  UserRecordsNotifier(
-      {required super.serviceLoader, required this.storageRepo});
+  UserRecordsNotifier({
+    required this.storageRepo,
+  });
 
   @override
   String get fileName => '\\records.json';
@@ -21,7 +22,7 @@ base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
     for (final record in jsonDecode(data) as List) {
       recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
     }
-    
+
     return recordList.reversed.toList();
   }
 
@@ -30,7 +31,7 @@ base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
     int dia = 80,
     int pulse = 75,
     required Weather weather,
-  }) async { 
+  }) async {
     if (value case RecordsNotifierData(data: final data)) {
       value = const RecordsNotifierLoading();
 
@@ -40,7 +41,7 @@ base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
         pulse: pulse,
         weather: weather,
         timeOfRecord: DateTime.now(),
-      ); 
+      );
 
       data.add(user);
       final recordsRaw = data.map((e) => e.toJson()).toList();

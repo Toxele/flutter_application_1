@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
-import 'package:flutter_application_1/trash/code_ruiner.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
 import 'package:flutter_application_1/ui/notifications_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'data/geolocation_repository.dart';
-import 'data/json_loader.dart';
 import 'data/storage_repository.dart';
 import 'domain/notification_service/notification_service.dart';
 import 'domain/user_records_notifier/user_records_notifier.dart';
@@ -41,7 +39,6 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider<UserRecordsNotifier>(
           create: (_) => UserRecordsNotifier(
-            serviceLoader: const JsonLoader(),
             storageRepo: storageRepo,
           ),
         ),

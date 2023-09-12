@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/class_instances.dart';
-import 'package:flutter_application_1/data/json_loader.dart';
 import 'package:flutter_application_1/domain/model/user_notification_record.dart';
-import 'package:flutter_application_1/domain/model/user_record.dart';
 import 'package:flutter_application_1/domain/user_notification_data_service.dart';
-import 'package:flutter_application_1/ui/home.dart';
-import 'package:flutter_application_1/ui/sceens_to_show_once/set_up_prefs_screen.dart';
-import 'package:flutter_application_1/ui/shared/input_record_dialog.dart';
 import 'package:flutter_application_1/ui/shared/notification_record_info_dialog.dart';
-import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:flutter_application_1/ui/shared/user_notify_input_record.dart';
 import 'package:provider/provider.dart';
 
@@ -83,7 +77,6 @@ class NotificationsScreen extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<UserNotifyDataService>(
           create: (_) => UserNotifyDataService(
-              serviceLoader: const JsonLoader(),
               storageRepo: context.read<StorageRepository>()),
         ),
         ChangeNotifierProxyProvider<UserNotifyDataService, HomeStateNotifier>(
