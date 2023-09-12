@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'data/geolocation_repository.dart';
 import 'data/storage_repository.dart';
 import 'data/weather_repository.dart';
-import 'domain/notification_service/notification_service.dart';
+import 'domain/services/notification_service/notification_service.dart';
 import 'domain/user_records_notifier/user_records_notifier.dart';
 import 'domain/weather_notifier/weather_notifier.dart';
 import 'ui/home.dart';
