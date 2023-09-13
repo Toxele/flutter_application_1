@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/default_values.dart'
     as default_values;
-import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
-import 'package:flutter_application_1/domain/weather_notifier/weather_notifier.dart';
+import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
+import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather.dart';
+import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../../domain/weather_notifier/weather.dart';
 import '../../utils/text_field_pattern.dart';
 
 class _InputRecord {
@@ -37,7 +37,7 @@ class InputRecordDialog extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final record = context.read<_InputRecord>();
-              final userStatus = context.read<UserRecordsNotifier>();
+              final userStatus = context.read<HypertensionNotifier>();
 
               final sys =
                   int.tryParse(record.sys) ?? default_values.defaultZero;
