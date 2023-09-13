@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_application_1/data/geolocation_repository.dart';
 import 'package:flutter_application_1/data/weather_repository.dart';
-import 'package:flutter_application_1/domain/weather_notifier/weather.dart';
 import 'package:geolocator/geolocator.dart';
+
+import 'weather.dart';
 
 // todo переделать на ValueNotifier и sealed классы
 class WeatherNotifier extends ChangeNotifier {

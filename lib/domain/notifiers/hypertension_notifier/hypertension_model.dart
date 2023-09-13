@@ -1,20 +1,21 @@
-import 'package:flutter_application_1/domain/weather_notifier/weather.dart';
 import 'package:flutter_application_1/utils/date_time_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'user_record.g.dart';
+import '../weather_notifier/weather.dart';
+
+part 'hypertension_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class UserRecord {
+class HypertensionModel {
   // поля значений, которые вводят пользователь, возможно сюда добавится дата и время
   final int? sys;
   final int? dia;
   final int? pulse;
   final Weather? weather;
   @EpochDateTimeConverter()
-  final DateTime timeOfRecord;
+  final DateTime timeOfRecord; // todo: это время снятия показаний?
 
-  UserRecord({
+  HypertensionModel({
     this.sys,
     this.dia,
     this.pulse,
@@ -22,7 +23,7 @@ class UserRecord {
     required this.timeOfRecord,
   });
 
-  factory UserRecord.fromJson(Map<String, dynamic> json) =>
+  factory HypertensionModel.fromJson(Map<String, dynamic> json) =>
       _$UserRecordFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserRecordToJson(this);
