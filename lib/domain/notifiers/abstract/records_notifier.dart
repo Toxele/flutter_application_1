@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 sealed class RecordsNotifierState<T> {
@@ -25,6 +26,8 @@ class RecordsNotifierEmpty<T> extends RecordsNotifierState<T> {
   const RecordsNotifierEmpty();
 }
 
+/// Класс-уведомитель отвечает за получение и хранение [T]-данных с диска.
+/// По умолчанию используется путь "документы".
 abstract base class RecordsNotifier<T>
     extends ValueNotifier<RecordsNotifierState<T>> {
   RecordsNotifier() : super(const RecordsNotifierLoading()) {
@@ -33,9 +36,8 @@ abstract base class RecordsNotifier<T>
 
   String get fileName;
 
-  // todo: воспользоваться пакетом https://pub.dev/packages/path
   Future<String> get _getPath async =>
-      '${(await getApplicationDocumentsDirectory()).path}$fileName';
+      p.join((await getApplicationDocumentsDirectory()).path, fileName);
 
   @protected
   Future<void> load() async {
@@ -48,8 +50,9 @@ abstract base class RecordsNotifier<T>
       } else {
         value = const RecordsNotifierEmpty();
       }
+    } else {
+      value = const RecordsNotifierEmpty();
     }
-    // todo: value = пустой список
   }
 
   @protected
@@ -65,5 +68,7 @@ abstract base class RecordsNotifier<T>
     await file.writeAsString(encoded);
   }
 
+  /// Хранимые файлы должны преобразовываться в модельки.
+  /// Реализуйте данный метод, чтобы указать способ сериализации.
   Future<T> serializeData(String data);
 }
