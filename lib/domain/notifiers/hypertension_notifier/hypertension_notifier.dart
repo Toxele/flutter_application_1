@@ -1,26 +1,28 @@
 import 'dart:convert';
 
 import 'package:flutter_application_1/data/storage_repository.dart';
-import 'package:flutter_application_1/domain/model/user_record.dart';
-import 'package:flutter_application_1/domain/weather_notifier/weather.dart';
 
-import '../records_notifier.dart';
+import '../abstract/records_notifier.dart';
+import '../weather_notifier/weather.dart';
+import 'hypertension_model.dart';
 
-base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
-  UserRecordsNotifier({
+base class HypertensionNotifier
+    extends RecordsNotifier<List<HypertensionModel>> {
+  HypertensionNotifier({
     required this.storageRepo,
   });
 
   @override
-  String get fileName => '\\records.json';
+  String get fileName => '\\hypertension_data.json';
 
   final StorageRepository storageRepo;
 
   @override
-  Future<List<UserRecord>> serializeData(String data) async {
-    final recordList = <UserRecord>[];
+  Future<List<HypertensionModel>> serializeData(String data) async {
+    final recordList = <HypertensionModel>[];
     for (final record in jsonDecode(data) as List) {
-      recordList.add(UserRecord.fromJson(record as Map<String, dynamic>));
+      recordList
+          .add(HypertensionModel.fromJson(record as Map<String, dynamic>));
     }
 
     return recordList.reversed.toList();
@@ -32,10 +34,11 @@ base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
     int pulse = 75,
     required Weather weather,
   }) async {
+    // todo подумать здесь над логикой
     if (value case RecordsNotifierData(data: final data)) {
       value = const RecordsNotifierLoading();
 
-      final user = UserRecord(
+      final user = HypertensionModel(
         sys: sys,
         dia: dia,
         pulse: pulse,
@@ -51,6 +54,7 @@ base class UserRecordsNotifier extends RecordsNotifier<List<UserRecord>> {
     }
   }
 
+  /// todo: подумать над логикой этого всего
   Future<bool> acceptRecord(int sys, int dia, int pulse) async {
     /// todo: это всё исправить на нормальные ключи и значения по умолчанию.
     storageRepo.storage.setInt('Dia Min', 70); // это временно

@@ -1,14 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_notification_record.dart';
+part of 'event_notification.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserNotificationRecord _$UserNotificationRecordFromJson(
-        Map<String, dynamic> json) =>
-    UserNotificationRecord(
+EventNotification _$UserNotificationRecordFromJson(Map<String, dynamic> json) =>
+    EventNotification(
       text: json['text'] as String?,
       timeToNotificate: const EpochDateTimeConverter()
           .fromJson(json['timeToNotificate'] as int),
@@ -16,7 +15,7 @@ UserNotificationRecord _$UserNotificationRecordFromJson(
     );
 
 Map<String, dynamic> _$UserNotificationRecordToJson(
-        UserNotificationRecord instance) =>
+        EventNotification instance) =>
     <String, dynamic>{
       'text': instance.text,
       'timeToNotificate':

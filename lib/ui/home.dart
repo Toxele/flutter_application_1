@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/data/storage_repository.dart';
-import 'package:flutter_application_1/domain/class_instances.dart';
-import 'package:flutter_application_1/domain/model/user_record.dart';
-import 'package:flutter_application_1/domain/records_notifier.dart';
+import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
+import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
+import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
+import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather.dart';
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
-import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
+import 'package:flutter_application_1/ui/class_instances.dart';
 import 'package:flutter_application_1/ui/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:provider/provider.dart';
 
-import '../domain/weather_notifier/weather.dart';
 import 'shared/input_record_dialog.dart';
 import 'theme_notifier.dart';
 
@@ -21,7 +21,7 @@ sealed class HomeState {
 class HomeStateData extends HomeState {
   const HomeStateData(this.data);
 
-  final List<UserRecord> data;
+  final List<HypertensionModel> data;
 }
 
 class HomeStateLoading extends HomeState {
@@ -50,7 +50,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
     load();
   }
 
-  final UserRecordsNotifier userRecordsNotifier;
+  final HypertensionNotifier userRecordsNotifier;
   final StorageRepository storage;
 
   Future<void> addRecord({
@@ -93,10 +93,10 @@ class HomePage extends StatelessWidget {
     
     return MultiProvider(
       providers: [
-        ChangeNotifierProxyProvider2<UserRecordsNotifier, StorageRepository,
+        ChangeNotifierProxyProvider2<HypertensionNotifier, StorageRepository,
             HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
-            userRecordsNotifier: context.read<UserRecordsNotifier>(),
+            userRecordsNotifier: context.read<HypertensionNotifier>(),
             storage: context.read<StorageRepository>(),
           ),
           update:
@@ -133,7 +133,7 @@ class HomePage extends StatelessWidget {
               icon: const Icon(Icons.add),
               onPressed: () {
                 final recordsNotifier = context.read<HomeStateNotifier>();
-                final userStatusNotifier = context.read<UserRecordsNotifier>();
+                final userStatusNotifier = context.read<HypertensionNotifier>();
 
                 showDialog(
                   context: context,
@@ -240,7 +240,7 @@ class HomePage extends StatelessWidget {
 }
 
 class _RowRecords extends StatelessWidget {
-  final UserRecord record;
+  final HypertensionModel record;
 
   const _RowRecords({
     required this.record,

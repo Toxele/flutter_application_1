@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../domain/class_instances.dart';
+import '../class_instances.dart';
 
 class RecordInfoDialog extends StatefulWidget {
   const RecordInfoDialog({super.key});

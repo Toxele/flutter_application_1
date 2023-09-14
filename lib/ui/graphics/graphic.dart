@@ -1,10 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/domain/model/user_record.dart';
-import 'package:flutter_application_1/domain/user_records_notifier/user_records_notifier.dart';
+import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
+import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
+import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
 import 'package:provider/provider.dart';
-
-import '../../domain/records_notifier.dart';
 
 class LineChartSample2 extends StatefulWidget {
   const LineChartSample2({super.key});
@@ -20,15 +19,15 @@ class _LineChartSample2State extends State<LineChartSample2> {
   ];
   bool showAvg = false;
   //late UserStatusNotifier _statusNotifier;
-  late List<UserRecord> _dataRecords;
+  late List<HypertensionModel> _dataRecords;
   // ignore: avoid_void_async
 
-  late UserRecordsNotifier? userStatusNotifier;
+  late HypertensionNotifier? userStatusNotifier;
 
   @override
   Widget build(BuildContext context) {
     userStatusNotifier =
-        context.watch<UserRecordsNotifier>(); // не хочет работать
+        context.watch<HypertensionNotifier>(); // не хочет работать
     switch (userStatusNotifier?.value) {
       case RecordsNotifierData(data: final data):
         _dataRecords = data;
@@ -366,7 +365,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
     );
   }
 
-  List<FlSpot> makeFLSpots(List<UserRecord> records, bool isSys) {
+  List<FlSpot> makeFLSpots(List<HypertensionModel> records, bool isSys) {
     List<FlSpot> spots = [];
     double index = 2;
     for (int i = 0; i < 7; i++) {

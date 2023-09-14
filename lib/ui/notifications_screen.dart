@@ -1,16 +1,16 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/domain/class_instances.dart';
-import 'package:flutter_application_1/domain/model/user_notification_record.dart';
-import 'package:flutter_application_1/domain/user_notification_data_service.dart';
+import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
+import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/event_notification.dart';
+import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/events_notification_notifier.dart';
+import 'package:flutter_application_1/ui/class_instances.dart';
 import 'package:flutter_application_1/ui/shared/notification_record_info_dialog.dart';
 import 'package:flutter_application_1/ui/shared/user_notify_input_record.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/storage_repository.dart';
-import '../domain/records_notifier.dart';
 
 sealed class HomeState {
   const HomeState();
@@ -19,7 +19,7 @@ sealed class HomeState {
 class HomeStateData extends HomeState {
   const HomeStateData(this.data);
 
-  final List<UserNotificationRecord> data;
+  final List<EventNotification> data;
 }
 
 class HomeStateLoading extends HomeState {
@@ -45,7 +45,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
     load();
   }
 
-  final UserNotifyDataService userNotificationRecordsNotifier;
+  final EventsNotificationNotifier userNotificationRecordsNotifier;
 
   Future<void> addRecord({
     required String message,
@@ -75,17 +75,14 @@ class NotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserNotifyDataService>(
-          create: (_) => UserNotifyDataService(
-            storageRepo: context.read<StorageRepository>(),
-          ),
+        ChangeNotifierProvider<EventsNotificationNotifier>(
+          create: (_) => EventsNotificationNotifier(),
         ),
-        ChangeNotifierProxyProvider2<UserNotifyDataService, StorageRepository,
+        ChangeNotifierProxyProvider<EventsNotificationNotifier,
             HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
             userNotificationRecordsNotifier:
-                context.read<UserNotifyDataService>(),
-            storage: context.read<StorageRepository>(),
+                context.read<EventsNotificationNotifier>(),
           ),
           update:
               (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
@@ -104,7 +101,7 @@ class NotificationsScreen extends StatelessWidget {
               onPressed: () {
                 final recordsNotifier = context.read<HomeStateNotifier>();
                 final userStatusNotifier =
-                    context.read<UserNotifyDataService>();
+                    context.read<EventsNotificationNotifier>();
 
                 showDialog(
                   context: context,
@@ -153,7 +150,7 @@ class NotificationsScreen extends StatelessWidget {
 }
 
 class _RowUserRecords extends StatelessWidget {
-  final UserNotificationRecord record;
+  final EventNotification record;
 
   const _RowUserRecords({
     required this.record,
