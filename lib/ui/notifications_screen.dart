@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/class_instances.dart';
 import 'package:flutter_application_1/domain/model/user_notification_record.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_application_1/domain/user_notification_data_service.dart
 import 'package:flutter_application_1/ui/shared/notification_record_info_dialog.dart';
 import 'package:flutter_application_1/ui/shared/user_notify_input_record.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/storage_repository.dart';
 import '../domain/records_notifier.dart';
@@ -34,10 +37,10 @@ class HomeStateDataEmpty extends HomeState {
 }
 
 class HomeStateNotifier extends ValueNotifier<HomeState> {
-  StorageRepository? storage;
+  final StorageRepository storage;
   HomeStateNotifier({
     required this.userNotificationRecordsNotifier,
-    this.storage, // todo: внедрить через провайдера
+    required this.storage, 
   }) : super(const HomeStateLoading()) {
     load();
   }
@@ -70,22 +73,26 @@ class NotificationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // todo: я внедрил это здесь. Но если тебе нужна UserDataService в другом месте,
-    //  то здесь ты её можешь получить через `context.watch<UserDataService>()`
-    // и тогда ты автоматически избавишься от Proxy
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserNotifyDataService>(
           create: (_) => UserNotifyDataService(
-              storageRepo: context.read<StorageRepository>()),
+            storageRepo: context.read<StorageRepository>(),
+          ),
         ),
-        ChangeNotifierProxyProvider<UserNotifyDataService, HomeStateNotifier>(
+        ChangeNotifierProxyProvider2<UserNotifyDataService, StorageRepository,
+            HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
             userNotificationRecordsNotifier:
                 context.read<UserNotifyDataService>(),
+            storage: context.read<StorageRepository>(),
           ),
-          update: (_, userRecordsNotifier, __) => HomeStateNotifier(
-              userNotificationRecordsNotifier: userRecordsNotifier),
+          update:
+              (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
+                  HomeStateNotifier(
+            userNotificationRecordsNotifier: userRecordsNotifier,
+            storage: storage,
+          ),
         ),
       ],
       builder: (context, _) {

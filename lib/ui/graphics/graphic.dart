@@ -172,7 +172,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       );
       // todo: настроить отображение y
       print(touchedSpot);
-      return LineTooltipItem(touchedSpot.y.toString(), textStyle);
+      return LineTooltipItem((60 + 10 * (touchedSpot.y - 2)).toString(), textStyle);
     }).toList();
   }
 
@@ -369,7 +369,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
   List<FlSpot> makeFLSpots(List<UserRecord> records, bool isSys) {
     List<FlSpot> spots = [];
     double index = 2;
-    for (int i = 0; i < records.length; i++) {
+    for (int i = 0; i < 7; i++) {
       if (isSys) {
         spots.add(FlSpot(index - 2, 2.0 + (records[i].sys! - 60.0) / 10.0));
       } else {

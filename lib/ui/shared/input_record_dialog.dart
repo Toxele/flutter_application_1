@@ -70,7 +70,7 @@ class InputRecordDialog extends StatelessWidget {
             builder: (context, weatherNotifier, _) {
               final Weather? weather = weatherNotifier.weather;
               final record = context.read<_InputRecord>();
-              //TODO : покрутить этот момент
+              //TODO : покрутить этот момент // может функцию создать с именованными параметрами? 
               record.temperature = weather?.temperature.toString() ?? '';
               record.pressure = weather?.pressure.toString() ?? '';
               record.cloudiness = weather?.cloudiness.toString() ?? '';

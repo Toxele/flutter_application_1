@@ -22,7 +22,7 @@ class _NotificationRecordInfoDialogState
           actions: [
             IconButton(
               onPressed: () {
-                // TODO: реализовать передачу в модельку
+                // TODO: реализовать передачу в модельку 
                 context
                     .read<NotificationService>()
                     .showNotificationWithActions();

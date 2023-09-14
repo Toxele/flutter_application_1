@@ -90,9 +90,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // todo: я внедрил это здесь. Но если тебе нужна UserDataService в другом месте,
-    //  то здесь ты её можешь получить через `context.watch<UserDataService>()`
-    // и тогда ты автоматически избавишься от Proxy
+    
     return MultiProvider(
       providers: [
         ChangeNotifierProxyProvider2<UserRecordsNotifier, StorageRepository,
