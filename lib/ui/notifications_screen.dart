@@ -78,11 +78,11 @@ class NotificationsScreen extends StatelessWidget {
         ChangeNotifierProvider<EventsNotificationNotifier>(
           create: (_) => EventsNotificationNotifier(),
         ),
-        ChangeNotifierProxyProvider<EventsNotificationNotifier,
+        ChangeNotifierProxyProvider2<EventsNotificationNotifier, StorageRepository,
             HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
             userNotificationRecordsNotifier:
-                context.read<EventsNotificationNotifier>(),
+                context.read<EventsNotificationNotifier>(), storage: context.read<StorageRepository>(),
           ),
           update:
               (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
