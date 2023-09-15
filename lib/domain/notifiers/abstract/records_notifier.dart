@@ -41,13 +41,17 @@ abstract base class RecordsNotifier<T>
   Future<void> load() async {
     final path = await _getPath;
     final file = File(path);
+
     if (await file.exists()) {
+      
       String rawRecordsList = await file.readAsString();
       if (rawRecordsList.isNotEmpty) {
         value = RecordsNotifierData(await serializeData(rawRecordsList));
       } else {
         value = const RecordsNotifierEmpty();
       }
+    } else {
+      value = const RecordsNotifierEmpty();
     }
     // todo: value = пустой список
   }

@@ -179,6 +179,7 @@ class HomePage extends StatelessWidget {
                     },
                   );
                 case HomeStateLoading():
+
                   child = const Center(
                     child: CircularProgressIndicator(),
                   );
