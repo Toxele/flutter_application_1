@@ -34,24 +34,28 @@ base class HypertensionNotifier
     int pulse = 75,
     required Weather weather,
   }) async {
-    // todo подумать здесь над логикой
+    // todo еЩЁ подумать здесь над логикой
+
+    var records = <HypertensionModel>[];
+
     if (value case RecordsNotifierData(data: final data)) {
       value = const RecordsNotifierLoading();
-
-      final user = HypertensionModel(
-        sys: sys,
-        dia: dia,
-        pulse: pulse,
-        weather: weather,
-        timeOfRecord: DateTime.now(),
-      );
-
-      data.add(user);
-      final recordsRaw = data.map((e) => e.toJson()).toList();
-
-      addRecord(recordsRaw);
-      load();
+      records = [...data];
     }
+
+    final user = HypertensionModel(
+      sys: sys,
+      dia: dia,
+      pulse: pulse,
+      weather: weather,
+      timeOfRecord: DateTime.now(),
+    );
+
+    records.add(user);
+    final recordsRaw = records.map((e) => e.toJson()).toList();
+
+    addRecord(recordsRaw);
+    load();
   }
 
   /// todo: подумать над логикой этого всего

@@ -13,10 +13,11 @@ class NotificationService {
   Future<void> init() async {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    notificationAppLaunchDetails = !kIsWeb && Platform.isLinux
-        ? null
-        : await flutterLocalNotificationsPlugin
-            .getNotificationAppLaunchDetails();
+    notificationAppLaunchDetails =
+        kIsWeb || Platform.isLinux || Platform.isWindows
+            ? null
+            : await flutterLocalNotificationsPlugin
+                .getNotificationAppLaunchDetails();
 
     await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(

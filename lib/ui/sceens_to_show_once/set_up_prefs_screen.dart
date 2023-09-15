@@ -13,7 +13,6 @@ class SetUpSharedPreferencesScreen extends StatefulWidget {
 
 class _SetUpSharedPreferencesScreenState
     extends State<SetUpSharedPreferencesScreen> {
-  @override
   int _index = 0;
   double _weight = 0.0;
   double _height = 0.0;
@@ -36,12 +35,10 @@ class _SetUpSharedPreferencesScreenState
             _index += 1;
           });
         } else {
+          storageRepository.storage.setDouble(StorageStore.weightKey, _weight);
+          storageRepository.storage.setDouble(StorageStore.heightKey, _height);
           storageRepository.storage
-              .setDouble(StorageStore.weightKey, _weight ?? 0.0);
-          storageRepository.storage
-              .setDouble(StorageStore.heightKey, _height ?? 0.0);
-          storageRepository.storage
-              .setBool(StorageStore.isTimeToStepperKey, true);
+              .setBool(StorageStore.isTimeToStepperKey, false);
         }
       },
       onStepTapped: (int index) {
