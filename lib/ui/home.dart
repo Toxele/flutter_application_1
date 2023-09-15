@@ -90,7 +90,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return MultiProvider(
       providers: [
         ChangeNotifierProxyProvider2<HypertensionNotifier, StorageRepository,
@@ -175,11 +174,10 @@ class HomePage extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     itemCount: records.length,
                     itemBuilder: (BuildContext context, int position) {
-                      return _RowRecords(record: records[position]);
+                      return _HypertensionTile(record: records[position]);
                     },
                   );
                 case HomeStateLoading():
-
                   child = const Center(
                     child: CircularProgressIndicator(),
                   );
@@ -240,10 +238,10 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _RowRecords extends StatelessWidget {
+class _HypertensionTile extends StatelessWidget {
   final HypertensionModel record;
 
-  const _RowRecords({
+  const _HypertensionTile({
     required this.record,
   });
 
@@ -253,93 +251,101 @@ class _RowRecords extends StatelessWidget {
         '${record.timeOfRecord.hour}:${record.timeOfRecord.minute > 9 ? record.timeOfRecord.minute : '0${record.timeOfRecord.minute}'}';
     // используем тут этот record
     print('build: ${record.dia}');
-    return GestureDetector(
-      onTap: () => showDialog(
-        context: context,
-        builder: (context) {
-          return ChangeNotifierProvider(
-            create: (_) => UserRecordToDisplay(record),
-            child: const RecordInfoDialog(),
-          );
-        },
+    return Card(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
-      child: Card(
-        child: Row(
-          children: [
-            const SizedBox(
-              width: 4,
-            ),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.red,
+      clipBehavior: Clip.hardEdge,
+      child: InkWell(
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) {
+            return ChangeNotifierProvider(
+              create: (_) => UserRecordToDisplay(record),
+              child: const RecordInfoDialog(),
+            );
+          },
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 4,
               ),
-              child: const SizedBox(
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.red,
+                ),
+                child: const SizedBox(
+                  width: 10,
+                  height: 60,
+                ),
+              ),
+              const SizedBox(
+                width: 7,
+              ),
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 5,
+                      bottom: 3,
+                    ),
+                    child: Text(
+                      currentTime,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                  Text(
+                    record.sys.toString(),
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                width: 7,
+              ),
+              const Column(
+                children: <Widget>[
+                  Text(
+                    'SYS',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  Text(
+                    'мм.рт.ст',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                width: 50,
+              ),
+              Text(record.dia.toString(), style: const TextStyle(fontSize: 20)),
+              const SizedBox(
                 width: 10,
-                height: 60,
               ),
-            ),
-            const SizedBox(
-              width: 7,
-            ),
-            Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 5,
-                    bottom: 3,
+              const Column(
+                children: <Widget>[
+                  Text(
+                    'DIA',
+                    style: TextStyle(fontSize: 13),
                   ),
-                  child: Text(
-                    currentTime,
-                    style: const TextStyle(fontSize: 12),
+                  Text(
+                    'мм.рт.ст',
+                    style: TextStyle(fontSize: 13),
                   ),
-                ),
-                Text(
-                  record.sys.toString(),
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ],
-            ),
-            const SizedBox(
-              width: 7,
-            ),
-            const Column(
-              children: <Widget>[
-                Text(
-                  'SYS',
-                  style: TextStyle(fontSize: 13),
-                ),
-                Text(
-                  'мм.рт.ст',
-                  style: TextStyle(fontSize: 13),
-                ),
-              ],
-            ),
-            const SizedBox(
-              width: 50,
-            ),
-            Text(record.dia.toString(), style: const TextStyle(fontSize: 20)),
-            const SizedBox(
-              width: 10,
-            ),
-            const Column(
-              children: <Widget>[
-                Text(
-                  'DIA',
-                  style: TextStyle(fontSize: 13),
-                ),
-                Text(
-                  'мм.рт.ст',
-                  style: TextStyle(fontSize: 13),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Text(record.pulse.toString(), style: const TextStyle(fontSize: 20)),
-            const SizedBox(
-              width: 30,
-            ),
-          ],
+                ],
+              ),
+              const Spacer(),
+              Text(record.pulse.toString(),
+                  style: const TextStyle(fontSize: 20)),
+              const SizedBox(
+                width: 30,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../class_instances.dart';
 
+//todo переименовать все классы в соответствии с hypertension
 class RecordInfoDialog extends StatefulWidget {
   const RecordInfoDialog({super.key});
   @override
@@ -15,7 +16,7 @@ class _RecordInfoDialogState extends State<RecordInfoDialog> {
     final record = context.watch<UserRecordToDisplay>().value;
     return Dialog.fullscreen(
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(title: const Text('Ваша запись')),
         body: ListView(
           children: <Widget>[
             const Card(
