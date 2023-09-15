@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/ui/graph_screen.dart';
@@ -75,23 +76,30 @@ class GHFlutterApp extends StatelessWidget {
           },
         ),
       ],
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          themeMode: context.watch<ThemeModeNotifier>().value,
-          theme: ThemeData.light(), // todo: поиграть с этим
-          darkTheme: ThemeData.dark(),
-          title: strings.appTitle,
-          initialRoute: '/',
-          routes: {
-            '/': (context) => const HomePage(),
-            '/graph': (context) => GraphScreen(),
-            '/settings': (context) => const SettingsScreen(),
-            '/notifications': (context) => const NotificationsScreen(),
-            //'/recordingAdd':(context) => MyDialog(onDone: )
-          },
-        );
-      },
+      builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        themeMode: context.watch<ThemeModeNotifier>().value,
+        theme: ThemeData.light(), // todo: поиграть с этим
+        darkTheme: ThemeData.dark(),
+        title: strings.appTitle,
+        builder: (context, child) => ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(
+            dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+            },
+          ),
+          child: child!,
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const HomePage(),
+          '/graph': (context) => GraphScreen(),
+          '/settings': (context) => const SettingsScreen(),
+          '/notifications': (context) => const NotificationsScreen(),
+          //'/recordingAdd':(context) => MyDialog(onDone: )
+        },
+      ),
     );
   }
 }
