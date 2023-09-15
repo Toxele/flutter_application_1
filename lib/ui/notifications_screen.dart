@@ -6,7 +6,6 @@ import 'package:flutter_application_1/ui/class_instances.dart';
 import 'package:flutter_application_1/ui/shared/notification_record_info_dialog.dart';
 import 'package:flutter_application_1/ui/shared/user_notify_input_record.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/storage_repository.dart';
 

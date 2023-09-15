@@ -24,7 +24,7 @@ base class HypertensionNotifier
       recordList
           .add(HypertensionModel.fromJson(record as Map<String, dynamic>));
     }
-
+    
     return recordList.reversed.toList();
   }
 
@@ -36,7 +36,7 @@ base class HypertensionNotifier
   }) async {
     // todo подумать здесь над логикой
     if (value case RecordsNotifierData(data: final data)) {
-      value = const RecordsNotifierLoading();
+      value = const RecordsNotifierLoading(); 
 
       final user = HypertensionModel(
         sys: sys,
@@ -48,7 +48,6 @@ base class HypertensionNotifier
 
       data.add(user);
       final recordsRaw = data.map((e) => e.toJson()).toList();
-
       addRecord(recordsRaw);
       load();
     }

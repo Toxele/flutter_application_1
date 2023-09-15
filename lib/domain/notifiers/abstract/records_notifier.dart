@@ -43,7 +43,6 @@ abstract base class RecordsNotifier<T>
   Future<void> load() async {
     final path = await _getPath;
     final file = File(path);
-
     if (await file.exists()) {
       
       String rawRecordsList = await file.readAsString();
@@ -61,8 +60,9 @@ abstract base class RecordsNotifier<T>
   Future<void> addRecord(Object? data) async {
     final path = await _getPath;
     final file = File(path);
-
+    print('FILE CREATED!!!');
     if (!await file.exists()) {
+      
       await file.create();
     }
     String encoded = json.encode(data);
