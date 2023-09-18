@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constant/default_values.dart'
-    as default_values;
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather.dart';
 import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather_notifier.dart';
@@ -39,12 +37,9 @@ class InputRecordDialog extends StatelessWidget {
               final record = context.read<_InputRecord>();
               final userStatus = context.read<HypertensionNotifier>();
 
-              final sys =
-                  int.tryParse(record.sys) ?? default_values.defaultZero;
-              final dia =
-                  int.tryParse(record.dia) ?? default_values.defaultZero;
-              final pulse =
-                  int.tryParse(record.pulse) ?? default_values.defaultZero;
+              final sys = int.tryParse(record.sys) ?? 0;
+              final dia = int.tryParse(record.dia) ?? 0;
+              final pulse = int.tryParse(record.pulse) ?? 0;
               final temperature = double.tryParse(record.temperature);
               final pressure = double.tryParse(record.pressure);
               final cloudiness = double.tryParse(record.cloudiness);

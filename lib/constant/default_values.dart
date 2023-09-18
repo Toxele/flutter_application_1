@@ -1,1 +1,0 @@
-const defaultZero = 0;

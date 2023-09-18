@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constant/strings.dart' as strings;
+import 'package:flutter_application_1/application/app_const.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
@@ -108,7 +108,7 @@ class HomePage extends StatelessWidget {
       builder: (context, _) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text(strings.appTitle),
+            title: const Text(AppConst.appTitle),
             actions: [
               IconButton(
                 onPressed: () {

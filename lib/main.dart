@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constant/strings.dart' as strings;
 import 'package:flutter_application_1/ui/graph_screen.dart';
 import 'package:flutter_application_1/ui/notifications_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'application/app_const.dart';
 import 'application/theme_mode_notifier.dart';
 import 'data/geolocation_repository.dart';
 import 'data/storage_repository.dart';
@@ -81,16 +81,19 @@ class GHFlutterApp extends StatelessWidget {
         themeMode: context.watch<ThemeModeNotifier>().value,
         theme: ThemeData.light(), // todo: поиграть с этим
         darkTheme: ThemeData.dark(),
-        title: strings.appTitle,
-        builder: (context, child) => ScrollConfiguration(
-          behavior: ScrollConfiguration.of(context).copyWith(
-            dragDevices: {
-              PointerDeviceKind.touch,
-              PointerDeviceKind.mouse,
-            },
-          ),
-          child: child!,
-        ),
+        title: AppConst.appTitle,
+        builder: (context, child) {
+          final scrollConfiguration = ScrollConfiguration.of(context);
+          return ScrollConfiguration(
+            behavior: scrollConfiguration.copyWith(
+              dragDevices: {
+                ...scrollConfiguration.dragDevices,
+                PointerDeviceKind.mouse,
+              },
+            ),
+            child: child!,
+          );
+        },
         initialRoute: '/',
         routes: {
           '/': (context) => const HomePage(),
