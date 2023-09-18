@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/event_notification.dart';
 import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/events_notification_notifier.dart';
-import 'package:flutter_application_1/ui/class_instances.dart';
-import 'package:flutter_application_1/ui/shared/notification_record_info_dialog.dart';
+import 'package:flutter_application_1/ui/dialogues/notification_record_info_dialog.dart';
 import 'package:flutter_application_1/ui/shared/user_notify_input_record.dart';
 import 'package:provider/provider.dart';
 
 import '../data/storage_repository.dart';
+import 'user_notification_record_presenter.dart';
 
 sealed class HomeState {
   const HomeState();
@@ -37,7 +37,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
   final StorageRepository storage;
   HomeStateNotifier({
     required this.userNotificationRecordsNotifier,
-    required this.storage, 
+    required this.storage,
   }) : super(const HomeStateLoading()) {
     load();
   }
@@ -75,11 +75,12 @@ class NotificationsScreen extends StatelessWidget {
         ChangeNotifierProvider<EventsNotificationNotifier>(
           create: (_) => EventsNotificationNotifier(),
         ),
-        ChangeNotifierProxyProvider2<EventsNotificationNotifier, StorageRepository,
-            HomeStateNotifier>(
+        ChangeNotifierProxyProvider2<EventsNotificationNotifier,
+            StorageRepository, HomeStateNotifier>(
           create: (context) => HomeStateNotifier(
             userNotificationRecordsNotifier:
-                context.read<EventsNotificationNotifier>(), storage: context.read<StorageRepository>(),
+                context.read<EventsNotificationNotifier>(),
+            storage: context.read<StorageRepository>(),
           ),
           update:
               (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>

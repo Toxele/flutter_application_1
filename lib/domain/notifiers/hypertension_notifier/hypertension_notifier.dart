@@ -62,18 +62,18 @@ base class HypertensionNotifier
   /// todo: подумать над логикой этого всего
   Future<bool> acceptRecord(int sys, int dia, int pulse) async {
     /// todo: это всё исправить на нормальные ключи и значения по умолчанию.
-    storageRepo.storage.setInt('Dia Min', 70); // это временно
-    storageRepo.storage.setInt('Dia Max', 140);
-    storageRepo.storage.setInt('Sys Min', 90);
-    storageRepo.storage.setInt('Sys Max', 170);
-    storageRepo.storage.setInt('Pulse Min', 60);
-    storageRepo.storage.setInt('Pulse Max', 130);
-    int normalSysMin = storageRepo.storage.getInt('Sys Min') ?? 0;
-    int normalSysMax = storageRepo.storage.getInt('Sys Max') ?? 0;
-    int normalDiaMin = storageRepo.storage.getInt('Dia Min') ?? 0;
-    int normalDiaMax = storageRepo.storage.getInt('Dia Max') ?? 0;
-    int normalPulseMin = storageRepo.storage.getInt('Pulse Min') ?? 0;
-    int normalPulseMax = storageRepo.storage.getInt('Pulse Max') ?? 0;
+    storageRepo.setInt('Dia Min', 70); // это временно
+    storageRepo.setInt('Dia Max', 140);
+    storageRepo.setInt('Sys Min', 90);
+    storageRepo.setInt('Sys Max', 170);
+    storageRepo.setInt('Pulse Min', 60);
+    storageRepo.setInt('Pulse Max', 130);
+    int normalSysMin = storageRepo.getInt('Sys Min') ?? 0;
+    int normalSysMax = storageRepo.getInt('Sys Max') ?? 0;
+    int normalDiaMin = storageRepo.getInt('Dia Min') ?? 0;
+    int normalDiaMax = storageRepo.getInt('Dia Max') ?? 0;
+    int normalPulseMin = storageRepo.getInt('Pulse Min') ?? 0;
+    int normalPulseMax = storageRepo.getInt('Pulse Max') ?? 0;
     return normalSysMin < sys &&
         sys < normalSysMax &&
         normalDiaMin < dia &&

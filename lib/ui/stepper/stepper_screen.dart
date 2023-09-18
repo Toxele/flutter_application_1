@@ -3,23 +3,20 @@ import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/utils/text_field_pattern.dart';
 import 'package:provider/provider.dart';
 
-class SetUpSharedPreferencesScreen extends StatefulWidget {
-  const SetUpSharedPreferencesScreen({super.key});
+class StepperScreen extends StatefulWidget {
+  const StepperScreen({super.key});
 
   @override
-  State<SetUpSharedPreferencesScreen> createState() =>
-      _SetUpSharedPreferencesScreenState();
+  State<StepperScreen> createState() => _StepperScreenState();
 }
 
-class _SetUpSharedPreferencesScreenState
-    extends State<SetUpSharedPreferencesScreen> {
+class _StepperScreenState extends State<StepperScreen> {
   int _index = 0;
   double _weight = 0.0;
   double _height = 0.0;
   @override
   Widget build(BuildContext context) {
-    final StorageRepository storageRepository =
-        context.watch<StorageRepository>();
+    final storageRepository = context.watch<StorageRepository>();
     return Stepper(
       currentStep: _index,
       onStepCancel: () {
@@ -35,10 +32,9 @@ class _SetUpSharedPreferencesScreenState
             _index += 1;
           });
         } else {
-          storageRepository.storage.setDouble(StorageStore.weightKey, _weight);
-          storageRepository.storage.setDouble(StorageStore.heightKey, _height);
-          storageRepository.storage
-              .setBool(StorageStore.isTimeToStepperKey, false);
+          storageRepository.setDouble(StorageStore.weightKey, _weight);
+          storageRepository.setDouble(StorageStore.heightKey, _height);
+          storageRepository.setBool(StorageStore.isTimeToStepperKey, false);
         }
       },
       onStepTapped: (int index) {
@@ -98,7 +94,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
           onChanged: (User? value) {
             setState(() {
               _character = value;
-              storage.storage.setBool(StorageStore.isManKey, true);
+              storage.setBool(StorageStore.isManKey, true);
             });
           },
         ),
@@ -109,7 +105,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
           onChanged: (User? value) {
             setState(() {
               _character = value;
-              storage.storage.setBool(StorageStore.isManKey, false);
+              storage.setBool(StorageStore.isManKey, false);
             });
           },
         ),

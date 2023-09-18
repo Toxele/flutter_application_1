@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../class_instances.dart';
+import '../user_notification_record_presenter.dart';
 
 //todo переименовать все классы в соответствии с hypertension
 class RecordInfoDialog extends StatefulWidget {
