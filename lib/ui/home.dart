@@ -6,12 +6,11 @@ import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hyp
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather.dart';
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
-import 'package:flutter_application_1/ui/class_instances.dart';
-import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../application/theme_mode_notifier.dart';
-import 'shared/input_record_dialog.dart';
+import 'dialogues/input_record_dialog.dart';
+import 'dialogues/record_info_dialog.dart';
 import 'stepper/stepper_screen.dart';
 
 sealed class HomeState {
@@ -259,10 +258,12 @@ class _HypertensionTile extends StatelessWidget {
         onTap: () => showDialog(
           context: context,
           builder: (context) {
-            return ChangeNotifierProvider(
-              create: (_) => UserRecordToDisplay(record),
-              child: const RecordInfoDialog(),
-            );
+            return
+                // ChangeNotifierProvider(
+                // create: (_) => UserRecordToDisplay(record),
+                // child:
+                const RecordInfoDialog();
+            // );
           },
         ),
         child: Padding(
