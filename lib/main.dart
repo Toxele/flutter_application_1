@@ -5,6 +5,7 @@ import 'package:flutter_application_1/ui/graph_screen.dart';
 import 'package:flutter_application_1/ui/notifications_screen.dart';
 import 'package:provider/provider.dart';
 
+import 'application/theme_mode_notifier.dart';
 import 'data/geolocation_repository.dart';
 import 'data/storage_repository.dart';
 import 'data/weather_repository.dart';
@@ -13,7 +14,6 @@ import 'domain/notifiers/weather_notifier/weather_notifier.dart';
 import 'domain/services/notification_service/notification_service.dart';
 import 'ui/home.dart';
 import 'ui/settings/settings_screen.dart';
-import 'ui/theme_notifier.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,7 +71,7 @@ class GHFlutterApp extends StatelessWidget {
         ChangeNotifierProvider<ThemeModeNotifier>(
           create: (context) {
             return ThemeModeNotifier(
-              storageRepo: context.read<StorageRepository>(),
+              storage: context.read<StorageRepository>(),
             );
           },
         ),

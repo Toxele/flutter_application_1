@@ -10,9 +10,9 @@ import 'package:flutter_application_1/ui/class_instances.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:provider/provider.dart';
 
+import '../application/theme_mode_notifier.dart';
 import 'shared/input_record_dialog.dart';
 import 'stepper/stepper_screen.dart';
-import 'theme_notifier.dart';
 
 sealed class HomeState {
   const HomeState();

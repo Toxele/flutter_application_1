@@ -50,6 +50,9 @@ class StorageStore {
   static const String isTimeToStepperKey = 'isTimeToStepperKey';
   static const bool isTimeToStepperDefaultValue = true;
 
+  static const String isDarkThemeKey = 'isDarkTheme';
+  static const bool? isDarkThemeDefaultValue = null;
+
   // todo делать обязательную приписку "DefaultValue"
   static const String weightKey = 'weigthKey';
   static const double weight = 75.0;
