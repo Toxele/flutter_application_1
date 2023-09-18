@@ -7,11 +7,11 @@ import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hyp
 import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather.dart';
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:flutter_application_1/ui/class_instances.dart';
-import 'package:flutter_application_1/ui/sceens_to_show_once/set_up_prefs_screen.dart';
 import 'package:flutter_application_1/ui/shared/record_info_dialog.dart';
 import 'package:provider/provider.dart';
 
 import 'shared/input_record_dialog.dart';
+import 'stepper/stepper_screen.dart';
 import 'theme_notifier.dart';
 
 sealed class HomeState {
@@ -69,9 +69,8 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
   }
 
   Future<void> load() async {
-    final isTimeToStepper =
-        storage.storage.getBool(StorageStore.isTimeToStepperKey) ??
-            StorageStore.isTimeToStepperDefaultValue;
+    final isTimeToStepper = storage.getBool(StorageStore.isTimeToStepperKey) ??
+        StorageStore.isTimeToStepperDefaultValue;
     if (isTimeToStepper) {
       value = const StepperHomeState();
       return;
@@ -184,7 +183,7 @@ class HomePage extends StatelessWidget {
                 case HomeStateError(message: final message):
                   child = Center(child: Text(message));
                 case StepperHomeState():
-                  child = const SetUpSharedPreferencesScreen();
+                  child = const StepperScreen();
                 case HomeStateDataEmpty():
                   child = const Center(
                     child: Text('У вас нет сохранений'),

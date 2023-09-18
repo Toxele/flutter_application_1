@@ -5,7 +5,7 @@ class ThemeModeNotifier extends ValueNotifier<ThemeMode> {
   ThemeModeNotifier({
     required this.storageRepo,
   }) : super(ThemeMode.system) {
-    final bool? isDark = storageRepo.storage.getBool('isDarkTheme');
+    final bool? isDark = storageRepo.getBool('isDarkTheme');
 
     value = isDark == null
         ? ThemeMode.system
@@ -18,6 +18,6 @@ class ThemeModeNotifier extends ValueNotifier<ThemeMode> {
     value = themeMode;
 
     final isDark = themeMode == ThemeMode.dark;
-    storageRepo.storage.setBool('isDarkTheme', isDark);
+    storageRepo.setBool('isDarkTheme', isDark);
   }
 }
