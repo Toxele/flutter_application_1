@@ -154,26 +154,31 @@ class HomePage extends StatelessWidget {
               Widget child;
               switch (recordsState) {
                 case HomeStateData(data: final records):
-                  child = ListView.separated(
-                    separatorBuilder: (context, index) {
+                  child = ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: records.length,
+                    itemBuilder: (BuildContext context, int index) {
                       final time = records[index].timeOfRecord;
 
                       if (index == 0 ||
-                          records[index - 1].timeOfRecord.day !=
-                              records[index].timeOfRecord.day) {
-                        return Card(
-                          child: Text(
-                            '${time.day} ${time.month} ${time.year} года',
-                          ),
+                          (index == 1 &&
+                              records[0].timeOfRecord.day !=
+                                  records[1].timeOfRecord.day)) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              child: Card(
+                                child: Text(
+                                  '${time.day} ${time.month} ${time.year} года',
+                                ),
+                              ),
+                            ),
+                            _HypertensionTile(record: records[index]),
+                          ],
                         );
-                      } else {
-                        return const SizedBox.shrink();
                       }
-                    },
-                    padding: const EdgeInsets.all(16),
-                    itemCount: records.length,
-                    itemBuilder: (BuildContext context, int position) {
-                      return _HypertensionTile(record: records[position]);
+                      return _HypertensionTile(record: records[index]);
                     },
                   );
                 case HomeStateLoading():
@@ -259,12 +264,10 @@ class _HypertensionTile extends StatelessWidget {
         onTap: () => showDialog(
           context: context,
           builder: (context) {
-            return
-              ChangeNotifierProvider(
-                 create: (_) => UserRecordToDisplay(record),
-                 child:
-                const RecordInfoDialog(),
-             );
+            return ChangeNotifierProvider(
+              create: (_) => UserRecordToDisplay(record),
+              child: const RecordInfoDialog(),
+            );
           },
         ),
         child: Padding(
