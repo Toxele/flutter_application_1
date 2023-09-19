@@ -165,6 +165,7 @@ class _RecordTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       margin: const EdgeInsets.all(8.0),
       child: Padding(
@@ -175,19 +176,17 @@ class _RecordTile extends StatelessWidget {
             Flexible(
               child: Text(
                 name,
-                style: sharedTextStyle,
+                style: theme.textTheme.titleLarge,
               ),
             ),
             const SizedBox(width: 8),
             Text(
               value != null ? value.toString() : '–',
-              style: sharedTextStyle,
+              style: theme.textTheme.labelMedium,
             ),
           ],
         ),
       ),
     );
   }
-
-  static const TextStyle sharedTextStyle = TextStyle(fontSize: 20);
 }
