@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 import '../user_notification_record_presenter.dart';
@@ -14,62 +15,166 @@ class _RecordInfoDialogState extends State<RecordInfoDialog> {
   @override
   Widget build(BuildContext context) {
     final record = context.watch<UserRecordToDisplay>().value;
+    const TextStyle sharedTextStyle = TextStyle(fontSize: 20);
     return Dialog.fullscreen(
       child: Scaffold(
         appBar: AppBar(title: const Text('Ваша запись')),
         body: ListView(
           children: <Widget>[
-            const Card(
-              child: Text(
-                'Данные измерения',
-                style: TextStyle(fontSize: 20),
-              ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Row(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.all(20)),
+                Spacer(),
+                Text(
+                  'Данные измерения',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+                Spacer(),
+                Padding(padding: EdgeInsets.all(20)),
+              ],
+            ),
+            Container(
+              width: double.infinity,
+              height: 1,
+              color: Colors.red,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: <Widget>[
+                const SizedBox(
+                  height: 40,
+                ),
+                const Spacer(),
+                const Text(
+                  'Давление: ',
+                  style: sharedTextStyle,
+                ),
+                Text(
+                  '${record.sys}/${record.dia}',
+                  style: sharedTextStyle,
+                ),
+                const Spacer(),
+              ],
+            ),
+            Container(
+              width: double.infinity,
+              height: 1,
+              color: Colors.red,
+            ),
+            const SizedBox(
+                  height: 20,
+                ),
+            Row(
+              children: <Widget>[
+                
+               
+                const Spacer(),
+                const Text(
+                  'Пульс, уд/мин: ',
+                  style: sharedTextStyle,
+                ),
+                Text(
+                  '${record.pulse}',
+                  style: sharedTextStyle,
+                ),
+                const Spacer(),
+              ],
+            ),
+            const SizedBox(
+                  height: 10,
+                ),
+            Container(
+              width: double.infinity,
+              height: 1,
+              color: Colors.red,
+            ),
+            
+            const SizedBox(
+              height: 10,
+            ),
+            const Row(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.all(20)),
+                Spacer(),
+                Text(
+                  'Метеоусловия',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+                Spacer(),
+                Padding(padding: EdgeInsets.all(20)),
+              ],
+            ),
+            Container(
+              width: double.infinity,
+              height: 10,
+              color: Colors.red,
+            ),
+            const SizedBox(
+              height: 10,
             ),
             Card(
               child: Row(
                 children: <Widget>[
-                  const Text('Давление'),
+                  const SizedBox(
+                    height: 40,
+                  ),
                   const Spacer(),
-                  Text('${record.sys}/${record.dia}'),
+                  const Text(
+                    'Температура в градусах Цельсия: ',
+                    style: sharedTextStyle,
+                  ),
+                  Text(
+                    '${record.weather?.temperature}',
+                    style: sharedTextStyle,
+                  ),
+                  const Spacer(),
                 ],
               ),
             ),
             Card(
               child: Row(
                 children: <Widget>[
-                  const Text('Пульс, уд/мин'),
+                  const SizedBox(
+                    height: 40,
+                  ),
                   const Spacer(),
-                  Text('${record.pulse}'),
-                ],
-              ),
-            ),
-            const Card(
-              child: Text('Метеоусловия'),
-            ),
-            Card(
-              child: Row(
-                children: <Widget>[
-                  const Text('Температура в градусах Цельсия'),
+                  const Text(
+                    'Облачность: ',
+                    style: sharedTextStyle,
+                  ),
+                  Text(
+                    '${record.weather?.cloudiness}%',
+                    style: sharedTextStyle,
+                  ),
                   const Spacer(),
-                  Text('${record.weather?.temperature}'),
-                ],
-              ),
-            ),
-            Card(
-              child: Row(
-                children: <Widget>[
-                  const Text('Облачность, %'),
-                  const Spacer(),
-                  Text('${record.weather?.cloudiness}'),
                 ],
               ),
             ),
             Card(
               child: Row(
                 children: <Widget>[
-                  const Text('Атмосферное давление, мм. рт. ст.'),
+                  const SizedBox(
+                    height: 40,
+                  ),
                   const Spacer(),
-                  Text('${record.weather?.pressure}'),
+                  const Text(
+                    'Атмосферное давление, мм. рт. ст.',
+                    style: sharedTextStyle,
+                  ),
+                  Text(
+                    '${record.weather?.pressure}',
+                    style: sharedTextStyle,
+                  ),
+                  const Spacer(),
                 ],
               ),
             ),

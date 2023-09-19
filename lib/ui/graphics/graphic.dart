@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
@@ -368,7 +370,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
   List<FlSpot> makeFLSpots(List<HypertensionModel> records, bool isSys) {
     List<FlSpot> spots = [];
     double index = 2;
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < min(7, records.length); i++) {
       if (isSys) {
         spots.add(FlSpot(index - 2, 2.0 + (records[i].sys! - 60.0) / 10.0));
       } else {

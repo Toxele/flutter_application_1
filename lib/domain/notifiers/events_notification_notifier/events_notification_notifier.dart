@@ -28,17 +28,18 @@ base class EventsNotificationNotifier
     String text = "",
     required DateTime timeToNotificate,
   }) async {
-    if (value case RecordsNotifierData(data: final data)) {
-      // TODO : пофиксить if - value принимает состояние RecordsNotifierEmpty, в hypertension_notifier.dart скорее всего та же проблема
+    var records = <EventNotification>[];
+    if (value case RecordsNotifierData(data: final data)) { 
       value = const RecordsNotifierLoading();
-
-      final user =
-          EventNotification(timeToNotificate: timeToNotificate, text: text);
-
-      data.add(user);
-      final recordsRaw = data.map((e) => e.toJson()).toList();
-      addRecord(recordsRaw);
-      load();
+      records = [...data];
     }
+    value = const RecordsNotifierLoading();
+    final user =
+        EventNotification(timeToNotificate: timeToNotificate, text: text);
+
+    records.add(user);
+    final recordsRaw = records.map((e) => e.toJson()).toList();
+    addRecord(recordsRaw);
+    load();
   }
 }

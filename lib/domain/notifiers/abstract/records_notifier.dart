@@ -60,7 +60,6 @@ abstract base class RecordsNotifier<T>
   Future<void> addRecord(Object? data) async {
     final path = await _getPath;
     final file = File(path);
-    print('FILE CREATED!!!');
     if (!await file.exists()) {
       
       await file.create();
