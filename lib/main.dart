@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/graph_screen.dart';
-import 'package:flutter_application_1/ui/notifications_screen.dart';
+import 'package:flutter_application_1/ui/notifications/notifications_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'application/app_const.dart';

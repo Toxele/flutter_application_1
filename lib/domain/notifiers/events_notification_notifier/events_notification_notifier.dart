@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:uuid/v7.dart';
+
 import '../abstract/records_notifier.dart';
 import 'event_notification.dart';
 
@@ -24,18 +26,26 @@ base class EventsNotificationNotifier
     return recordList.reversed.toList();
   }
 
+  String get _uuid => const UuidV7().generate();
+
   Future<void> saveRecord({
-    String text = "",
-    required DateTime timeToNotificate,
+    required String text,
+    required DateTime time,
+    bool? isActive,
   }) async {
     var records = <EventNotification>[];
-    if (value case RecordsNotifierData(data: final data)) { 
+    if (value case RecordsNotifierData(data: final data)) {
       value = const RecordsNotifierLoading();
       records = [...data];
     }
     value = const RecordsNotifierLoading();
-    final user =
-        EventNotification(timeToNotificate: timeToNotificate, text: text);
+    final user = EventNotification(
+      time: time,
+      text: text,
+      uuid: _uuid,
+    );
+
+    if (isActive != null) user.copyWith(isActive: isActive);
 
     records.add(user);
     final recordsRaw = records.map((e) => e.toJson()).toList();

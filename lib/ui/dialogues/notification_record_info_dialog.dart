@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../domain/services/notification_service/notification_service.dart';
-import '../user_notification_record_presenter.dart';
+import '../notifications/notifications_presenter.dart';
 
 class NotificationRecordInfoDialog extends StatefulWidget {
   const NotificationRecordInfoDialog({super.key});
