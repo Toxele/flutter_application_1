@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
 import 'package:provider/provider.dart';
 
-import '../notifications/notifications_presenter.dart';
-
 //todo переименовать все классы в соответствии с hypertension
-class RecordInfoDialog extends StatefulWidget {
-  const RecordInfoDialog({super.key});
-  @override
-  State<RecordInfoDialog> createState() => _RecordInfoDialogState();
-}
-
-class _RecordInfoDialogState extends State<RecordInfoDialog> {
+class HypertensionInfo extends StatelessWidget {
+  const HypertensionInfo({super.key});
   @override
   Widget build(BuildContext context) {
-    final record = context.watch<UserRecordToDisplay>().value;
+    final record = context.watch<HypertensionModel>();
 
     final pressure = record.weather?.pressure;
     final cloudiness = record.weather?.cloudiness;

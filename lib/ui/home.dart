@@ -5,7 +5,6 @@ import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather.dart';
-import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:provider/provider.dart';
 
 import '../application/theme_mode_notifier.dart';
@@ -111,9 +110,8 @@ class HomePage extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  context
-                      .read<NotificationService>()
-                      .showNotificationWithActions();
+                  // todo
+                  // context.read<NotificationService>().addEvent();
                 },
                 icon: const Icon(Icons.notification_add),
               ),
@@ -263,9 +261,9 @@ class _HypertensionTile extends StatelessWidget {
         onTap: () => showDialog(
           context: context,
           builder: (context) {
-            return ChangeNotifierProvider(
-              create: (_) => UserRecordToDisplay(record),
-              child: const RecordInfoDialog(),
+            return Provider(
+              create: (_) => record,
+              child: const HypertensionInfo(),
             );
           },
         ),

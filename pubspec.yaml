@@ -27,7 +27,8 @@ dependencies:
   fl_chart: ^0.63.0
   intl: ^0.18.1
   flutter_local_notifications: ^16.0.0-dev.1
-  
+  flutter_timezone: ^1.0.7
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

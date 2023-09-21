@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/events_notification_notifier.dart';
+import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:provider/provider.dart';
 
 import 'notifications_presenter.dart';
@@ -12,7 +13,9 @@ class NotificationsScreen extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<EventsNotificationNotifier>(
-          create: (_) => EventsNotificationNotifier(),
+          create: (_) => EventsNotificationNotifier(
+            notificationService: context.read<NotificationService>(),
+          ),
         ),
         ChangeNotifierProxyProvider<EventsNotificationNotifier,
             NotificationsScreenPresenter>(

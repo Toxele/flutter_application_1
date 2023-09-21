@@ -8,6 +8,9 @@ part 'event_notification.g.dart';
 class EventNotification {
   final String uuid;
 
+  // todo взять время а не то, что сейчас
+  int get uuidAsTime => uuid as int;
+
   final String text;
 
   @EpochDateTimeConverter()

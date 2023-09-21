@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:uuid/v7.dart';
 
 import '../abstract/records_notifier.dart';
@@ -11,7 +12,11 @@ import 'event_notification.dart';
 // todo доработать логику всего класса
 base class EventsNotificationNotifier
     extends RecordsNotifier<List<EventNotification>> {
-  EventsNotificationNotifier();
+  EventsNotificationNotifier({
+    required NotificationService notificationService,
+  }) : _notificationService = notificationService;
+
+  final NotificationService _notificationService;
 
   @override
   String get fileName => '\\events_notification_data.json';
@@ -43,6 +48,12 @@ base class EventsNotificationNotifier
       time: time,
       text: text,
       uuid: _uuid,
+    );
+
+    _notificationService.addEvent(
+      id: user.uuidAsTime,
+      message: user.text,
+      time: user.time,
     );
 
     if (isActive != null) user.copyWith(isActive: isActive);
