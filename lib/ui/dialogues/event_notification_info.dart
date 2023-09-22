@@ -17,9 +17,9 @@ class EventNotificationInfo extends StatelessWidget {
               onPressed: () {
                 // TODO: реализовать передачу в модельку
                 final presenter = context.read<NotificationsScreenPresenter>();
-
-                presenter.addRecord(text: text, time: time);
-              },
+                // TODO  : поменять липовый текст и время на нужное
+                presenter.addRecord(text: 'text', time: DateTime.now()/*Time */);
+              }, 
               icon: const Icon(Icons.notification_add),
             ),
           ],

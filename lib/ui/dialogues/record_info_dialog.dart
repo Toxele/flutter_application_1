@@ -7,7 +7,7 @@ class HypertensionInfo extends StatelessWidget {
   const HypertensionInfo({super.key});
   @override
   Widget build(BuildContext context) {
-    final record = context.watch<UserRecordToDisplay>().value;
+    final record = context.watch<HypertensionModel>();
 
     final pressure = record.weather?.pressure;
     final cloudiness = record.weather?.cloudiness;
