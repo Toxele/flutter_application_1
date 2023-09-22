@@ -3,6 +3,7 @@ import 'package:flutter_application_1/domain/notifiers/events_notification_notif
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:provider/provider.dart';
 
+import 'notification_info.dart';
 import 'notifications_presenter.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -34,27 +35,19 @@ class NotificationsScreen extends StatelessWidget {
           appBar: AppBar(title: const Text('Уведомления')),
           // todo: hero
           floatingActionButton: FloatingActionButton(
-            child: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                // final recordsNotifier = context.read<HomeStateNotifier>();
-                // final userStatusNotifier =
-                //     context.read<EventsNotificationNotifier>();
-                //
-                // showDialog(
-                //   context: context,
-                //   builder: (context) {
-                //     return ChangeNotifierProvider.value(
-                //       value: userStatusNotifier,
-                //       child: UserNotifyRecord(
-                //         onDone: recordsNotifier.addRecord,
-                //       ),
-                //     );
-                //   },
-                // );
-              },
-            ),
-            onPressed: () {},
+            child: const Icon(Icons.add),
+            onPressed: () {
+              final presenter = context.read<NotificationsScreenPresenter>();
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return ChangeNotifierProvider.value(
+                    value: presenter,
+                    child: const EventNotificationInfo(event: null),
+                  );
+                },
+              );
+            },
           ),
           body: Consumer<NotificationsScreenPresenter>(
             builder: (context, notificationsScreenState, child) {
