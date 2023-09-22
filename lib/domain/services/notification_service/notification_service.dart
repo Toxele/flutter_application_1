@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 // todo начать использовать
 class NotificationService {
@@ -35,20 +37,32 @@ class NotificationService {
     print(notificationResponse.notificationResponseType.name);
   }
 
-  Future<void> showNotificationWithActions() async {
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(
+  Future<void> addEvent({
+    required String message,
+    required int id,
+    required DateTime time,
+  }) async {
+    tz.initializeTimeZones();
+
+    const androidNotificationDetails = AndroidNotificationDetails(
       '.',
       '..',
       actions: <AndroidNotificationAction>[
-        AndroidNotificationAction('id_1', 'Хорошо?'),
-        AndroidNotificationAction('id_2', 'Ладно'),
-        AndroidNotificationAction('id_3', 'Удача?'),
+        AndroidNotificationAction('yes', 'Ок'),
+        AndroidNotificationAction('yes', 'Отложить'),
       ],
     );
-    const NotificationDetails notificationDetails =
+    const notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
-    await flutterLocalNotificationsPlugin.show(
-        0, 'Антон привет!', 'Я запустил эту штуковину 🚀', notificationDetails);
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      'Вы просили уведомить...',
+      message,
+      tz.TZDateTime.now(tz.local)
+          .add(Duration(milliseconds: time.millisecondsSinceEpoch)),
+      notificationDetails,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
   }
 }
