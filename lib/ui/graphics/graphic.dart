@@ -366,7 +366,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       ],
     );
   }
-
+  
   List<FlSpot> makeFLSpots(List<HypertensionModel> records, bool isSys) {
     List<FlSpot> spots = [];
     double index = 2;

@@ -3,6 +3,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:path/path.dart';
+
 import '../abstract/records_notifier.dart';
 import 'event_notification.dart';
 
@@ -36,7 +38,6 @@ base class EventsNotificationNotifier
     value = const RecordsNotifierLoading();
     final user =
         EventNotification(timeToNotificate: timeToNotificate, text: text);
-
     records.add(user);
     final recordsRaw = records.map((e) => e.toJson()).toList();
     addRecord(recordsRaw);
