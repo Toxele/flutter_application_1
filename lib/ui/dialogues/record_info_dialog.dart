@@ -134,43 +134,49 @@ class HypertensionInfo extends StatelessWidget {
                 ],
               ),
             ),
-            Card(
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  const Spacer(),
-                  const Text(
-                    'Облачность: ',
-                    style: sharedTextStyle,
-                  ),
-                  Text(
-                    '${record.weather?.cloudiness}%',
-                    style: sharedTextStyle,
-                  ),
-                  const Spacer(),
-                ],
+
+            /// todo: добавить другие тайлы
+            _RecordTile(
+              name: 'Облачность: ',
+              value: cloudiness != null ? '${cloudiness.toString()}%' : '–',
+            ),
+            _RecordTile(
+              name: 'Атмосферное давление, мм. рт. ст.',
+              value: pressure != null ? pressure.toString() : '–',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RecordTile extends StatelessWidget {
+  const _RecordTile({super.key, required this.name, required this.value});
+
+  final String name;
+  final String? value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      margin: const EdgeInsets.all(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Flexible(
+              child: Text(
+                name,
+                style: theme.textTheme.titleLarge,
               ),
             ),
-            Card(
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  const Spacer(),
-                  const Text(
-                    'Атмосферное давление, мм. рт. ст.',
-                    style: sharedTextStyle,
-                  ),
-                  Text(
-                    '${record.weather?.pressure}',
-                    style: sharedTextStyle,
-                  ),
-                  const Spacer(),
-                ],
-              ),
+            const SizedBox(width: 8),
+            Text(
+              value != null ? value.toString() : '–',
+              style: theme.textTheme.labelMedium,
             ),
           ],
         ),
