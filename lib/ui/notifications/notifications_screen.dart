@@ -33,8 +33,8 @@ class NotificationsScreen extends StatelessWidget {
       builder: (context, _) {
         return Scaffold(
           appBar: AppBar(title: const Text('Уведомления')),
-          // todo: hero
           floatingActionButton: FloatingActionButton(
+            heroTag: 'notification_action',
             child: const Icon(Icons.add),
             onPressed: () {
               final presenter = context.read<NotificationsScreenPresenter>();

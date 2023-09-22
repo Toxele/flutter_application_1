@@ -57,6 +57,6 @@ class NotificationsScreenPresenter
         NotificationsScreenData(records),
       RecordsNotifierLoading() => const NotificationsScreenLoading(),
       RecordsNotifierEmpty() => const NotificationsScreenEmpty(),
-    }; 
+    };
   }
 }

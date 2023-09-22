@@ -3,8 +3,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:path/path.dart';
-
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:uuid/v7.dart';
 
@@ -46,14 +44,15 @@ base class EventsNotificationNotifier
       records = [...data];
     }
     value = const RecordsNotifierLoading();
+
     final user = EventNotification(
       time: time,
       text: text,
-      uuid: _uuid,
+      uuid: DateTime.now().millisecondsSinceEpoch,
     );
 
     _notificationService.addEvent(
-      id: user.uuidAsTime,
+      id: user.uuid,
       message: user.text,
       time: user.time,
     );

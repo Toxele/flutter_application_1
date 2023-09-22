@@ -6,10 +6,10 @@ part 'event_notification.g.dart';
 /// todo переделать на freezed
 @JsonSerializable(explicitToJson: true)
 class EventNotification {
-  final String uuid;
+  final int uuid;
 
   // todo взять время а не то, что сейчас
-  int get uuidAsTime => uuid as int;
+  // int get uuidAsTime => uuid;
 
   final String text;
 
@@ -41,7 +41,7 @@ class EventNotification {
 
   factory EventNotification.fromJson(Map<String, dynamic> map) {
     return EventNotification(
-      uuid: map['uuid'] as String,
+      uuid: map['uuid'] as int,
       text: map['text'] as String,
       time: const EpochDateTimeConverter().fromJson(map['time'] as int),
       isActive: map['isActive'] as bool,
@@ -63,7 +63,7 @@ class EventNotification {
       uuid.hashCode ^ text.hashCode ^ time.hashCode ^ isActive.hashCode;
 
   EventNotification copyWith({
-    String? uuid,
+    int? uuid,
     String? text,
     DateTime? time,
     bool? isActive,

@@ -14,10 +14,12 @@ class EventNotificationInfo extends StatefulWidget {
 
 class _EventNotificationInfoState extends State<EventNotificationInfo> {
   final focusNode = FocusNode();
+  final textController = TextEditingController();
 
   @override
   void dispose() {
     focusNode.dispose();
+    textController.dispose();
     super.dispose();
   }
 
@@ -31,20 +33,31 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
           title: const Text('Создание оповещения'),
           actions: [
             IconButton(
-              onPressed: () {
-                // TODO: реализовать передачу в модельку
-                final presenter = context.read<NotificationsScreenPresenter>();
-                // TODO  : поменять липовый текст и время на нужное
-                presenter.addRecord(
-                    text: 'text', time: DateTime.now() /*Time */);
-              },
+              onPressed: () {},
               icon: const Icon(Icons.notification_add),
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          heroTag: 'notification_action',
+          child: const Icon(Icons.save),
+          onPressed: () {
+            final presenter = context.read<NotificationsScreenPresenter>();
+            presenter.addRecord(
+              text: textController.text,
+              time: DateTime.now(),
+              isActive: true,
+            );
+          },
+        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: TextField(
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            controller: isCreateMode
+                ? textController
+                : (textController..text = widget.event!.text),
             focusNode: isCreateMode ? (focusNode..requestFocus()) : null,
           ),
         ),
@@ -52,7 +65,3 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
     );
   }
 }
-
-//Card(
-//           child: Text(event?.text ?? ""),
-//         )
