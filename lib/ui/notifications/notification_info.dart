@@ -15,6 +15,8 @@ class EventNotificationInfo extends StatefulWidget {
 class _EventNotificationInfoState extends State<EventNotificationInfo> {
   final focusNode = FocusNode();
   final textController = TextEditingController();
+  DateTime? timeSelected;
+  bool isActivate = true;
 
   @override
   void dispose() {
@@ -45,21 +47,41 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
             final presenter = context.read<NotificationsScreenPresenter>();
             presenter.addRecord(
               text: textController.text,
-              time: DateTime.now(),
+              time: timeSelected ?? DateTime.now(), // todo: пока что костыль
               isActive: true,
             );
           },
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: TextField(
-            keyboardType: TextInputType.multiline,
-            maxLines: null,
-            controller: isCreateMode
-                ? textController
-                : (textController..text = widget.event!.text),
-            focusNode: isCreateMode ? (focusNode..requestFocus()) : null,
-          ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                controller: isCreateMode
+                    ? textController
+                    : (textController..text = widget.event!.text),
+                focusNode: isCreateMode ? (focusNode..requestFocus()) : null,
+              ),
+            ),
+            const Divider(),
+            SwitchListTile(
+              value: isActivate,
+              title: Text(
+                isCreateMode
+                    ? DateTime.now().toString()
+                    : widget.event!.time.toString(),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              subtitle: const Text('Нажмите, чтобы изменить время'),
+              onChanged: (value) {
+                setState(() {
+                  isActivate = value;
+                });
+              },
+            ),
+          ],
         ),
       ),
     );
