@@ -36,7 +36,7 @@ class NotificationsScreen extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             heroTag: 'notification_action',
             child: const Icon(Icons.add),
-            onPressed: () { 
+            onPressed: () {
               final presenter = context.read<NotificationsScreenPresenter>();
               showDialog(
                 context: context,
