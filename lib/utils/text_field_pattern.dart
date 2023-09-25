@@ -6,16 +6,18 @@ class TextFieldPattern extends StatelessWidget {
     required this.onEdit,
     required this.value,
     required this.valueName,
+    this.inputType = TextInputType.number,
   });
 
   final String value;
   final String valueName;
+  final TextInputType inputType;
   final Function(String value) onEdit;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
+      children: [ 
         const SizedBox(height: 25),
         Center(
           child: Text(
@@ -37,7 +39,7 @@ class TextFieldPattern extends StatelessWidget {
           // каждой формочке нужны свои настройки
           textAlign: TextAlign.center,
           textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
+          keyboardType: inputType,
           onChanged: onEdit,
         ),
         const SizedBox(height: 10),

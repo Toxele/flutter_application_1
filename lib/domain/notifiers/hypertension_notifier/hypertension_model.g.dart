@@ -6,7 +6,7 @@ part of 'hypertension_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-HypertensionModel _$UserRecordFromJson(Map<String, dynamic> json) =>
+HypertensionModel _$HypertensionModelFromJson(Map<String, dynamic> json) =>
     HypertensionModel(
       sys: json['sys'] as int?,
       dia: json['dia'] as int?,
@@ -18,7 +18,7 @@ HypertensionModel _$UserRecordFromJson(Map<String, dynamic> json) =>
           const EpochDateTimeConverter().fromJson(json['timeOfRecord'] as int),
     );
 
-Map<String, dynamic> _$UserRecordToJson(HypertensionModel instance) =>
+Map<String, dynamic> _$HypertensionModelToJson(HypertensionModel instance) =>
     <String, dynamic>{
       'sys': instance.sys,
       'dia': instance.dia,

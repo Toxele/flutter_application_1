@@ -24,7 +24,7 @@ class HypertensionModel {
   });
 
   factory HypertensionModel.fromJson(Map<String, dynamic> json) =>
-      _$UserRecordFromJson(json);
+      _$HypertensionModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserRecordToJson(this);
+  Map<String, dynamic> toJson() => _$HypertensionModelToJson(this);
 }

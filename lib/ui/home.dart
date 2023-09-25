@@ -69,6 +69,7 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
   Future<void> load() async {
     final isTimeToStepper = storage.getBool(StorageStore.isTimeToStepperKey) ??
         StorageStore.isTimeToStepperDefaultValue;
+
     if (isTimeToStepper) {
       value = const StepperHomeState();
       return;
@@ -185,13 +186,15 @@ class HomePage extends StatelessWidget {
                 case HomeStateError(message: final message):
                   child = Center(child: Text(message));
                 case StepperHomeState():
-                  child = const StepperScreen();
-                case HomeStateDataEmpty():
+                  child = Provider(
+                    builder: (context, child) => const StepperScreen(), create: (BuildContext context) {  },
+                  );
+                case HomeStateDataEmpty(): 
                   child = const Center(
                     child: Text('У вас нет сохранений'),
                   );
               }
-              return child;
+              return child; 
             },
           ),
           drawer: SafeArea(
@@ -258,7 +261,7 @@ class _HypertensionTile extends StatelessWidget {
       ),
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () => showDialog(
+        onTap: () => showDialog( 
           context: context,
           builder: (context) {
             return Provider(

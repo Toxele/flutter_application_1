@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
+import 'package:flutter_application_1/ui/home.dart';
 import 'package:flutter_application_1/utils/text_field_pattern.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,8 @@ class _StepperScreenState extends State<StepperScreen> {
           storageRepository.setDouble(StorageStore.weightKey, _weight);
           storageRepository.setDouble(StorageStore.heightKey, _height);
           storageRepository.setBool(StorageStore.isTimeToStepperKey, false);
+          final value = context.read<HomeStateNotifier>();
+          value.value = const HomeStateDataEmpty(); // Уязвимое место, если мы захотим использовать повторно 
         }
       },
       onStepTapped: (int index) {

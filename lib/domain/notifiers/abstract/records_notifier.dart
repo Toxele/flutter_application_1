@@ -44,7 +44,6 @@ abstract base class RecordsNotifier<T>
     final path = await _getPath;
     final file = File(path);
     if (await file.exists()) {
-      
       String rawRecordsList = await file.readAsString();
       if (rawRecordsList.isNotEmpty) {
         value = RecordsNotifierData(await serializeData(rawRecordsList));

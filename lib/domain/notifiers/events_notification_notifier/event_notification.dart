@@ -25,28 +25,10 @@ class EventNotification {
     this.isActive = true,
   });
 
-  // factory EventNotification.fromJson(Map<String, dynamic> json) =>
-  //     _$UserNotificationRecordFromJson(json);
-  //
-  // Map<String, dynamic> toJson() => _$UserNotificationRecordToJson(this);
+  factory EventNotification.fromJson(Map<String, dynamic> json) =>
+      _$EventNotificationFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'uuid': uuid,
-      'text': text,
-      'time': const EpochDateTimeConverter().toJson(time),
-      'isActive': isActive,
-    };
-  }
-
-  factory EventNotification.fromJson(Map<String, dynamic> map) {
-    return EventNotification(
-      uuid: map['uuid'] as int,
-      text: map['text'] as String,
-      time: const EpochDateTimeConverter().fromJson(map['time'] as int),
-      isActive: map['isActive'] as bool,
-    );
-  }
+  Map<String, dynamic> toJson() => _$EventNotificationToJson(this);
 
   @override
   bool operator ==(Object other) =>

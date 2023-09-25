@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/text_field_pattern.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/storage_repository.dart';
@@ -14,11 +15,10 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            title: Text('Важная настройка 1'),
+            title: const Text('Вес'),
             onTap: () {
-              print('12345');
             },
-          ),
+          ), 
           ListTile(
             title: Text('Важная настройка 1'),
             onTap: () {},

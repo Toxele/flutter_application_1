@@ -27,7 +27,7 @@ base class EventsNotificationNotifier
     for (final record in jsonDecode(data) as List) {
       recordList
           .add(EventNotification.fromJson(record as Map<String, dynamic>));
-    }
+    } 
     return recordList.reversed.toList();
   }
 
