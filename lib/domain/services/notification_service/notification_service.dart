@@ -54,6 +54,10 @@ class NotificationService {
     );
     const notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
+
+    // todo: удалить это, а для windows систем вообще не внедрять уведомляшки
+    if (Platform.isWindows) return;
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       'Вы просили уведомить...',

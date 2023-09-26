@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/event_notification.dart';
 import 'package:flutter_application_1/ui/notifications/notifications_presenter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class EventNotificationInfo extends StatefulWidget {
@@ -18,7 +19,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
   final selectedTime =
       ValueNotifier(DateTime.now().add(const Duration(days: 1)));
   final selectedDate =
-      ValueNotifier(DateTime.now().add(const Duration(days: 365)));
+      ValueNotifier(DateTime.now().add(const Duration(days: 1)));
   bool isActivate = true;
 
   @override
@@ -50,12 +51,26 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
           child: const Icon(Icons.save),
           onPressed: () {
             final presenter = context.read<NotificationsScreenPresenter>();
-            presenter.addRecord(
-              text: textController.text,
-              time: selectedTime.value ??
-                  DateTime.now(), // todo: пока что костыль
-              isActive: true,
-            );
+
+            if (isCreateMode) {
+              presenter.addRecord(
+                text: textController.text,
+                time: selectedDate.value.copyWith(
+                  hour: selectedTime.value.hour,
+                  minute: selectedTime.value.minute,
+                ),
+                isActive: true,
+              );
+            } else {
+              // presenter.updateRecord(
+              //   text: textController.text,
+              //   time: selectedDate.value.copyWith(
+              //     hour: selectedTime.value.hour,
+              //     minute: selectedTime.value.minute,
+              //   ),
+              //   isActive: true,
+              // );
+            }
           },
         ),
         body: Column(
@@ -89,8 +104,8 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
             ),
             // TimeTile(),
             TimeTile(
-              selectedDate: selectedDate,
-              selectedTime: selectedTime,
+              dateNotifier: selectedDate,
+              timeNotifier: selectedTime,
             ),
           ],
         ),
@@ -102,12 +117,12 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
 class TimeTile extends StatelessWidget {
   const TimeTile({
     super.key,
-    required this.selectedTime,
-    required this.selectedDate,
+    required this.timeNotifier,
+    required this.dateNotifier,
   });
 
-  final ValueNotifier<DateTime> selectedTime;
-  final ValueNotifier<DateTime> selectedDate;
+  final ValueNotifier<DateTime> timeNotifier;
+  final ValueNotifier<DateTime> dateNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -115,41 +130,52 @@ class TimeTile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         ValueListenableBuilder(
-          valueListenable: selectedTime,
+          valueListenable: timeNotifier,
           builder: (context, value, child) {
+            final time = DateFormat('HH:mm').format(timeNotifier.value);
+
             return ActionChip(
               onPressed: () async {
-                final time = DateTime.now().add(const Duration(days: 1));
+                final time = timeNotifier.value;
 
                 // todo задать ограничение, что выбранное время не может быть меньше текущего
                 final selectedTime = await showTimePicker(
                   context: context,
                   initialTime: TimeOfDay(hour: time.hour, minute: time.minute),
                 );
+
+                if (selectedTime == null) return;
+
+                timeNotifier.value = time.copyWith(
+                  hour: selectedTime.hour,
+                  minute: selectedTime.minute,
+                );
               },
-              label: Text('12:32'), // use value
+              label: Text(time), // use value
             );
           },
         ),
         ValueListenableBuilder(
-          valueListenable: selectedDate,
+          valueListenable: dateNotifier,
           builder: (context, value, child) {
+            final date = DateFormat('d MMMM yyyy').format(timeNotifier.value);
+
             return ActionChip(
               onPressed: () async {
-                final date = DateTime.now().add(const Duration(days: 1));
+                final date = dateNotifier.value;
 
                 final selected = await showDatePicker(
                   context: context,
-                  firstDate: date,
+                  firstDate: DateTime.now(),
                   lastDate: date.add(const Duration(days: 365)),
                   initialDate: date,
                 );
 
                 if (selected == null) return;
 
-                selectedDate.value = selected;
+                dateNotifier.value = selected;
               },
-              label: Text('12 сентября 2022'), // use value
+              label: Text(date), // use value
             );
           },
         ),
