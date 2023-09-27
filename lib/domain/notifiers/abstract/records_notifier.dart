@@ -60,12 +60,22 @@ abstract base class RecordsNotifier<T>
     final path = await _getPath;
     final file = File(path);
     if (!await file.exists()) {
-      
       await file.create();
     }
     String encoded = json.encode(data);
 
     await file.writeAsString(encoded);
+  }
+
+  @protected
+  Future<void> removeRecord(int index) async {
+    final path = await _getPath;
+    final file = File(path);
+    if (await file.exists()) {
+      String rawRecordsList = await file.readAsString();
+      T list = await serializeData(rawRecordsList);
+      
+    }
   }
 
   /// Хранимые файлы должны преобразовываться в модельки.

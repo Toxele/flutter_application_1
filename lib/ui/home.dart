@@ -5,6 +5,7 @@ import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../application/theme_mode_notifier.dart';
@@ -168,7 +169,7 @@ class HomePage extends StatelessWidget {
                               width: double.infinity,
                               child: Card(
                                 child: Text(
-                                  '${time.day} ${time.month} ${time.year} года',
+                                  DateFormat('d MMMM yyyy').format(time),
                                 ),
                               ),
                             ),
