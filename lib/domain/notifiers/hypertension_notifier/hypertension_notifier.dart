@@ -1,32 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter_application_1/data/storage_repository.dart';
 
 import '../abstract/records_notifier.dart';
 import '../weather_notifier/weather.dart';
 import 'hypertension_model.dart';
 
-base class HypertensionNotifier
-    extends RecordsNotifier<List<HypertensionModel>> {
+base class HypertensionNotifier extends RecordsNotifier<HypertensionModel> {
   HypertensionNotifier({
     required this.storageRepo,
   });
 
   @override
-  String get fileName => '\\hypertension_data.json';
+  String get fileName => 'hypertension_data.json';
 
   final StorageRepository storageRepo;
-
-  @override
-  Future<List<HypertensionModel>> serializeData(String data) async {
-    final recordList = <HypertensionModel>[];
-    for (final record in jsonDecode(data) as List) {
-      recordList
-          .add(HypertensionModel.fromJson(record as Map<String, dynamic>));
-    }
-    
-    return recordList.reversed.toList();
-  }
 
   Future<void> saveRecord({
     int sys = 120,
@@ -34,16 +20,6 @@ base class HypertensionNotifier
     int pulse = 75,
     required Weather weather,
   }) async {
-    // todo еЩЁ подумать здесь над логикой
-
-    var records = <HypertensionModel>[];
-
-    if (value case RecordsNotifierData(data: final data)) {
-      value = const RecordsNotifierLoading();
-      records = [...data];
-    }
-      value = const RecordsNotifierLoading(); 
-
     final user = HypertensionModel(
       sys: sys,
       dia: dia,
@@ -52,12 +28,16 @@ base class HypertensionNotifier
       timeOfRecord: DateTime.now(),
     );
 
-    records.add(user);
-    final recordsRaw = records.map((e) => e.toJson()).toList();
-
-    addRecord(recordsRaw);
-    load();
+    addRecord(user);
   }
+
+  @override
+  Map<String, dynamic> deserializeElement(HypertensionModel element) =>
+      element.toJson();
+
+  @override
+  HypertensionModel serializeElement(Map<String, dynamic> data) =>
+      HypertensionModel.fromJson(data);
 
   /// todo: подумать над логикой этого всего
   Future<bool> acceptRecord(int sys, int dia, int pulse) async {

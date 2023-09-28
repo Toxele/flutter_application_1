@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_final_locals, file_names, cast_nullable_to_non_nullable, unused_field
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:uuid/v7.dart';
@@ -11,7 +10,7 @@ import 'event_notification.dart';
 
 // todo доработать логику всего класса
 base class EventsNotificationNotifier
-    extends RecordsNotifier<List<EventNotification>> {
+    extends RecordsNotifier<EventNotification> {
   EventsNotificationNotifier({
     required NotificationService notificationService,
   }) : _notificationService = notificationService;
@@ -19,17 +18,17 @@ base class EventsNotificationNotifier
   final NotificationService _notificationService;
 
   @override
-  String get fileName => '\\events_notification_data.json';
+  String get fileName => 'events_notification_data.json';
+
+  // todo: recordList.reversed.toList(); внутри ui сделать это
 
   @override
-  Future<List<EventNotification>> serializeData(String data) async {
-    final recordList = <EventNotification>[];
-    for (final record in jsonDecode(data) as List) {
-      recordList
-          .add(EventNotification.fromJson(record as Map<String, dynamic>));
-    } 
-    return recordList.reversed.toList();
-  }
+  EventNotification serializeElement(Map<String, dynamic> dataElement) =>
+      EventNotification.fromJson(dataElement);
+
+  @override
+  Map<String, dynamic> deserializeElement(EventNotification element) =>
+      element.toJson();
 
   String get _uuid => const UuidV7().generate();
 
@@ -38,30 +37,20 @@ base class EventsNotificationNotifier
     required DateTime time,
     bool? isActive,
   }) async {
-    var records = <EventNotification>[];
-    if (value case RecordsNotifierData(data: final data)) {
-      value = const RecordsNotifierLoading();
-      records = [...data];
-    }
-    value = const RecordsNotifierLoading();
-
-    final user = EventNotification(
+    var event = EventNotification(
       time: time,
       text: text,
       uuid: DateTime.now().millisecondsSinceEpoch,
     );
 
     _notificationService.addEvent(
-      id: user.uuid,
-      message: user.text,
-      time: user.time,
+      id: event.uuid,
+      message: event.text,
+      time: event.time,
     );
 
-    if (isActive != null) user.copyWith(isActive: isActive);
+    if (isActive != null) event = event.copyWith(isActive: isActive);
 
-    records.add(user);
-    final recordsRaw = records.map((e) => e.toJson()).toList();
-    addRecord(recordsRaw);
-    load();
+    addRecord(event);
   }
 }
