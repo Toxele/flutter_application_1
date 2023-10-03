@@ -154,20 +154,21 @@ class HomePage extends StatelessWidget {
               switch (recordsState) {
                 case HomeStateData(data: final records):
                   child = ListView.builder(
-                    padding: const EdgeInsets.all(16),
+                    // reverse: true,
+                    padding: const EdgeInsets.all(8.0),
                     itemCount: records.length,
                     itemBuilder: (BuildContext context, int index) {
                       final time = records[index].timeOfRecord;
 
                       if (index == 0 ||
-                          (index == 1 &&
-                              records[0].timeOfRecord.day !=
-                                  records[1].timeOfRecord.day)) {
+                          (records[index - 1].timeOfRecord.day !=
+                              records[index].timeOfRecord.day)) {
                         return Column(
                           children: [
                             SizedBox(
                               width: double.infinity,
                               child: Card(
+                                margin: const EdgeInsets.all(8.0),
                                 child: Text(
                                   DateFormat('d MMMM yyyy').format(time),
                                 ),
@@ -188,14 +189,15 @@ class HomePage extends StatelessWidget {
                   child = Center(child: Text(message));
                 case StepperHomeState():
                   child = Provider(
-                    builder: (context, child) => const StepperScreen(), create: (BuildContext context) {  },
+                    builder: (context, child) => const StepperScreen(),
+                    create: (BuildContext context) {},
                   );
-                case HomeStateDataEmpty(): 
+                case HomeStateDataEmpty():
                   child = const Center(
                     child: Text('У вас нет сохранений'),
                   );
               }
-              return child; 
+              return child;
             },
           ),
           drawer: SafeArea(
@@ -254,15 +256,14 @@ class _HypertensionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     String currentTime =
         '${record.timeOfRecord.hour}:${record.timeOfRecord.minute > 9 ? record.timeOfRecord.minute : '0${record.timeOfRecord.minute}'}';
-    // используем тут этот record
-    print('build: ${record.dia}');
+
     return Card(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () => showDialog( 
+        onTap: () => showDialog(
           context: context,
           builder: (context) {
             return Provider(
