@@ -66,7 +66,7 @@ abstract base class RecordsNotifier<T extends Object>
 
     _state.add(element);
 
-    String encoded = json.encode(_deserialize(_state));
+    String encoded = _deserialize(_state);
     _writeData(encoded);
 
     value = RecordsNotifierData(_state);
@@ -80,7 +80,7 @@ abstract base class RecordsNotifier<T extends Object>
     final index = _state.indexOf(oldElement);
     _state[index] = newElement;
 
-    String encoded = json.encode(_deserialize(_state));
+    String encoded = _deserialize(_state);
     _writeData(encoded);
 
     value = RecordsNotifierData(_state);
@@ -93,7 +93,7 @@ abstract base class RecordsNotifier<T extends Object>
     // мы считаем, что в списке нет похожих элементов и они иммутабельны
     _state.removeAt(_state.indexOf(element));
 
-    String encoded = json.encode(_deserialize(_state));
+    String encoded = _deserialize(_state);
     _writeData(encoded);
 
     value =
@@ -115,7 +115,7 @@ abstract base class RecordsNotifier<T extends Object>
   T serializeElement(Map<String, dynamic> dataElement);
 
   List<T> _serialize(String data) => [
-        for (final element in data as List)
+        for (final element in json.decode(data) as List)
           serializeElement(element as Map<String, dynamic>),
       ];
 
