@@ -14,14 +14,22 @@ class ChangeValueFieldDouble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog.fullscreen(
       child: Scaffold(
-        appBar:
-            AppBar(), // можно ли выполнить проверку на то, что пользователь вышел из окна через аппбар?
+        // можно ли выполнить проверку на то, что пользователь вышел из окна через аппбар?
         body: TextFieldPattern(
           onEdit: (String value) {
             sr.setDouble(valueKey, double.parse(value));
           },
           value: sr.getDouble(valueKey).toString(),
           valueName: valueName,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: IconButton(
+            icon: const Icon(Icons.done),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
       ),
     );
