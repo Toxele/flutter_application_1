@@ -60,19 +60,17 @@ abstract base class RecordsNotifier<T extends Object>
     }
   }
 
-  @protected
   Future<void> addRecord(T element) async {
     value = const RecordsNotifierLoading();
 
     //_state.add(element); - старый вариант
-    _state.insert(0, element); // - новый 
+    _state.insert(0, element); // - новый
     String encoded = _deserialize(_state);
     _writeData(encoded);
 
     value = RecordsNotifierData(_state);
   }
 
-  @protected
   Future<void> updateRecord(T oldElement, T newElement) async {
     value = const RecordsNotifierLoading();
 
@@ -86,7 +84,6 @@ abstract base class RecordsNotifier<T extends Object>
     value = RecordsNotifierData(_state);
   }
 
-  @protected
   Future<void> removeRecord(T element) async {
     value = const RecordsNotifierLoading();
 

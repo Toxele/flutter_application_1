@@ -37,6 +37,7 @@ class InputRecordDialog extends StatelessWidget {
               final record = context.read<_InputRecord>();
               final userStatus = context.read<HypertensionNotifier>();
 
+              /// todo: парсинг вынести в [HypertensionNotifier.acceptRecord]
               final sys = int.tryParse(record.sys) ?? 0;
               final dia = int.tryParse(record.dia) ?? 0;
               final pulse = int.tryParse(record.pulse) ?? 0;

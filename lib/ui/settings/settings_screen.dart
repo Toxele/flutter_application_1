@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/shared/change_value_field.dart';
-import 'package:flutter_application_1/utils/text_field_pattern.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/storage_repository.dart';

@@ -67,6 +67,10 @@ class HomeStateNotifier extends ValueNotifier<HomeState> {
     );
   }
 
+  Future<void> removeRecord(HypertensionModel record) async {
+    userRecordsNotifier.removeRecord(record);
+  }
+
   Future<void> load() async {
     final isTimeToStepper = storage.getBool(StorageStore.isTimeToStepperKey) ??
         StorageStore.isTimeToStepperDefaultValue;
@@ -147,59 +151,7 @@ class HomePage extends StatelessWidget {
             ),
             onPressed: () {},
           ),
-          body: Consumer<HomeStateNotifier>(
-            builder: (context, homeStateNotifier, child) {
-              final recordsState = homeStateNotifier.value;
-              Widget child;
-              switch (recordsState) {
-                case HomeStateData(data: final records):
-                  child = ListView.builder(
-                    // reverse: true,
-                    padding: const EdgeInsets.all(8.0),
-                    itemCount: records.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final time = records[index].timeOfRecord;
-
-                      if (index == 0 ||
-                          (records[index - 1].timeOfRecord.day !=
-                              records[index].timeOfRecord.day)) {
-                        return Column(
-                          children: [
-                            SizedBox(
-                              width: double.infinity,
-                              child: Card(
-                                margin: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  DateFormat('d MMMM yyyy').format(time),
-                                ),
-                              ),
-                            ),
-                            _HypertensionTile(record: records[index]),
-                          ],
-                        );
-                      }
-                      return _HypertensionTile(record: records[index]);
-                    },
-                  );
-                case HomeStateLoading():
-                  child = const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                case HomeStateError(message: final message):
-                  child = Center(child: Text(message));
-                case StepperHomeState():
-                  child = Provider(
-                    builder: (context, child) => const StepperScreen(),
-                    create: (BuildContext context) {},
-                  );
-                case HomeStateDataEmpty():
-                  child = const Center(
-                    child: Text('У вас нет сохранений'),
-                  );
-              }
-              return child;
-            },
-          ),
+          body: const _HypertensionBody(),
           drawer: SafeArea(
             child: Drawer(
               child: ListView(
@@ -245,6 +197,63 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class _HypertensionBody extends StatelessWidget {
+  const _HypertensionBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final homeStateNotifier = context.watch<HomeStateNotifier>();
+    final recordsState = homeStateNotifier.value;
+
+    Widget child;
+    switch (recordsState) {
+      case HomeStateData(data: final records):
+        child = ListView.builder(
+          // reverse: true,
+          padding: const EdgeInsets.all(8.0),
+          itemCount: records.length,
+          itemBuilder: (BuildContext context, int index) {
+            final time = records[index].timeOfRecord;
+
+            if (index == 0 ||
+                (records[index - 1].timeOfRecord.day !=
+                    records[index].timeOfRecord.day)) {
+              return Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      margin: const EdgeInsets.all(8.0),
+                      child: Text(
+                        DateFormat('d MMMM yyyy').format(time),
+                      ),
+                    ),
+                  ),
+                  _HypertensionTile(record: records[index]),
+                ],
+              );
+            }
+            return _HypertensionTile(record: records[index]);
+          },
+        );
+      case HomeStateLoading():
+        child = const Center(
+          child: CircularProgressIndicator(),
+        );
+      case HomeStateError(message: final message):
+        child = Center(child: Text(message));
+      case StepperHomeState():
+        child = const StepperScreen();
+      case HomeStateDataEmpty():
+        child = const Center(
+          child: Text('У вас нет сохранений'),
+        );
+    }
+
+    return child;
+  }
+}
+
 class _HypertensionTile extends StatelessWidget {
   final HypertensionModel record;
 
@@ -254,103 +263,121 @@ class _HypertensionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // todo использовать DateFormat
     String currentTime =
         '${record.timeOfRecord.hour}:${record.timeOfRecord.minute > 9 ? record.timeOfRecord.minute : '0${record.timeOfRecord.minute}'}';
 
-    return Card(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+    return Dismissible(
+      // todo определить в модельке приватный геттер uuid, который будет возвращаться уникальное значение
+      // мы тот раз определились, что это будет время
+      key: ValueKey(record.timeOfRecord.millisecondsSinceEpoch),
+      onDismissed: (direction) {
+        context.read<HomeStateNotifier>().removeRecord(record);
+      },
+      background: const Align(
+        alignment: Alignment.centerLeft,
+        child: Icon(Icons.delete),
       ),
-      clipBehavior: Clip.hardEdge,
-      child: InkWell(
-        onTap: () => showDialog(
-          context: context,
-          builder: (context) {
-            return Provider(
-              create: (_) => record,
-              child: const HypertensionInfo(),
-            );
-          },
+      secondaryBackground: const Align(
+        alignment: Alignment.centerRight,
+        child: Icon(Icons.delete),
+      ),
+      child: Card(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              const SizedBox(
-                width: 4,
-              ),
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.red,
+        clipBehavior: Clip.hardEdge,
+        child: InkWell(
+          onTap: () => showDialog(
+            context: context,
+            builder: (context) {
+              return Provider(
+                create: (_) => record,
+                child: const HypertensionInfo(),
+              );
+            },
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 4,
                 ),
-                child: const SizedBox(
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.red,
+                  ),
+                  child: const SizedBox(
+                    width: 10,
+                    height: 60,
+                  ),
+                ),
+                const SizedBox(
+                  width: 7,
+                ),
+                Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        right: 5,
+                        bottom: 3,
+                      ),
+                      child: Text(
+                        currentTime,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    Text(
+                      record.sys.toString(),
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 7,
+                ),
+                const Column(
+                  children: <Widget>[
+                    Text(
+                      'SYS',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    Text(
+                      'мм.рт.ст',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 50,
+                ),
+                Text(record.dia.toString(),
+                    style: const TextStyle(fontSize: 20)),
+                const SizedBox(
                   width: 10,
-                  height: 60,
                 ),
-              ),
-              const SizedBox(
-                width: 7,
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      right: 5,
-                      bottom: 3,
+                const Column(
+                  children: <Widget>[
+                    Text(
+                      'DIA',
+                      style: TextStyle(fontSize: 13),
                     ),
-                    child: Text(
-                      currentTime,
-                      style: const TextStyle(fontSize: 12),
+                    Text(
+                      'мм.рт.ст',
+                      style: TextStyle(fontSize: 13),
                     ),
-                  ),
-                  Text(
-                    record.sys.toString(),
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                width: 7,
-              ),
-              const Column(
-                children: <Widget>[
-                  Text(
-                    'SYS',
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  Text(
-                    'мм.рт.ст',
-                    style: TextStyle(fontSize: 13),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                width: 50,
-              ),
-              Text(record.dia.toString(), style: const TextStyle(fontSize: 20)),
-              const SizedBox(
-                width: 10,
-              ),
-              const Column(
-                children: <Widget>[
-                  Text(
-                    'DIA',
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  Text(
-                    'мм.рт.ст',
-                    style: TextStyle(fontSize: 13),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Text(record.pulse.toString(),
-                  style: const TextStyle(fontSize: 20)),
-              const SizedBox(
-                width: 30,
-              ),
-            ],
+                  ],
+                ),
+                const Spacer(),
+                Text(record.pulse.toString(),
+                    style: const TextStyle(fontSize: 20)),
+                const SizedBox(
+                  width: 30,
+                ),
+              ],
+            ),
           ),
         ),
       ),
