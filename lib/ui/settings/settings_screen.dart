@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/ui/shared/change_value_field.dart';
 import 'package:flutter_application_1/utils/text_field_pattern.dart';
 import 'package:provider/provider.dart';
 
@@ -17,11 +18,32 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             title: const Text('Вес'),
             onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return ChangeValueFieldDouble(
+                    sr,
+                    StorageStore.weightKey,
+                    'Вес',
+                  );
+                },
+              );
             },
-          ), 
+          ),
           ListTile(
-            title: Text('Важная настройка 1'),
-            onTap: () {},
+            title: Text('Рост'),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return ChangeValueFieldDouble(
+                    sr,
+                    StorageStore.heightKey,
+                    'Рост',
+                  );
+                },
+              );
+            },
           ),
           SwitchListTile(
             value: true,

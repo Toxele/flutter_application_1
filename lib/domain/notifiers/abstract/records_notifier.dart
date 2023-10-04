@@ -64,8 +64,8 @@ abstract base class RecordsNotifier<T extends Object>
   Future<void> addRecord(T element) async {
     value = const RecordsNotifierLoading();
 
-    _state.add(element);
-
+    //_state.add(element); - старый вариант
+    _state.insert(0, element); // - новый 
     String encoded = _deserialize(_state);
     _writeData(encoded);
 
