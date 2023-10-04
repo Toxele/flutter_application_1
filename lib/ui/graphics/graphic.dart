@@ -63,7 +63,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
               });
             },
             child: Text(
-              'avg',
+              'Увеличить',
               style: TextStyle(
                 fontSize: 12,
                 color: showAvg ? Colors.white.withOpacity(0.5) : Colors.white,
@@ -103,6 +103,20 @@ class _LineChartSample2State extends State<LineChartSample2> {
       case 12:
         text = linePattirnWidget(6);
         break;
+      case 14:
+        text = linePattirnWidget(7);
+      case 16:
+        text = linePattirnWidget(8);
+      case 18:
+        text = linePattirnWidget(9);
+      case 20:
+        text = linePattirnWidget(10);
+      case 22:
+        text = linePattirnWidget(11);
+      case 24:
+        text = linePattirnWidget(12);
+      case 26:
+        text = linePattirnWidget(14);
       default:
         text = const Text('', style: style);
         break;
@@ -124,7 +138,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
             ? _dataRecords[idx].timeOfRecord.hour.toString()
             : '0',
         style: style);
-    ;
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
@@ -173,7 +186,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
       );
       // todo: настроить отображение y
       print(touchedSpot);
-      return LineTooltipItem((60 + 10 * (touchedSpot.y - 2)).toString(), textStyle);
+      return LineTooltipItem(
+          (60 + 10 * (touchedSpot.y - 2)).toString(), textStyle);
     }).toList();
   }
 
@@ -238,11 +252,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
       lineBarsData: [
         lineChart(
           context,
-          makeFLSpots(_dataRecords, true),
+          makeFLSpots(records: _dataRecords, isSys: true),
         ),
         lineChart(
           context,
-          makeFLSpots(_dataRecords, false),
+          makeFLSpots(records: _dataRecords, isSys: false),
         ),
       ],
     );
@@ -272,7 +286,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
   LineChartData avgData() {
     return LineChartData(
-      lineTouchData: const LineTouchData(enabled: false),
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipItems: lineTooltipItem,
+        ),
+      ),
       gridData: FlGridData(
         show: true,
         drawHorizontalLine: true,
@@ -321,20 +339,19 @@ class _LineChartSample2State extends State<LineChartSample2> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: 26,
       minY: 0,
-      maxY: 6,
+      maxY: 15,
       lineBarsData: [
+        lineChart(
+          context,
+          makeFLSpots(records: _dataRecords, length: 26, isSys: true),
+        ),
+        lineChart(
+          context,
+          makeFLSpots(records: _dataRecords, length: 26, isSys: false),
+        ),
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
-          ],
           isCurved: true,
           gradient: LinearGradient(
             colors: [
@@ -366,11 +383,14 @@ class _LineChartSample2State extends State<LineChartSample2> {
       ],
     );
   }
-  
-  List<FlSpot> makeFLSpots(List<HypertensionModel> records, bool isSys) {
+
+  List<FlSpot> makeFLSpots(
+      {required List<HypertensionModel> records,
+      int length = 7,
+      required bool isSys}) {
     List<FlSpot> spots = [];
     double index = 2;
-    for (int i = 0; i < min(7, records.length); i++) {
+    for (int i = 0; i < min(length, records.length); i++) {
       if (isSys) {
         spots.add(FlSpot(index - 2, 2.0 + (records[i].sys! - 60.0) / 10.0));
       } else {

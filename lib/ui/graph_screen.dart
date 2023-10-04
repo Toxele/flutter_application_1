@@ -31,7 +31,7 @@ class GraphScreenState extends State<GraphScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Мой график')),
-      body: LineChartSample2(),
+      body: const LineChartSample2(),
       /* ListenableBuilder(
         listenable: cartNotifier,
         builder: (context, child) {
