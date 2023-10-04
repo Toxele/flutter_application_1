@@ -15,7 +15,9 @@ class HypertensionModel {
   @EpochDateTimeConverter()
   final DateTime timeOfRecord; // todo: это время снятия показаний?
 
-  HypertensionModel({
+  int get uuid => timeOfRecord.millisecondsSinceEpoch;
+
+  const HypertensionModel({
     this.sys,
     this.dia,
     this.pulse,

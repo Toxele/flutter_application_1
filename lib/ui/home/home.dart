@@ -1,92 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/application/app_const.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
-import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
-import 'package:flutter_application_1/domain/notifiers/weather_notifier/weather.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../application/theme_mode_notifier.dart';
-import 'dialogues/input_record_dialog.dart';
-import 'dialogues/record_info_dialog.dart';
-import 'stepper/stepper_screen.dart';
-
-sealed class HomeState {
-  const HomeState();
-}
-
-class HomeStateData extends HomeState {
-  const HomeStateData(this.data);
-
-  final List<HypertensionModel> data;
-}
-
-class HomeStateLoading extends HomeState {
-  const HomeStateLoading();
-}
-
-class HomeStateError extends HomeState {
-  const HomeStateError(this.message);
-
-  final String message;
-}
-
-class HomeStateDataEmpty extends HomeState {
-  const HomeStateDataEmpty();
-}
-
-class StepperHomeState extends HomeState {
-  const StepperHomeState();
-}
-
-class HomeStateNotifier extends ValueNotifier<HomeState> {
-  HomeStateNotifier({
-    required this.userRecordsNotifier,
-    required this.storage,
-  }) : super(const HomeStateLoading()) {
-    load();
-  }
-
-  final HypertensionNotifier userRecordsNotifier;
-  final StorageRepository storage;
-
-  Future<void> addRecord({
-    int sys = 120,
-    int dia = 80,
-    int pulse = 75,
-    required Weather weather,
-  }) async {
-    value = const HomeStateLoading();
-    userRecordsNotifier.saveRecord(
-      sys: sys,
-      dia: dia,
-      pulse: pulse,
-      weather: weather,
-    );
-  }
-
-  Future<void> removeRecord(HypertensionModel record) async {
-    userRecordsNotifier.removeRecord(record);
-  }
-
-  Future<void> load() async {
-    final isTimeToStepper = storage.getBool(StorageStore.isTimeToStepperKey) ??
-        StorageStore.isTimeToStepperDefaultValue;
-
-    if (isTimeToStepper) {
-      value = const StepperHomeState();
-      return;
-    }
-
-    value = switch (userRecordsNotifier.value) {
-      RecordsNotifierData(data: final records) => HomeStateData(records),
-      RecordsNotifierLoading() => const HomeStateLoading(),
-      RecordsNotifierEmpty() => const HomeStateDataEmpty(),
-    };
-  }
-}
+import '../../application/theme_mode_notifier.dart';
+import '../dialogues/input_record_dialog.dart';
+import '../dialogues/record_info_dialog.dart';
+import '../stepper/stepper_screen.dart';
+import 'home_presenter.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage();
@@ -96,14 +20,14 @@ class HomePage extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProxyProvider2<HypertensionNotifier, StorageRepository,
-            HomeStateNotifier>(
-          create: (context) => HomeStateNotifier(
+            HomeStatePresenter>(
+          create: (context) => HomeStatePresenter(
             userRecordsNotifier: context.read<HypertensionNotifier>(),
             storage: context.read<StorageRepository>(),
           ),
           update:
               (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
-                  HomeStateNotifier(
+                  HomeStatePresenter(
             userRecordsNotifier: userRecordsNotifier,
             storage: storage,
           ),
@@ -133,7 +57,7 @@ class HomePage extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
-                final recordsNotifier = context.read<HomeStateNotifier>();
+                final recordsNotifier = context.read<HomeStatePresenter>();
                 final userStatusNotifier = context.read<HypertensionNotifier>();
 
                 showDialog(
@@ -202,7 +126,7 @@ class _HypertensionBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final homeStateNotifier = context.watch<HomeStateNotifier>();
+    final homeStateNotifier = context.watch<HomeStatePresenter>();
     final recordsState = homeStateNotifier.value;
 
     Widget child;
@@ -268,11 +192,11 @@ class _HypertensionTile extends StatelessWidget {
         '${record.timeOfRecord.hour}:${record.timeOfRecord.minute > 9 ? record.timeOfRecord.minute : '0${record.timeOfRecord.minute}'}';
 
     return Dismissible(
-      // todo определить в модельке приватный геттер uuid, который будет возвращаться уникальное значение
-      // мы тот раз определились, что это будет время
-      key: ValueKey(record.timeOfRecord.millisecondsSinceEpoch),
+      key: ValueKey(record.uuid),
       onDismissed: (direction) {
-        context.read<HomeStateNotifier>().removeRecord(record);
+        // todo: сделать окошко предупреждения
+        // showDialog(context: context, builder: builder);
+        context.read<HomeStatePresenter>().removeRecord(record);
       },
       background: const Align(
         alignment: Alignment.centerLeft,

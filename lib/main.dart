@@ -12,7 +12,7 @@ import 'data/weather_repository.dart';
 import 'domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
 import 'domain/notifiers/weather_notifier/weather_notifier.dart';
 import 'domain/services/notification_service/notification_service.dart';
-import 'ui/home.dart';
+import 'ui/home/home.dart';
 import 'ui/settings/settings_screen.dart';
 
 Future<void> main() async {
