@@ -22,6 +22,9 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
       ValueNotifier(DateTime.now().add(const Duration(days: 1)));
   bool isActivate = true;
 
+  late final event = widget.event;
+  late final isCreateMode = event == null;
+
   @override
   void dispose() {
     selectedTime.dispose();
@@ -33,12 +36,12 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final isCreateMode = widget.event == null;
-
     return Dialog.fullscreen(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Создание оповещения'),
+          title: Text(
+            isCreateMode ? 'Создание оповещения' : 'Редактирование оповещения',
+          ),
           actions: [
             IconButton(
               onPressed: () {},
@@ -71,6 +74,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
               //   isActive: true,
               // );
             }
+            Navigator.of(context).pop();
           },
         ),
         body: Column(
@@ -132,7 +136,7 @@ class TimeTile extends StatelessWidget {
         ValueListenableBuilder(
           valueListenable: timeNotifier,
           builder: (context, value, child) {
-            final time = DateFormat('HH:mm').format(timeNotifier.value);
+            final time = DateFormat('HH:mm').format(value);
 
             return ActionChip(
               onPressed: () async {
@@ -158,7 +162,7 @@ class TimeTile extends StatelessWidget {
         ValueListenableBuilder(
           valueListenable: dateNotifier,
           builder: (context, value, child) {
-            final date = DateFormat('d MMMM yyyy').format(timeNotifier.value);
+            final date = DateFormat('d MMMM yyyy').format(value);
 
             return ActionChip(
               onPressed: () async {

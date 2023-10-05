@@ -51,6 +51,24 @@ class NotificationsScreenPresenter
     );
   }
 
+  Future<void> updateRecord({
+    required String text,
+    required DateTime time,
+    bool? isActive,
+    required EventNotification oldRecord,
+  }) async {
+    value = const NotificationsScreenLoading();
+
+    // todo
+
+    _eventsNotificationNotifier.updateRecord(
+      text: text,
+      time: time,
+      isActive: isActive,
+      oldRecord: oldRecord,
+    );
+  }
+
   Future<void> load() async {
     value = switch (_eventsNotificationNotifier.value) {
       RecordsNotifierData(data: final records) =>

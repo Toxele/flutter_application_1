@@ -53,4 +53,15 @@ base class EventsNotificationNotifier
 
     addRecord(event);
   }
+
+  Future<void> updateRecord({
+    required String text,
+    required DateTime time,
+    required bool? isActive,
+    required EventNotification oldRecord,
+  }) async {
+    // todo
+    // реализовать метод, выделить создание объекта в отдельный приватный метод
+    updateRecord();
+  }
 }

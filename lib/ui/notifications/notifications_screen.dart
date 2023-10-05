@@ -56,7 +56,6 @@ class NotificationsScreen extends StatelessWidget {
               switch (recordsState) {
                 case NotificationsScreenData(data: final events):
                   child = ListView.builder(
-                    padding: const EdgeInsets.all(16),
                     itemCount: events.length,
                     itemBuilder: (BuildContext context, int index) {
                       final event = events[index];
@@ -64,6 +63,19 @@ class NotificationsScreen extends StatelessWidget {
                         isActive: event.isActive,
                         text: event.text,
                         time: event.time,
+                        onEdit: () {
+                          final presenter =
+                              context.read<NotificationsScreenPresenter>();
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ChangeNotifierProvider.value(
+                                value: presenter,
+                                child: const EventNotificationInfo(event: null),
+                              );
+                            },
+                          );
+                        },
                       );
                     },
                   );
@@ -91,15 +103,21 @@ class NotificationTile extends StatelessWidget {
     required this.text,
     required this.time,
     required this.isActive,
+    required this.onEdit,
   });
 
   final String text;
   final DateTime time;
   final bool isActive;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(
+      secondary: IconButton(
+        onPressed: onEdit,
+        icon: const Icon(Icons.edit),
+      ),
       title: Text(text),
       subtitle: Text(time.toString()),
       value: isActive,
