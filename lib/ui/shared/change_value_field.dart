@@ -10,6 +10,19 @@ class ChangeValueFieldDouble extends StatelessWidget {
   final String valueKey;
   final String valueName;
   const ChangeValueFieldDouble(this.sr, this.valueKey, this.valueName);
+  // TODO: вынести в отдельный контроллер и доделать
+  void setValue(Object? value) {
+    if (value is int) {
+      sr.setInt(valueKey, value);
+    }
+    if (value is double) {
+      sr.setDouble(valueKey, value);
+    }
+    if (value is String) {
+      sr.setString(valueKey, value);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog.fullscreen(

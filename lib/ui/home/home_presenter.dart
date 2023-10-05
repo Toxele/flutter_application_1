@@ -52,7 +52,7 @@ class HomeStatePresenter extends ValueNotifier<HomeState> {
   }) async {
     value = const HomeStateLoading();
     userRecordsNotifier.saveRecord(
-      sys: sys,
+      sys: sys, 
       dia: dia,
       pulse: pulse,
       weather: weather,

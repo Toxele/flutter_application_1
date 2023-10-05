@@ -45,8 +45,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             padding: const EdgeInsets.only(
               right: 18,
               left: 12,
-              top: 24,
-              bottom: 12,
+              top: 37,
             ),
             child: LineChart(
               showAvg ? avgData() : mainData(),
@@ -54,7 +53,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ),
         ),
         SizedBox(
-          width: 60,
+          width: 90,
           height: 34,
           child: TextButton(
             onPressed: () {
@@ -63,10 +62,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
               });
             },
             child: Text(
-              'Увеличить',
-              style: TextStyle(
+              showAvg ? 'Уменьшить' : 'Увеличить',
+              style: const TextStyle(
                 fontSize: 12,
-                color: showAvg ? Colors.white.withOpacity(0.5) : Colors.white,
+                color: Colors.white,
               ),
             ),
           ),
@@ -205,13 +204,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
-            color: Colors.green,
+            color: Color(0xff37434d),
             strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
           return const FlLine(
-            color: Colors.green,
+            color: Color(0xff37434d),
             strokeWidth: 1,
           );
         },

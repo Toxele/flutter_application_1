@@ -48,9 +48,9 @@ abstract base class RecordsNotifier<T extends Object>
     final path = await _getPath;
     final file = File(path);
     if (await file.exists()) {
-      String rawRecordsList = await file.readAsString();
-      if (rawRecordsList.isNotEmpty) {
-        _state = _serialize(rawRecordsList);
+      String rawRecordsList = await file.readAsString(); 
+      _state = _serialize(rawRecordsList);
+      if (_state.isNotEmpty) { // до этого мы сначала rawRecordList проверяли, но нужно _state, т.к это физически наш список, а не файл
         value = RecordsNotifierData(_state);
       } else {
         value = const RecordsNotifierEmpty();
