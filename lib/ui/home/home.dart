@@ -193,11 +193,24 @@ class _HypertensionTile extends StatelessWidget {
 
     return Dismissible(
       key: ValueKey(record.uuid),
-      onDismissed: (direction) {
-        // todo: сделать окошко предупреждения
-        // showDialog(context: context, builder: builder);
-        context.read<HomeStatePresenter>().removeRecord(record);
-      },
+      confirmDismiss: (direction) => showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Удалить запись?'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Нет'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Да'),
+            ),
+          ],
+        ),
+      ),
+      onDismissed: (direction) =>
+          context.read<HomeStatePresenter>().removeRecord(record),
       background: const Align(
         alignment: Alignment.centerLeft,
         child: Icon(Icons.delete),
