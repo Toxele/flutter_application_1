@@ -44,7 +44,7 @@ class NotificationsScreenPresenter
     bool? isActive,
   }) async {
     value = const NotificationsScreenLoading();
-    _eventsNotificationNotifier.saveRecord(
+    await _eventsNotificationNotifier.saveRecord(
       text: text,
       time: time,
       isActive: isActive,
@@ -59,9 +59,7 @@ class NotificationsScreenPresenter
   }) async {
     value = const NotificationsScreenLoading();
 
-    // todo
-
-    _eventsNotificationNotifier.updateNotificationRecord(
+    await _eventsNotificationNotifier.updateNotificationRecord(
       text: text,
       time: time,
       isActive: isActive,

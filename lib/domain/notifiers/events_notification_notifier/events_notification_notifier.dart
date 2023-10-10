@@ -2,15 +2,11 @@
 
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
-import 'package:path/path.dart';
-import 'package:uuid/v7.dart';
 
 import '../abstract/records_notifier.dart';
 import 'event_notification.dart';
 
-// todo доработать логику всего класса
 base class EventsNotificationNotifier
     extends RecordsNotifier<EventNotification> {
   EventsNotificationNotifier({
@@ -32,8 +28,6 @@ base class EventsNotificationNotifier
   Map<String, dynamic> deserializeElement(EventNotification element) =>
       element.toJson();
 
-  String get _uuid => const UuidV7().generate();
-
   Future<void> saveRecord({
     required String text,
     required DateTime time,
@@ -45,7 +39,7 @@ base class EventsNotificationNotifier
       uuid: DateTime.now().millisecondsSinceEpoch,
     );
 
-    _notificationService.addEvent(
+    await _notificationService.addEvent(
       id: event.uuid,
       message: event.text,
       time: event.time,
@@ -53,20 +47,38 @@ base class EventsNotificationNotifier
 
     if (isActive != null) event = event.copyWith(isActive: isActive);
 
-    addRecord(event);
+    await addRecord(event);
   }
 
-  @override
+  EventNotification _createEvent({
+    required String text,
+    required DateTime time,
+    required int uuid,
+    required bool isActive,
+  }) =>
+      EventNotification(
+        uuid: uuid,
+        text: text,
+        time: time,
+        isActive: isActive,
+      );
+
+  // todo
+  // String get _uuid => const UuidV7().generate();
+
   Future<void> updateNotificationRecord({
     required String text,
     required DateTime time,
     required bool? isActive,
-    required EventNotification oldRecord
+    required EventNotification oldRecord,
   }) async {
-    // todo 
-    // реализовать метод, выделить создание объекта в отдельный приватный метод
-    EventNotification newElement= EventNotification(uuid: oldRecord.uuid, text: text, time: time, isActive: isActive ?? false);
+    EventNotification newElement = _createEvent(
+      uuid: oldRecord.uuid,
+      text: text,
+      time: time,
+      isActive: isActive ?? false,
+    );
 
-    updateRecord(oldElement: oldRecord, newElement: newElement);
+    await updateRecord(oldElement: oldRecord, newElement: newElement);
   }
 }

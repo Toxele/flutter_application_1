@@ -48,9 +48,9 @@ abstract base class RecordsNotifier<T extends Object>
     final path = await _getPath;
     final file = File(path);
     if (await file.exists()) {
-      String rawRecordsList = await file.readAsString(); 
+      String rawRecordsList = await file.readAsString();
       _state = _serialize(rawRecordsList);
-      if (_state.isNotEmpty) { // до этого мы сначала rawRecordList проверяли, но нужно _state, т.к это физически наш список, а не файл
+      if (_state.isNotEmpty) {
         value = RecordsNotifierData(_state);
       } else {
         value = const RecordsNotifierEmpty();
@@ -63,15 +63,17 @@ abstract base class RecordsNotifier<T extends Object>
   Future<void> addRecord(T element) async {
     value = const RecordsNotifierLoading();
 
-    //_state.add(element); - старый вариант
-    _state.insert(0, element); // - новый
+    _state.insert(0, element);
     String encoded = _deserialize(_state);
-    _writeData(encoded);
+    await _writeData(encoded);
 
     value = RecordsNotifierData(_state);
   }
 
-  Future<void> updateRecord({required T oldElement, required T newElement}) async {
+  Future<void> updateRecord({
+    required T oldElement,
+    required T newElement,
+  }) async {
     value = const RecordsNotifierLoading();
 
     // мы считаем, что в списке нет похожих элементов и они иммутабельны
@@ -79,7 +81,7 @@ abstract base class RecordsNotifier<T extends Object>
     _state[index] = newElement;
 
     String encoded = _deserialize(_state);
-    _writeData(encoded);
+    await _writeData(encoded);
 
     value = RecordsNotifierData(_state);
   }
@@ -91,7 +93,7 @@ abstract base class RecordsNotifier<T extends Object>
     _state.removeAt(_state.indexOf(element));
 
     String encoded = _deserialize(_state);
-    _writeData(encoded);
+    await _writeData(encoded);
 
     value =
         _state.isEmpty ? RecordsNotifierEmpty() : RecordsNotifierData(_state);
