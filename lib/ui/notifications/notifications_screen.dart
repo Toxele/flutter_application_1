@@ -71,7 +71,8 @@ class NotificationsScreen extends StatelessWidget {
                             builder: (context) {
                               return ChangeNotifierProvider.value(
                                 value: presenter,
-                                child: const EventNotificationInfo(event: null), 
+                                child:
+                                    EventNotificationInfo(event: events[index]),
                               );
                             },
                           );

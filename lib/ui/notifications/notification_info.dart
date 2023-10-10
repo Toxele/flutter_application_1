@@ -44,7 +44,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {Navigator.of(context).pop();},
               icon: const Icon(Icons.notification_add),
             ),
           ],
@@ -65,14 +65,14 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
                 isActive: true,
               );
             } else {
-              // presenter.updateRecord(
-              //   text: textController.text,
-              //   time: selectedDate.value.copyWith(
-              //     hour: selectedTime.value.hour,
-              //     minute: selectedTime.value.minute,
-              //   ),
-              //   isActive: true,
-              // );
+              presenter.updateRecord(
+                 text: textController.text,
+                time: selectedDate.value.copyWith(
+                 hour: selectedTime.value.hour,
+                  minute: selectedTime.value.minute,
+                 ),
+                isActive: true, oldRecord: event!,
+              );
             }
             Navigator.of(context).pop();
           },
