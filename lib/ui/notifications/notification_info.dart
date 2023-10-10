@@ -52,11 +52,11 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
         floatingActionButton: FloatingActionButton(
           heroTag: 'notification_action',
           child: const Icon(Icons.save),
-          onPressed: () {
+          onPressed: () async {
             final presenter = context.read<NotificationsScreenPresenter>();
 
             if (isCreateMode) {
-              presenter.addRecord(
+              await presenter.addRecord(
                 text: textController.text,
                 time: selectedDate.value.copyWith(
                   hour: selectedTime.value.hour,
@@ -74,7 +74,9 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
                 isActive: true, oldRecord: event!,
               );
             }
-            Navigator.of(context).pop();
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           },
         ),
         body: Column(
