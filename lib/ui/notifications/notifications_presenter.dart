@@ -61,7 +61,7 @@ class NotificationsScreenPresenter
 
     // todo
 
-    _eventsNotificationNotifier.updateRecord(
+    _eventsNotificationNotifier.updateNotificationRecord(
       text: text,
       time: time,
       isActive: isActive,

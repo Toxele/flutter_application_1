@@ -196,7 +196,7 @@ class _HypertensionTile extends StatelessWidget {
       confirmDismiss: (direction) => showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Удалить запись?'),
+          title: const Text('Удалить запись?'), 
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(false),

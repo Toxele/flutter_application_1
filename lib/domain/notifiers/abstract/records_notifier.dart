@@ -71,7 +71,7 @@ abstract base class RecordsNotifier<T extends Object>
     value = RecordsNotifierData(_state);
   }
 
-  Future<void> updateRecord(T oldElement, T newElement) async {
+  Future<void> updateRecord({required T oldElement, required T newElement}) async {
     value = const RecordsNotifierLoading();
 
     // мы считаем, что в списке нет похожих элементов и они иммутабельны

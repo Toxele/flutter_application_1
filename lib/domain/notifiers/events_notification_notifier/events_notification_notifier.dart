@@ -2,7 +2,9 @@
 
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
+import 'package:path/path.dart';
 import 'package:uuid/v7.dart';
 
 import '../abstract/records_notifier.dart';
@@ -54,14 +56,17 @@ base class EventsNotificationNotifier
     addRecord(event);
   }
 
-  Future<void> updateRecord({
+  @override
+  Future<void> updateNotificationRecord({
     required String text,
     required DateTime time,
     required bool? isActive,
-    required EventNotification oldRecord,
+    required EventNotification oldRecord
   }) async {
-    // todo
+    // todo 
     // реализовать метод, выделить создание объекта в отдельный приватный метод
-    updateRecord();
+    EventNotification newElement= EventNotification(uuid: oldRecord.uuid, text: text, time: time, isActive: isActive ?? false);
+
+    updateRecord(oldElement: oldRecord, newElement: newElement);
   }
 }
