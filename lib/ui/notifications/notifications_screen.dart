@@ -77,6 +77,17 @@ class NotificationsScreen extends StatelessWidget {
                             },
                           );
                         },
+                        onChangedActive: (bool value) {
+                          final presenter =
+                              context.read<NotificationsScreenPresenter>();
+
+                          presenter.updateRecord(
+                            text: event.text,
+                            time: event.time,
+                            isActive: value,
+                            oldRecord: event,
+                          );
+                        },
                       );
                     },
                   );
@@ -105,12 +116,14 @@ class NotificationTile extends StatelessWidget {
     required this.time,
     required this.isActive,
     required this.onEdit,
+    required this.onChangedActive,
   });
 
   final String text;
   final DateTime time;
   final bool isActive;
   final VoidCallback onEdit;
+  final void Function(bool) onChangedActive;
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +135,7 @@ class NotificationTile extends StatelessWidget {
       title: Text(text),
       subtitle: Text(time.toString()),
       value: isActive,
-      onChanged: (value) {},
+      onChanged: onChangedActive,
     );
 
     // String currentTime =
