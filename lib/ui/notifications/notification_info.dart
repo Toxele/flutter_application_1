@@ -40,16 +40,10 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            isCreateMode ? 'Создание оповещения' : 'Редактирование оповещения',
+            isCreateMode
+                ? 'Создание уведомление'
+                : 'Редактирование уведомления',
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.notification_add),
-            ),
-          ],
         ),
         floatingActionButton: FloatingActionButton(
           heroTag: 'notification_action',
@@ -84,9 +78,9 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
+            ListTile(
+              title: const Text('Текст уведомления:'),
+              subtitle: TextField(
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 controller: isCreateMode
@@ -99,22 +93,28 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
             SwitchListTile(
               value: isActivate,
               title: Text(
-                isCreateMode
-                    ? DateTime.now().toString()
-                    : widget.event!.time.toString(),
-                style: Theme.of(context).textTheme.titleMedium,
+                'Уведомление ${isActivate ? '' : 'не '}активировано',
               ),
-              subtitle: const Text('Нажмите, чтобы изменить время'),
+              subtitle:
+                  const Text('Мы уведомим Вас согласно текущим настройкам'),
               onChanged: (value) {
                 setState(() {
                   isActivate = value;
                 });
               },
             ),
-            // TimeTile(),
-            TimeTile(
-              dateNotifier: selectedDate,
-              timeNotifier: selectedTime,
+            const Divider(),
+            ListTile(
+              title: const Center(
+                child: Text('Нажмите ниже для настройки времени'),
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TimeTile(
+                  dateNotifier: selectedDate,
+                  timeNotifier: selectedTime,
+                ),
+              ),
             ),
           ],
         ),
@@ -135,6 +135,7 @@ class TimeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -144,6 +145,8 @@ class TimeTile extends StatelessWidget {
             final time = DateFormat('HH:mm').format(value);
 
             return ActionChip(
+              elevation: 6.0,
+              shadowColor: theme.primaryColor,
               onPressed: () async {
                 final time = timeNotifier.value;
 
@@ -170,6 +173,8 @@ class TimeTile extends StatelessWidget {
             final date = DateFormat('d MMMM yyyy').format(value);
 
             return ActionChip(
+              elevation: 6.0,
+              shadowColor: theme.primaryColor,
               onPressed: () async {
                 final date = dateNotifier.value;
 

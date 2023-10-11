@@ -36,7 +36,7 @@ base class EventsNotificationNotifier
     var event = EventNotification(
       time: time,
       text: text,
-      uuid: DateTime.now().millisecondsSinceEpoch,
+      uuid: DateTime.now().millisecond,
     );
 
     await _notificationService.addEvent(

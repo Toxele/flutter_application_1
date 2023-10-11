@@ -42,6 +42,8 @@ class NotificationService {
     required int id,
     required DateTime time,
   }) async {
+    if (Platform.isWindows) return;
+
     await flutterLocalNotificationsPlugin.cancel(id);
     await addEvent(
       message: message,
