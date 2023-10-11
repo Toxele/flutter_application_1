@@ -37,6 +37,19 @@ class NotificationService {
     print(notificationResponse.notificationResponseType.name);
   }
 
+  Future<void> updateEvent({
+    required String message,
+    required int id,
+    required DateTime time,
+  }) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
+    await addEvent(
+      message: message,
+      id: id,
+      time: time,
+    );
+  }
+
   Future<void> addEvent({
     required String message,
     required int id,

@@ -72,13 +72,19 @@ base class EventsNotificationNotifier
     required bool? isActive,
     required EventNotification oldRecord,
   }) async {
-    EventNotification newElement = _createEvent(
+    final EventNotification newEvent = _createEvent(
       uuid: oldRecord.uuid,
       text: text,
       time: time,
       isActive: isActive ?? false,
     );
 
-    await updateRecord(oldElement: oldRecord, newElement: newElement);
+    await _notificationService.updateEvent(
+      id: newEvent.uuid,
+      message: newEvent.text,
+      time: newEvent.time,
+    );
+
+    await updateRecord(oldElement: oldRecord, newElement: newEvent);
   }
 }
