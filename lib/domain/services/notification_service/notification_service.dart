@@ -53,6 +53,26 @@ class NotificationService {
     );
   }
 
+  Future<void> showNowTest() async {
+    const androidNotificationDetails = AndroidNotificationDetails(
+      '.',
+      '..',
+      actions: <AndroidNotificationAction>[
+        AndroidNotificationAction('yes', 'Ок'),
+        AndroidNotificationAction('yes', 'Отложить'),
+      ],
+    );
+    const notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Антон привет!',
+      'Я запустил эту штуковину 🚀',
+      notificationDetails,
+    );
+  }
+
   Future<void> addEvent({
     required String message,
     required int id,
