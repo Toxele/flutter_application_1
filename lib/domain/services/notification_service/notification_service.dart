@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -73,15 +74,22 @@ class NotificationService {
     // todo: удалить это, а для windows систем вообще не внедрять уведомляшки
     if (Platform.isWindows) return;
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      'Вы просили уведомить...',
-      message,
-      tz.TZDateTime.now(tz.local)
-          .add(Duration(milliseconds: time.millisecondsSinceEpoch)),
-      notificationDetails,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
+    try {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id,
+        'Вы просили уведомить...',
+        message,
+        tz.TZDateTime.now(tz.local)
+            .add(Duration(milliseconds: time.millisecondsSinceEpoch)),
+        notificationDetails,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } on PlatformException catch (e, s) {
+      debugPrint(e.message);
+      debugPrint(s.toString());
+
+      throw '';
+    }
   }
 }
