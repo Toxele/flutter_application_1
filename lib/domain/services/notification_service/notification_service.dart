@@ -53,6 +53,21 @@ class NotificationService {
     );
   }
 
+  Future<void> showAllPendingNotifications() async {
+    final notifications =
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+
+    if (notifications.isEmpty) return print('Нет отложенных уведомлений');
+
+    for (final notif in notifications) {
+      String result = 'id: ${notif.id}\n';
+      result += 'title: ${notif.title}\n';
+      result += 'body: ${notif.body}\n';
+      result += 'payload: ${notif.payload}\n';
+      print('Уведомление ожидает поставки: $result');
+    }
+  }
+
   Future<void> showNowTest() async {
     const androidNotificationDetails = AndroidNotificationDetails(
       '.',
@@ -71,7 +86,6 @@ class NotificationService {
       'Я запустил эту штуковину 🚀',
       notificationDetails,
     );
-
   }
 
   Future<void> addEvent({
@@ -80,7 +94,7 @@ class NotificationService {
     required DateTime time,
   }) async {
     tz.initializeTimeZones();
-   // await AndroidFlutterLocalNotificationsPlugin.requestExactAlarmsPermission(); надо глянуть
+    // await AndroidFlutterLocalNotificationsPlugin.requestExactAlarmsPermission(); надо глянуть
     const androidNotificationDetails = AndroidNotificationDetails(
       '.',
       '..',

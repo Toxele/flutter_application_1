@@ -41,6 +41,14 @@ class NotificationsScreen extends StatelessWidget {
                 },
                 icon: const Icon(Icons.notification_add),
               ),
+              IconButton(
+                onPressed: () {
+                  final notificationService =
+                      context.read<NotificationService>();
+                  notificationService.showAllPendingNotifications();
+                },
+                icon: const Icon(Icons.pending_actions),
+              ),
             ],
           ),
           floatingActionButton: FloatingActionButton(
