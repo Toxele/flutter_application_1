@@ -71,6 +71,7 @@ class NotificationService {
       'Я запустил эту штуковину 🚀',
       notificationDetails,
     );
+
   }
 
   Future<void> addEvent({
@@ -79,7 +80,7 @@ class NotificationService {
     required DateTime time,
   }) async {
     tz.initializeTimeZones();
-
+   // await AndroidFlutterLocalNotificationsPlugin.requestExactAlarmsPermission(); надо глянуть
     const androidNotificationDetails = AndroidNotificationDetails(
       '.',
       '..',

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/application/app_const.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
+import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/events_notification_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
+import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +42,8 @@ class HomePage extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
+                  var nf = context.read<NotificationService>();
+                  nf.showNowTest(); 
                   // todo
                   // context.read<NotificationService>().addEvent();
                 },
