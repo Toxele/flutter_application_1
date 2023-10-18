@@ -108,16 +108,26 @@ class NotificationService with CustomLog {
     const notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
 
-    // todo: удалить это, а для windows систем вообще не внедрять уведомляшки
     if (Platform.isWindows) return;
+
+    final timeUtc = tz.TZDateTime.from(
+      time.copyWith(
+        second: 0,
+        millisecond: 0,
+        microsecond: 0,
+      ),
+      tz.local,
+    );
+
+    // todo: не могу вывести локальное время с
+    l.info('Выбранное время UTC:$timeUtc, Local:${timeUtc.toLocal()}');
 
     try {
       await flutterLocalNotificationsPlugin.zonedSchedule(
         id,
         'Вы просили уведомить...',
         message,
-        tz.TZDateTime.now(tz.local)
-            .add(Duration(milliseconds: time.millisecondsSinceEpoch)),
+        timeUtc,
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
