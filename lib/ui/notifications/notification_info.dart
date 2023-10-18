@@ -16,14 +16,23 @@ class EventNotificationInfo extends StatefulWidget {
 class _EventNotificationInfoState extends State<EventNotificationInfo> {
   final focusNode = FocusNode();
   final textController = TextEditingController();
-  final selectedTime =
-      ValueNotifier(DateTime.now().add(const Duration(days: 1)));
-  final selectedDate =
-      ValueNotifier(DateTime.now().add(const Duration(days: 1)));
+  late final ValueNotifier<DateTime> selectedTime;
+  late final ValueNotifier<DateTime> selectedDate;
   bool isActivate = true;
 
-  late final event = widget.event;
+  late final EventNotification? event = widget.event;
   late final isCreateMode = event == null;
+
+  @override
+  void initState() {
+    final time = event != null
+        ? event!.time
+        : DateTime.now().add(const Duration(days: 1, hours: 1));
+
+    selectedTime = ValueNotifier(time);
+    selectedDate = ValueNotifier(time);
+    super.initState();
+  }
 
   @override
   void dispose() {
