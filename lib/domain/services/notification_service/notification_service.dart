@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show PlatformException;
+import 'package:flutter_application_1/utils/logger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-// todo начать использовать
-class NotificationService {
+class NotificationService with CustomLog {
   NotificationService();
 
   late final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -57,15 +57,17 @@ class NotificationService {
     final notifications =
         await flutterLocalNotificationsPlugin.pendingNotificationRequests();
 
-    if (notifications.isEmpty) return print('Нет отложенных уведомлений');
+    if (notifications.isEmpty) return l.debug('Нет отложенных уведомлений');
 
-    for (final notif in notifications) {
-      String result = 'id: ${notif.id}\n';
-      result += 'title: ${notif.title}\n';
-      result += 'body: ${notif.body}\n';
-      result += 'payload: ${notif.payload}\n';
-      print('Уведомление ожидает поставки: $result');
-    }
+    l.info(() {
+      for (final notif in notifications) {
+        String result = 'id: ${notif.id}\n';
+        result += 'title: ${notif.title}\n';
+        result += 'body: ${notif.body}\n';
+        result += 'payload: ${notif.payload}\n';
+        return 'Уведомление ожидает поставки: $result';
+      }
+    });
   }
 
   Future<void> showNowTest() async {
