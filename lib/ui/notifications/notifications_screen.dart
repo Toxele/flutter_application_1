@@ -145,38 +145,11 @@ class NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile(
-      secondary: IconButton(
-        onPressed: onEdit,
-        icon: const Icon(Icons.edit),
-      ),
+    return ListTile(
+      onTap: onEdit,
       title: Text(text),
       subtitle: Text(time.toString()),
-      value: isActive,
-      onChanged: onChangedActive,
+      trailing: Switch(value: isActive, onChanged: onChangedActive),
     );
-
-    // String currentTime =
-    //     '${record.timeToNotificate.hour}:${record.timeToNotificate.minute}';
-    //
-    // // используем тут этот record
-    // return GestureDetector(
-    //   onTap: () => showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return ChangeNotifierProvider(
-    //         create: (_) => UserNotificationRecordToDisplay(record),
-    //         child: const NotificationRecordInfoDialog(),
-    //       );
-    //     },
-    //   ),
-    //   child: Card(
-    //     child: Row(
-    //       children: [
-    //         Text(record.text ?? ""),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }
