@@ -22,9 +22,6 @@ class NotificationService with CustomLog {
             : await flutterLocalNotificationsPlugin
                 .getNotificationAppLaunchDetails();
 
-    // todo: надо глянуть
-    // await AndroidFlutterLocalNotificationsPlugin.requestExactAlarmsPermission();
-
     await flutterLocalNotificationsPlugin.initialize(
       const InitializationSettings(
         android: AndroidInitializationSettings('app_icon'),
@@ -99,6 +96,7 @@ class NotificationService with CustomLog {
     required DateTime time,
   }) async {
     tz.initializeTimeZones();
+    // await AndroidFlutterLocalNotificationsPlugin.requestExactAlarmsPermission(); надо глянуть
     const androidNotificationDetails = AndroidNotificationDetails(
       '.',
       '..',
@@ -121,14 +119,14 @@ class NotificationService with CustomLog {
       tz.local,
     );
 
-    // todo: не могу вывести локальное время.
+    // todo: не могу вывести локальное время с
     l.info('Выбранное время UTC:$timeUtc, Local:${timeUtc.toLocal()}');
 
     try {
       await flutterLocalNotificationsPlugin.zonedSchedule(
         id,
         'Вы просили уведомить...',
-        message,
+        message, 
         timeUtc,
         notificationDetails,
         uiLocalNotificationDateInterpretation:

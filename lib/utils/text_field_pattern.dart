@@ -16,6 +16,8 @@ class TextFieldPattern extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var style = Theme.of(context);
+    Color color = style.secondaryHeaderColor;
     return Column(
       children: [ 
         const SizedBox(height: 25),
@@ -25,11 +27,12 @@ class TextFieldPattern extends StatelessWidget {
             style: const TextStyle(fontSize: 20),
           ),
         ),
+        const SizedBox(height: 5,),
         TextField(
           decoration: InputDecoration(
             hintText: value,
             filled: true,
-            fillColor: const Color.fromARGB(255, 86, 87, 87),
+            fillColor: color,
             border: OutlineInputBorder(
               borderSide: BorderSide.none,
               borderRadius: BorderRadius.circular(15),
