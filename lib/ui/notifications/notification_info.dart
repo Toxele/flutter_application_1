@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/event_notification.dart';
 import 'package:flutter_application_1/ui/notifications/notifications_presenter.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    show RepeatInterval;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -125,9 +127,65 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
                 ),
               ),
             ),
+            const Divider(),
+            const PeriodicallyWidget(),
           ],
         ),
       ),
+    );
+  }
+}
+
+extension RepeatIntervalLabel on RepeatInterval {
+  String get label => switch (this) {
+        RepeatInterval.everyMinute => 'Поминутно',
+        RepeatInterval.hourly => 'Каждый час',
+        RepeatInterval.daily => 'Каждый день',
+        RepeatInterval.weekly => 'Каждую неделю',
+      };
+}
+
+class PeriodicallyWidget extends StatefulWidget {
+  const PeriodicallyWidget({super.key});
+
+  @override
+  State<PeriodicallyWidget> createState() => _PeriodicallyWidgetState();
+}
+
+class _PeriodicallyWidgetState extends State<PeriodicallyWidget> {
+  bool isPeriodically = false;
+  RepeatInterval repeatInterval = RepeatInterval.weekly;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SwitchListTile(
+          title: const Text('Периодичность уведомлений'),
+          value: isPeriodically,
+          onChanged: (value) => setState(() => isPeriodically = value),
+        ),
+        if (isPeriodically)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: DropdownMenu<RepeatInterval>(
+              width: MediaQuery.sizeOf(context).width - 16.0,
+              enableSearch: false,
+              initialSelection: repeatInterval,
+              label: const Text('Периодичность'),
+              dropdownMenuEntries: [
+                for (final interval in RepeatInterval.values)
+                  DropdownMenuEntry<RepeatInterval>(
+                    label: interval.label,
+                    value: interval,
+                  ),
+              ],
+              onSelected: (value) => setState(
+                () => repeatInterval = value!,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

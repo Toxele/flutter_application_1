@@ -14,6 +14,11 @@ class NotificationService with CustomLog {
   late final NotificationAppLaunchDetails? notificationAppLaunchDetails;
 
   Future<void> init() async {
+    tz.initializeTimeZones();
+
+    // todo: нужно ли оно по итогу?
+    // await AndroidFlutterLocalNotificationsPlugin.requestExactAlarmsPermission();
+
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     notificationAppLaunchDetails =
@@ -94,9 +99,13 @@ class NotificationService with CustomLog {
     required String message,
     required int id,
     required DateTime time,
+    bool isPeriodically = false,
+    RepeatInterval? repeatInterval,
   }) async {
-    tz.initializeTimeZones();
-    // await AndroidFlutterLocalNotificationsPlugin.requestExactAlarmsPermission(); надо глянуть
+    assert(isPeriodically && repeatInterval != null);
+
+    if (Platform.isWindows) return;
+
     const androidNotificationDetails = AndroidNotificationDetails(
       '.',
       '..',
@@ -108,8 +117,6 @@ class NotificationService with CustomLog {
     const notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
 
-    if (Platform.isWindows) return;
-
     final timeUtc = tz.TZDateTime.from(
       time.copyWith(
         second: 0,
@@ -119,24 +126,31 @@ class NotificationService with CustomLog {
       tz.local,
     );
 
-    // todo: не могу вывести локальное время с
+    // todo: не могу вывести локальное время здесь
     l.info('Выбранное время UTC:$timeUtc, Local:${timeUtc.toLocal()}');
 
     try {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        id,
-        'Вы просили уведомить...',
-        message, 
-        timeUtc,
-        notificationDetails,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-      );
+      if (isPeriodically) {
+        await flutterLocalNotificationsPlugin.periodicallyShow(
+          id,
+          'Периодичное уведомление',
+          message,
+          repeatInterval!,
+          notificationDetails,
+        );
+      } else {
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          id,
+          'Вы просили уведомить...',
+          message,
+          timeUtc,
+          notificationDetails,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+        );
+      }
     } on PlatformException catch (e, s) {
-      debugPrint(e.message);
-      debugPrint(s.toString());
-
-      throw '';
+      l.error('Ошибка при отправке запроса на показ уведомления', e, s);
     }
   }
 }
