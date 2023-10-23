@@ -98,7 +98,7 @@ abstract base class RecordsNotifier<T extends Object>
     value =
         _state.isEmpty ? RecordsNotifierEmpty() : RecordsNotifierData(_state);
   }
-
+ 
   Future<void> _writeData(String data) async {
     final path = await _getPath;
     final file = File(path);

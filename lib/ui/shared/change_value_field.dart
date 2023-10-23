@@ -1,9 +1,7 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/utils/text_field_pattern.dart';
-import 'package:provider/provider.dart';
 
 class ChangeValueFieldDouble extends StatelessWidget {
   final StorageRepository sr;

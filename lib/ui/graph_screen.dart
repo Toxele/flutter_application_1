@@ -30,7 +30,7 @@ class GraphScreenState extends State<GraphScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Мой график')),
+      appBar: AppBar(title: const Text('Мой график')),
       body: const LineChartSample2(),
       /* ListenableBuilder(
         listenable: cartNotifier,

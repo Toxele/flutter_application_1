@@ -10,7 +10,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final sr = context.watch<StorageRepository>();
     return Scaffold(
-      appBar: AppBar(title: Text('Настройки')),
+      appBar: AppBar(title: const Text('Настройки')),
       body: ListView(
         children: [
           ListTile(
@@ -29,7 +29,7 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('Рост'),
+            title: const Text('Рост'),
             onTap: () {
               showDialog(
                 context: context,
@@ -45,7 +45,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           SwitchListTile(
             value: true,
-            title: Text('bool настройка 1'),
+            title: const Text('bool настройка 1'),
             onChanged: (value) {},
           ),
         ],

@@ -83,25 +83,18 @@ class _LineChartSample2State extends State<LineChartSample2> {
     switch (value.toInt()) {
       case 0:
         text = linePattirnWidget(0);
-        break;
       case 2:
         text = text = linePattirnWidget(1);
-        break;
       case 4:
         text = linePattirnWidget(2);
-        break;
       case 6:
         text = linePattirnWidget(3);
-        break;
       case 8:
         text = linePattirnWidget(4);
-        break;
       case 10:
         text = linePattirnWidget(5);
-        break;
       case 12:
         text = linePattirnWidget(6);
-        break;
       case 14:
         text = linePattirnWidget(7);
       case 16:
@@ -136,7 +129,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         _dataRecords.length >= idx + 1
             ? _dataRecords[idx].timeOfRecord.hour.toString()
             : '0',
-        style: style);
+        style: style,);
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
@@ -148,25 +141,18 @@ class _LineChartSample2State extends State<LineChartSample2> {
     switch (value.toInt()) {
       case 2:
         text = '60';
-        break;
       case 4:
         text = '80';
-        break;
       case 6:
         text = '100';
-        break;
       case 8:
         text = '120';
-        break;
       case 10:
         text = '140';
-        break;
       case 12:
         text = '160';
-        break;
       case 14:
         text = '180';
-        break;
       default:
         return Container();
     }
@@ -186,7 +172,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       // todo: настроить отображение y
       print(touchedSpot);
       return LineTooltipItem(
-          (60 + 10 * (touchedSpot.y - 2)).toString(), textStyle);
+          (60 + 10 * (touchedSpot.y - 2)).toString(), textStyle,);
     }).toList();
   }
 
@@ -198,8 +184,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
         ),
       ),
       gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
         horizontalInterval: 1,
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
@@ -216,12 +200,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
         },
       ),
       titlesData: FlTitlesData(
-        show: true,
         rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
+          
         ),
         topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
@@ -291,8 +273,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
         ),
       ),
       gridData: FlGridData(
-        show: true,
-        drawHorizontalLine: true,
         verticalInterval: 1,
         horizontalInterval: 1,
         getDrawingVerticalLine: (value) {
@@ -309,7 +289,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
         },
       ),
       titlesData: FlTitlesData(
-        show: true,
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
@@ -327,10 +306,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
           ),
         ),
         topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
+          
         ),
         rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
+          
         ),
       ),
       borderData: FlBorderData(
@@ -386,7 +365,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
   List<FlSpot> makeFLSpots(
       {required List<HypertensionModel> records,
       int length = 7,
-      required bool isSys}) {
+      required bool isSys,}) {
+    // ignore: prefer_final_locals
     List<FlSpot> spots = [];
     double index = 2;
     for (int i = 0; i < min(length, records.length); i++) {

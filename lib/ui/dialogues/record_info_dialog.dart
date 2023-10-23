@@ -138,7 +138,7 @@ class HypertensionInfo extends StatelessWidget {
             /// todo: добавить другие тайлы
             _RecordTile(
               name: 'Облачность: ',
-              value: cloudiness != null ? '${cloudiness.toString()}%' : '–',
+              value: cloudiness != null ? '$cloudiness%' : '–',
             ),
             _RecordTile(
               name: 'Атмосферное давление, мм. рт. ст.',
@@ -152,7 +152,7 @@ class HypertensionInfo extends StatelessWidget {
 }
 
 class _RecordTile extends StatelessWidget {
-  const _RecordTile({super.key, required this.name, required this.value});
+  const _RecordTile({required this.name, required this.value});
 
   final String name;
   final String? value;

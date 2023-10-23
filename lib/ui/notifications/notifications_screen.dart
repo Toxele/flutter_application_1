@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/event_notification.dart';
 import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/events_notification_notifier.dart';
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:provider/provider.dart';
@@ -81,6 +82,7 @@ class NotificationsScreen extends StatelessWidget {
                         isActive: event.isActive,
                         text: event.text,
                         time: event.time,
+                        record: event,
                         onEdit: () {
                           final presenter =
                               context.read<NotificationsScreenPresenter>();
@@ -135,9 +137,11 @@ class NotificationTile extends StatelessWidget {
     required this.isActive,
     required this.onEdit,
     required this.onChangedActive,
+    required this.record,
   });
 
   final String text;
+  final EventNotification record;
   final DateTime time;
   final bool isActive;
   final VoidCallback onEdit;
@@ -145,11 +149,46 @@ class NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onEdit,
-      title: Text(text),
-      subtitle: Text(time.toString()),
-      trailing: Switch(value: isActive, onChanged: onChangedActive),
+    return Dismissible(
+      key: ValueKey(record.uuid),
+      confirmDismiss: (direction) => showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Удалить запись?'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Нет'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Да'),
+            ),
+          ],
+        ),
+      ),
+      onDismissed: (direction) async {
+        await context
+            .read<NotificationService>()
+            .flutterLocalNotificationsPlugin
+            .cancel(record.uuid);
+        // ignore: use_build_context_synchronously
+        await context.read<EventsNotificationNotifier>().removeRecord(record);
+      },
+      background: const Align(
+        alignment: Alignment.centerLeft,
+        child: Icon(Icons.delete),
+      ),
+      secondaryBackground: const Align(
+        alignment: Alignment.centerRight,
+        child: Icon(Icons.delete),
+      ),
+      child: ListTile(
+        onTap: onEdit,
+        title: Text(text),
+        subtitle: Text(time.toString()),
+        trailing: Switch(value: isActive, onChanged: onChangedActive),
+      ),
     );
   }
 }

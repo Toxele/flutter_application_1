@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/application/app_const.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
-import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/events_notification_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
@@ -42,7 +41,7 @@ class HomePage extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () {
-                  var nf = context.read<NotificationService>();
+                  final nf = context.read<NotificationService>();
                   nf.showNowTest(); 
                   // todo
                   // context.read<NotificationService>().addEvent();
@@ -126,7 +125,7 @@ class HomePage extends StatelessWidget {
 }
 
 class _HypertensionBody extends StatelessWidget {
-  const _HypertensionBody({super.key});
+  const _HypertensionBody();
 
   @override
   Widget build(BuildContext context) {
@@ -192,7 +191,7 @@ class _HypertensionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // todo использовать DateFormat
-    String currentTime =
+    final String currentTime =
         '${record.timeOfRecord.hour}:${record.timeOfRecord.minute > 9 ? record.timeOfRecord.minute : '0${record.timeOfRecord.minute}'}';
 
     return Dismissible(
@@ -295,7 +294,7 @@ class _HypertensionTile extends StatelessWidget {
                   width: 50,
                 ),
                 Text(record.dia.toString(),
-                    style: const TextStyle(fontSize: 20)),
+                    style: const TextStyle(fontSize: 20),),
                 const SizedBox(
                   width: 10,
                 ),
@@ -313,7 +312,7 @@ class _HypertensionTile extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(record.pulse.toString(),
-                    style: const TextStyle(fontSize: 20)),
+                    style: const TextStyle(fontSize: 20),),
                 const SizedBox(
                   width: 30,
                 ),

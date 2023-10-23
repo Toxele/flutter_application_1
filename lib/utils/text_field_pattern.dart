@@ -16,8 +16,8 @@ class TextFieldPattern extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var style = Theme.of(context);
-    Color color = style.secondaryHeaderColor;
+    final style = Theme.of(context);
+    final Color color = style.secondaryHeaderColor;
     return Column(
       children: [ 
         const SizedBox(height: 25),

@@ -51,8 +51,8 @@ class HomeStatePresenter extends ValueNotifier<HomeState> {
     required Weather weather,
   }) async {
     value = const HomeStateLoading();
-    userRecordsNotifier.saveRecord(
-      sys: sys, 
+    await userRecordsNotifier.saveRecord(
+      sys: sys,
       dia: dia,
       pulse: pulse,
       weather: weather,
@@ -60,7 +60,7 @@ class HomeStatePresenter extends ValueNotifier<HomeState> {
   }
 
   Future<void> removeRecord(HypertensionModel record) async {
-    userRecordsNotifier.removeRecord(record);
+    await userRecordsNotifier.removeRecord(record);
   }
 
   Future<void> load() async {

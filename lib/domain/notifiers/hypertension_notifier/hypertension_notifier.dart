@@ -28,7 +28,7 @@ base class HypertensionNotifier extends RecordsNotifier<HypertensionModel> {
       timeOfRecord: DateTime.now(),
     );
 
-    addRecord(user);
+    await addRecord(user);
   }
 
   @override
