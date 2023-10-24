@@ -19,108 +19,111 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProxyProvider2<HypertensionNotifier, StorageRepository,
-            HomeStatePresenter>(
-          create: (context) => HomeStatePresenter(
-            userRecordsNotifier: context.read<HypertensionNotifier>(),
-            storage: context.read<StorageRepository>(),
-          ),
-          update:
-              (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
-                  HomeStatePresenter(
-            userRecordsNotifier: userRecordsNotifier,
-            storage: storage,
-          ),
-        ),
-      ],
-      builder: (context, _) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text(AppConst.appTitle),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  final nf = context.read<NotificationService>();
-                  nf.showNowTest(); 
-                  // todo
-                  // context.read<NotificationService>().addEvent();
-                },
-                icon: const Icon(Icons.notification_add),
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/graph');
-                },
-                icon: const Icon(Icons.auto_graph_rounded),
-              )
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                final recordsNotifier = context.read<HomeStatePresenter>();
-                final userStatusNotifier = context.read<HypertensionNotifier>();
-
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return ChangeNotifierProvider.value(
-                      value: userStatusNotifier,
-                      child: InputRecordDialog(
-                        onDone: recordsNotifier.addRecord,
-                      ),
-                    );
-                  },
-                );
-              },
+        providers: [
+          ChangeNotifierProxyProvider2<HypertensionNotifier, StorageRepository,
+              HomeStatePresenter>(
+            create: (context) => HomeStatePresenter(
+              userRecordsNotifier: context.read<HypertensionNotifier>(),
+              storage: context.read<StorageRepository>(),
             ),
-            onPressed: () {},
+            update:
+                (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
+                    HomeStatePresenter(
+              userRecordsNotifier: userRecordsNotifier,
+              storage: storage,
+            ),
           ),
-          body: const _HypertensionBody(),
-          drawer: SafeArea(
-            child: Drawer(
-              child: ListView(
-                children: [
-                  const FlutterLogo(
-                    size: 50,
-                    style: FlutterLogoStyle.horizontal,
-                  ),
-                  const Divider(),
-                  ListTile(
-                    title: const Text('Настройки'),
-                    onTap: () => Navigator.of(context).pushNamed('/settings'),
-                  ),
-                  ListTile(
-                    title: const Text('Уведомления'),
-                    onTap: () =>
-                        Navigator.of(context).pushNamed('/notifications'),
-                  ),
-                  Builder(
-                    builder: (context) {
-                      final isDark =
-                          Theme.of(context).brightness == Brightness.dark;
+        ],
+        builder: (context, _) {
+          final homeStateNotifier = context.read<HomeStatePresenter>();
+          final recordsState = homeStateNotifier.value;
+          switch (recordsState) {
+            case StepperHomeState:
+              return Scaffold(
+                appBar: AppBar(
+                  title: const Text(AppConst.appTitle),
+                ),
+                body: const _HypertensionBody(),
+              );
+            default:
+              return Scaffold(
+                appBar: AppBar(
+                  title: const Text(AppConst.appTitle),
+                  actions: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/graph');
+                      },
+                      icon: const Icon(Icons.auto_graph_rounded),
+                    )
+                  ],
+                ),
+                floatingActionButton: FloatingActionButton(
+                  child: IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      final userStatusNotifier =
+                          context.read<HypertensionNotifier>();
 
-                      return SwitchListTile(
-                        title: const Text('Тема'),
-                        subtitle: Text(isDark ? 'Тёмная' : 'Светлая'),
-                        value: isDark,
-                        onChanged: (value) {
-                          context.read<ThemeModeNotifier>().setTheme(
-                                value ? ThemeMode.dark : ThemeMode.light,
-                              );
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return ChangeNotifierProvider.value(
+                            value: userStatusNotifier,
+                            child: InputRecordDialog(
+                              onDone: homeStateNotifier.addRecord,
+                            ),
+                          );
                         },
                       );
                     },
                   ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+                  onPressed: () {},
+                ),
+                body: const _HypertensionBody(),
+                drawer: SafeArea(
+                  child: Drawer(
+                    child: ListView(
+                      children: [
+                        const FlutterLogo(
+                          size: 50,
+                          style: FlutterLogoStyle.horizontal,
+                        ),
+                        const Divider(),
+                        ListTile(
+                          title: const Text('Настройки'),
+                          onTap: () =>
+                              Navigator.of(context).pushNamed('/settings'),
+                        ),
+                        ListTile(
+                          title: const Text('Уведомления'),
+                          onTap: () =>
+                              Navigator.of(context).pushNamed('/notifications'),
+                        ),
+                        Builder(
+                          builder: (context) {
+                            final isDark =
+                                Theme.of(context).brightness == Brightness.dark;
+
+                            return SwitchListTile(
+                              title: const Text('Тема'),
+                              subtitle: Text(isDark ? 'Тёмная' : 'Светлая'),
+                              value: isDark,
+                              onChanged: (value) {
+                                context.read<ThemeModeNotifier>().setTheme(
+                                      value ? ThemeMode.dark : ThemeMode.light,
+                                    );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+          }
+        });
   }
 }
 
@@ -199,7 +202,7 @@ class _HypertensionTile extends StatelessWidget {
       confirmDismiss: (direction) => showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Удалить запись?'), 
+          title: const Text('Удалить запись?'),
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -293,8 +296,10 @@ class _HypertensionTile extends StatelessWidget {
                 const SizedBox(
                   width: 50,
                 ),
-                Text(record.dia.toString(),
-                    style: const TextStyle(fontSize: 20),),
+                Text(
+                  record.dia.toString(),
+                  style: const TextStyle(fontSize: 20),
+                ),
                 const SizedBox(
                   width: 10,
                 ),
@@ -311,8 +316,10 @@ class _HypertensionTile extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                Text(record.pulse.toString(),
-                    style: const TextStyle(fontSize: 20),),
+                Text(
+                  record.pulse.toString(),
+                  style: const TextStyle(fontSize: 20),
+                ),
                 const SizedBox(
                   width: 30,
                 ),

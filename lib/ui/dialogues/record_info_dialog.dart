@@ -11,7 +11,10 @@ class HypertensionInfo extends StatelessWidget {
 
     final pressure = record.weather?.pressure;
     final cloudiness = record.weather?.cloudiness;
-
+    final temperature = record.weather?.temperature;
+    final pulse = record.pulse;
+    final dia = record.dia;
+    final sys = record.sys;
     const TextStyle sharedTextStyle = TextStyle(fontSize: 20);
     return Dialog.fullscreen(
       child: Scaffold(
@@ -37,62 +40,23 @@ class HypertensionInfo extends StatelessWidget {
             ),
             Container(
               width: double.infinity,
-              height: 1,
-              color: Colors.red,
+              height: 10,
+              color: Theme.of(context).primaryColorLight,
             ),
             const SizedBox(
               height: 10,
             ),
-            Row(
-              children: <Widget>[
-                const SizedBox(
-                  height: 40,
-                ),
-                const Spacer(),
-                const Text(
-                  'Давление: ',
-                  style: sharedTextStyle,
-                ),
-                Text(
-                  '${record.sys}/${record.dia}',
-                  style: sharedTextStyle,
-                ),
-                const Spacer(),
-              ],
-            ),
-            Container(
-              width: double.infinity,
-              height: 1,
-              color: Colors.red,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: <Widget>[
-                const Spacer(),
-                const Text(
-                  'Пульс, уд/мин: ',
-                  style: sharedTextStyle,
-                ),
-                Text(
-                  '${record.pulse}',
-                  style: sharedTextStyle,
-                ),
-                const Spacer(),
-              ],
-            ),
+            _RecordTile(name: 'Давление:', value: '$sys/$dia'),
+            _RecordTile(name: 'Пульс, уд/мин:', value: pulse.toString()),
             const SizedBox(
               height: 10,
             ),
             Container(
               width: double.infinity,
-              height: 1,
-              color: Colors.red,
-            ),
-            const SizedBox(
               height: 10,
+              color: Theme.of(context).primaryColorLight,
             ),
+
             const Row(
               children: <Widget>[
                 Padding(padding: EdgeInsets.all(20)),
@@ -110,30 +74,14 @@ class HypertensionInfo extends StatelessWidget {
             Container(
               width: double.infinity,
               height: 10,
-              color: Colors.red,
+              color: Theme.of(context).primaryColorLight,
             ),
             const SizedBox(
               height: 10,
             ),
-            Card(
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  const Spacer(),
-                  const Text(
-                    'Температура в градусах Цельсия: ',
-                    style: sharedTextStyle,
-                  ),
-                  Text(
-                    '${record.weather?.temperature}',
-                    style: sharedTextStyle,
-                  ),
-                  const Spacer(),
-                ],
-              ),
-            ),
+            _RecordTile(
+                name: 'Температура, в градусах цельсия:',
+                value: temperature != null ? '$temperature' : '-'),
 
             /// todo: добавить другие тайлы
             _RecordTile(
@@ -141,7 +89,7 @@ class HypertensionInfo extends StatelessWidget {
               value: cloudiness != null ? '$cloudiness%' : '–',
             ),
             _RecordTile(
-              name: 'Атмосферное давление, мм. рт. ст.',
+              name: 'Атмосферное давление, мм. рт. ст:',
               value: pressure != null ? pressure.toString() : '–',
             ),
           ],
@@ -176,7 +124,7 @@ class _RecordTile extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               value != null ? value.toString() : '–',
-              style: theme.textTheme.labelMedium,
+              style: theme.textTheme.titleLarge, // labelMedium
             ),
           ],
         ),
