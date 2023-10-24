@@ -67,10 +67,17 @@ class NotificationsScreenPresenter
     );
   }
 
+  Future<void> _turnOffShown(List<EventNotification> data) async {
+    // todo: снять флажок у всех уведомлений, которые уже были показаны
+    // реализовать на основе текущего времени
+  }
+
   Future<void> load() async {
     value = switch (_eventsNotificationNotifier.value) {
-      RecordsNotifierData(data: final records) =>
-        NotificationsScreenData(records),
+      RecordsNotifierData(data: final records) => await () async {
+          await _turnOffShown(records);
+          return NotificationsScreenData(records);
+        }(),
       RecordsNotifierLoading() => const NotificationsScreenLoading(),
       RecordsNotifierEmpty() => const NotificationsScreenEmpty(),
     };

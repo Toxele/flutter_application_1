@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
         builder: (context, _) {
-          final homeStateNotifier = context.read<HomeStatePresenter>();
+          final homeStateNotifier = context.watch<HomeStatePresenter>();
           final recordsState = homeStateNotifier.value;
           switch (recordsState) {
             case StepperHomeState():

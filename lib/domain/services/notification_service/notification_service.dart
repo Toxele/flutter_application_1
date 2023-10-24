@@ -102,7 +102,7 @@ class NotificationService with CustomLog {
     bool isPeriodically = false,
     RepeatInterval? repeatInterval,
   }) async {
-    assert(isPeriodically && repeatInterval != null);
+    assert(!isPeriodically || (isPeriodically && repeatInterval != null));
 
     if (Platform.isWindows) return;
 
