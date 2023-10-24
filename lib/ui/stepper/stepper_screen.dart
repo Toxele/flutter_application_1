@@ -17,7 +17,6 @@ class _StepperScreenState extends State<StepperScreen> {
   double _height = 0.0;
   @override
   Widget build(BuildContext context) {
-    final storageRepository = context.watch<StorageRepository>();
     return Stepper(
       currentStep: _index,
       onStepCancel: () {
@@ -33,12 +32,9 @@ class _StepperScreenState extends State<StepperScreen> {
             _index += 1;
           });
         } else {
-          storageRepository.setDouble(StorageStore.weightKey, _weight);
-          storageRepository.setDouble(StorageStore.heightKey, _height);
-          storageRepository.setBool(StorageStore.isTimeToStepperKey, false);
-          final value = context.read<HomeStatePresenter>();
-          value.value =
-              const HomeStateDataEmpty(); // Уязвимое место, если мы захотим использовать повторно
+          context
+              .read<HomeStatePresenter>()
+              .finishStepper(weight: _weight, height: _height);
         }
       },
       onStepTapped: (int index) {

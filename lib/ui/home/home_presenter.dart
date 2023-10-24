@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
@@ -61,6 +63,19 @@ class HomeStatePresenter extends ValueNotifier<HomeState> {
 
   Future<void> removeRecord(HypertensionModel record) async {
     await userRecordsNotifier.removeRecord(record);
+  }
+
+  Future<void> finishStepper({
+    required double weight,
+    required double height,
+  }) async {
+    await Future.wait([
+      storage.setDouble(StorageStore.weightKey, weight),
+      storage.setDouble(StorageStore.heightKey, height),
+      storage.setBool(StorageStore.isTimeToStepperKey, false),
+    ]);
+
+    unawaited(load());
   }
 
   Future<void> load() async {

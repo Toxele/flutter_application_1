@@ -3,7 +3,6 @@ import 'package:flutter_application_1/application/app_const.dart';
 import 'package:flutter_application_1/data/storage_repository.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_model.dart';
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
-import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +37,7 @@ class HomePage extends StatelessWidget {
           final homeStateNotifier = context.read<HomeStatePresenter>();
           final recordsState = homeStateNotifier.value;
           switch (recordsState) {
-            case StepperHomeState:
+            case StepperHomeState():
               return Scaffold(
                 appBar: AppBar(
                   title: const Text(AppConst.appTitle),
@@ -59,26 +58,23 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 floatingActionButton: FloatingActionButton(
-                  child: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      final userStatusNotifier =
-                          context.read<HypertensionNotifier>();
+                  child: const Icon(Icons.add),
+                  onPressed: () {
+                    final userStatusNotifier =
+                        context.read<HypertensionNotifier>();
 
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return ChangeNotifierProvider.value(
-                            value: userStatusNotifier,
-                            child: InputRecordDialog(
-                              onDone: homeStateNotifier.addRecord,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  onPressed: () {},
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ChangeNotifierProvider.value(
+                          value: userStatusNotifier,
+                          child: InputRecordDialog(
+                            onDone: homeStateNotifier.addRecord,
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
                 body: const _HypertensionBody(),
                 drawer: SafeArea(
