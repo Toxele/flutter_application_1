@@ -29,14 +29,12 @@ class _LineChartSample2State extends State<LineChartSample2> {
   @override
   Widget build(BuildContext context) {
     userStatusNotifier =
-        context.watch<HypertensionNotifier>(); // не хочет работать
-    switch (userStatusNotifier?.value) {
-      case RecordsNotifierData(data: final data):
-        _dataRecords = data.reversed.toList();
-      default:
-        _dataRecords = [];
-        break;
-    }
+        context.watch<HypertensionNotifier>(); // todo: не хочет работать
+
+    _dataRecords = switch (userStatusNotifier?.value) {
+      RecordsNotifierData(:final data) => data.reversed.toList(),
+      _ => []
+    };
     return Stack(
       children: <Widget>[
         AspectRatio(
@@ -64,9 +62,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             child: Text(
               showAvg ? 'Уменьшить' : 'Увеличить',
               style: TextStyle(
-                fontSize: 12,
-                color: Theme.of(context).indicatorColor
-              ),
+                  fontSize: 12, color: Theme.of(context).indicatorColor),
             ),
           ),
         ),
@@ -124,7 +120,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 16,
-      
     );
     return Text(
       _dataRecords.length >= idx + 1

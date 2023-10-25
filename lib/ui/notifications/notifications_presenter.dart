@@ -67,16 +67,41 @@ class NotificationsScreenPresenter
     );
   }
 
-  Future<void> _turnOffShown(List<EventNotification> data) async {
-    // todo: снять флажок у всех уведомлений, которые уже были показаны
-    // реализовать на основе текущего времени
+  /// Вернёт флаг, указывающий былое наличие деактивированных уведомляшек
+  Future<bool> _deactivateWhereShown(
+    List<EventNotification> data,
+  ) async {
+    final timeNow = DateTime.now();
+
+    final needUpdate = <EventNotification>[];
+
+    // todo: упростить логику
+    data.where((element) {
+      final notificationEarlier = element.time.isAfter(timeNow);
+      if (!notificationEarlier) {
+        needUpdate.add(element.copyWith(isActive: false));
+      }
+      return notificationEarlier;
+    }).toList();
+
+    for (final notify in needUpdate) {
+      await _eventsNotificationNotifier.updateNotificationRecord(
+        text: notify.text,
+        time: notify.time,
+        isActive: notify.isActive,
+        oldRecord: notify,
+      );
+    }
+
+    return needUpdate.isNotEmpty;
   }
 
   Future<void> load() async {
     value = switch (_eventsNotificationNotifier.value) {
       RecordsNotifierData(data: final records) => await () async {
-          await _turnOffShown(records);
-          return NotificationsScreenData(records);
+          return await _deactivateWhereShown(records)
+              ? const NotificationsScreenLoading()
+              : NotificationsScreenData(records);
         }(),
       RecordsNotifierLoading() => const NotificationsScreenLoading(),
       RecordsNotifierEmpty() => const NotificationsScreenEmpty(),
