@@ -8,8 +8,7 @@ class WeatherRepository {
   }) : _weatherService = weatherService ??
             WeatherService(_apiKey, language: WeatherLanguage.russian);
 
-  // todo убрать в ближайшее время, использовать dart define and String.fromEnvironment
-  static const _apiKey = 'b890077fb67d8ea8060faed793c9c9c4';
+  static const _apiKey = String.fromEnvironment('WEATHER_APIKEY');
 
   final WeatherService _weatherService;
 
