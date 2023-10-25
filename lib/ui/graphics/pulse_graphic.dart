@@ -7,14 +7,14 @@ import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hyp
 import 'package:flutter_application_1/domain/notifiers/hypertension_notifier/hypertension_notifier.dart';
 import 'package:provider/provider.dart';
 
-class LineChartSample2 extends StatefulWidget {
-  const LineChartSample2({super.key});
+class LineChartSample1 extends StatefulWidget {
+  const LineChartSample1({super.key});
 
   @override
-  State<LineChartSample2> createState() => _LineChartSample2State();
+  State<LineChartSample1> createState() => _LineChartSample1State();
 }
 
-class _LineChartSample2State extends State<LineChartSample2> {
+class _LineChartSample1State extends State<LineChartSample1> {
   List<Color> gradientColors = [
     Colors.cyan,
     Colors.blue,
@@ -32,7 +32,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
         context.watch<HypertensionNotifier>(); // не хочет работать
     switch (userStatusNotifier?.value) {
       case RecordsNotifierData(data: final data):
-        _dataRecords = data;
+        _dataRecords = data.reversed.toList();
       default:
         _dataRecords = [];
         break;
@@ -63,10 +63,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
             },
             child: Text(
               showAvg ? 'Уменьшить' : 'Увеличить',
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.white,
-              ),
+              style: TextStyle(
+                  fontSize: 12, color: Theme.of(context).indicatorColor),
             ),
           ),
         ),
@@ -86,7 +84,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
       case 2:
         text = text = linePattirnWidget(1);
       case 4:
-        text = linePattirnWidget(2);
+        text = linePattirnWidget(2); 
       case 6:
         text = linePattirnWidget(3);
       case 8:
@@ -126,10 +124,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
       fontSize: 16,
     );
     return Text(
-        _dataRecords.length >= idx + 1
-            ? _dataRecords[idx].timeOfRecord.hour.toString()
-            : '0',
-        style: style,);
+      _dataRecords.length >= idx + 1
+          ? '${_dataRecords[idx].timeOfRecord.day}.${_dataRecords[idx].timeOfRecord.month}' //ещё бы год поместить(
+          : '-',
+      style: style,
+    );
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
@@ -172,7 +171,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
       // todo: настроить отображение y
       print(touchedSpot);
       return LineTooltipItem(
-          (60 + 10 * (touchedSpot.y - 2)).toString(), textStyle,);
+        (60 + 10 * (touchedSpot.y - 2)).toString(),
+        textStyle,
+      );
     }).toList();
   }
 
@@ -200,11 +201,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
         },
       ),
       titlesData: FlTitlesData(
-        rightTitles: const AxisTitles(
-          
-        ),
-        topTitles: const AxisTitles(
-        ),
+        rightTitles: const AxisTitles(),
+        topTitles: const AxisTitles(),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
@@ -233,12 +231,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
       lineBarsData: [
         lineChart(
           context,
-          makeFLSpots(records: _dataRecords, isSys: true),
+          makeFLSpots(records: _dataRecords),
         ),
-        lineChart(
-          context,
-          makeFLSpots(records: _dataRecords, isSys: false),
-        ),
+        
       ],
     );
   }
@@ -305,12 +300,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
             interval: 1,
           ),
         ),
-        topTitles: const AxisTitles(
-          
-        ),
-        rightTitles: const AxisTitles(
-          
-        ),
+        topTitles: const AxisTitles(),
+        rightTitles: const AxisTitles(),
       ),
       borderData: FlBorderData(
         show: true,
@@ -323,12 +314,9 @@ class _LineChartSample2State extends State<LineChartSample2> {
       lineBarsData: [
         lineChart(
           context,
-          makeFLSpots(records: _dataRecords, length: 26, isSys: true),
+          makeFLSpots(records: _dataRecords, length: 26),
         ),
-        lineChart(
-          context,
-          makeFLSpots(records: _dataRecords, length: 26, isSys: false),
-        ),
+        
         LineChartBarData(
           isCurved: true,
           gradient: LinearGradient(
@@ -362,19 +350,16 @@ class _LineChartSample2State extends State<LineChartSample2> {
     );
   }
 
-  List<FlSpot> makeFLSpots(
-      {required List<HypertensionModel> records,
-      int length = 7,
-      required bool isSys,}) {
+  List<FlSpot> makeFLSpots({
+    required List<HypertensionModel> records,
+    int length = 7,
+  }) {
     // ignore: prefer_final_locals
     List<FlSpot> spots = [];
     double index = 2;
     for (int i = 0; i < min(length, records.length); i++) {
-      if (isSys) {
-        spots.add(FlSpot(index - 2, 2.0 + (records[i].sys! - 60.0) / 10.0));
-      } else {
-        spots.add(FlSpot(index - 2, 2.0 + (records[i].dia! - 60.0) / 10.0));
-      }
+      spots.add(FlSpot(index - 2, 2.0 + (records[i].pulse! - 60.0) / 10.0));
+
       index += 2;
     }
     return spots;

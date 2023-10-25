@@ -1,7 +1,8 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/graphics/graphic.dart';
+import 'package:flutter_application_1/ui/graphics/hypertension_graphic.dart';
+import 'package:flutter_application_1/ui/graphics/pulse_graphic.dart';
 
 class GraphScreen extends StatefulWidget {
   @override
@@ -26,12 +27,14 @@ class GraphScreenState extends State<GraphScreen> {
     super.dispose();
     cartNotifier.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Мой график')),
-      body: const LineChartSample2(),
+      body: const Column(
+        children: <Widget>[LineChartSample2(), LineChartSample1()],
+      ),
       /* ListenableBuilder(
         listenable: cartNotifier,
         builder: (context, child) {
