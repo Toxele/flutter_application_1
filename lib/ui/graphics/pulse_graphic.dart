@@ -82,9 +82,9 @@ class _LineChartSample1State extends State<LineChartSample1> {
       case 0:
         text = linePattirnWidget(0);
       case 2:
-        text = text = linePattirnWidget(1);
+        text = linePattirnWidget(1);
       case 4:
-        text = linePattirnWidget(2); 
+        text = linePattirnWidget(2);
       case 6:
         text = linePattirnWidget(3);
       case 8:
@@ -119,9 +119,9 @@ class _LineChartSample1State extends State<LineChartSample1> {
   }
 
   Widget linePattirnWidget(int idx) {
-    const style = TextStyle(
+    final style = TextStyle(
       fontWeight: FontWeight.bold,
-      fontSize: 16,
+      fontSize: !showAvg ? 16 : 9,
     );
     return Text(
       _dataRecords.length >= idx + 1
@@ -233,7 +233,6 @@ class _LineChartSample1State extends State<LineChartSample1> {
           context,
           makeFLSpots(records: _dataRecords),
         ),
-        
       ],
     );
   }
@@ -316,7 +315,6 @@ class _LineChartSample1State extends State<LineChartSample1> {
           context,
           makeFLSpots(records: _dataRecords, length: 26),
         ),
-        
         LineChartBarData(
           isCurved: true,
           gradient: LinearGradient(

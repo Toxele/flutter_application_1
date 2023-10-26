@@ -32,8 +32,13 @@ class GraphScreenState extends State<GraphScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Мой график')),
-      body: const Column(
-        children: <Widget>[LineChartSample2(), LineChartSample1()],
+      body: Column(
+        children: <Widget>[
+          _infoTile(value: "График давления"),
+          const LineChartSample2(),
+          _infoTile(value: "График пульса"),
+          const LineChartSample1()
+        ],
       ),
       /* ListenableBuilder(
         listenable: cartNotifier,
@@ -48,6 +53,29 @@ class GraphScreenState extends State<GraphScreen> {
           cartNotifier.add(Item());
         },
       ), */
+    );
+  }
+}
+
+class _infoTile extends StatelessWidget {
+  String value;
+  _infoTile({required this.value});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: Card(
+          child: Center(
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 20),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
