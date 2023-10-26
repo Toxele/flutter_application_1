@@ -82,6 +82,7 @@ base class EventsNotificationNotifier
       id: newEvent.uuid,
       message: newEvent.text,
       time: newEvent.time,
+      repeatInterval: repeatInterval,
     );
 
     await updateRecord(oldElement: oldRecord, newElement: newEvent);
