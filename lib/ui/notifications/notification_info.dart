@@ -44,6 +44,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
     selectedDate.dispose();
     focusNode.dispose();
     textController.dispose();
+    repeatInterval.dispose();
     super.dispose();
   }
 
