@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/event_notification.dart';
@@ -67,42 +69,33 @@ class NotificationsScreenPresenter
     );
   }
 
-  /// Вернёт флаг, указывающий былое наличие деактивированных уведомляшек
-  Future<bool> _deactivateWhereShown(
+  /// Вернёт флаг, указывающий на то, что деактивированные уведомляшки были.
+  bool _deactivateWhereShown(
     List<EventNotification> data,
-  ) async {
+  ) {
     final timeNow = DateTime.now();
+    bool hasDeactivated = false;
 
-    final needUpdate = <EventNotification>[];
-
-    // todo: упростить логику
-    data.where((element) {
-      final notificationEarlier = element.time.isAfter(timeNow);
-      if (!notificationEarlier) {
-        needUpdate.add(element.copyWith(isActive: false));
+    for (final notify in data) {
+      if (notify.time.isBefore(timeNow)) {
+        hasDeactivated = true;
+        unawaited(_eventsNotificationNotifier.updateNotificationRecord(
+          text: notify.text,
+          time: notify.time,
+          isActive: false,
+          oldRecord: notify,
+        ));
       }
-      return notificationEarlier;
-    }).toList();
-
-    for (final notify in needUpdate) {
-      await _eventsNotificationNotifier.updateNotificationRecord(
-        text: notify.text,
-        time: notify.time,
-        isActive: notify.isActive,
-        oldRecord: notify,
-      );
     }
 
-    return needUpdate.isNotEmpty;
+    return hasDeactivated;
   }
 
   Future<void> load() async {
     value = switch (_eventsNotificationNotifier.value) {
-      RecordsNotifierData(data: final records) => await () async {
-          return await _deactivateWhereShown(records)
-              ? const NotificationsScreenLoading()
-              : NotificationsScreenData(records);
-        }(),
+      RecordsNotifierData(data: final records) => _deactivateWhereShown(records)
+          ? const NotificationsScreenLoading()
+          : NotificationsScreenData(records),
       RecordsNotifierLoading() => const NotificationsScreenLoading(),
       RecordsNotifierEmpty() => const NotificationsScreenEmpty(),
     };
