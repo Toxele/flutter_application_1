@@ -47,6 +47,7 @@ class NotificationService with CustomLog {
     required String message,
     required int id,
     required DateTime time,
+    RepeatInterval? repeatInterval,
   }) async {
     if (Platform.isWindows) return;
 
@@ -55,6 +56,7 @@ class NotificationService with CustomLog {
       message: message,
       id: id,
       time: time,
+      repeatInterval: repeatInterval,
     );
   }
 
@@ -99,11 +101,8 @@ class NotificationService with CustomLog {
     required String message,
     required int id,
     required DateTime time,
-    bool isPeriodically = false,
     RepeatInterval? repeatInterval,
   }) async {
-    assert(!isPeriodically || (isPeriodically && repeatInterval != null));
-
     if (Platform.isWindows) return;
 
     const androidNotificationDetails = AndroidNotificationDetails(
@@ -130,12 +129,12 @@ class NotificationService with CustomLog {
     l.info('Выбранное время UTC:$timeUtc, Local:${timeUtc.toLocal()}');
 
     try {
-      if (isPeriodically) {
+      if (repeatInterval != null) {
         await flutterLocalNotificationsPlugin.periodicallyShow(
           id,
           'Периодичное уведомление',
           message,
-          repeatInterval!,
+          repeatInterval,
           notificationDetails,
         );
       } else {

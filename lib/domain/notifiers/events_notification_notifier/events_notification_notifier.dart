@@ -1,8 +1,8 @@
-// ignore_for_file: prefer_final_locals, file_names, cast_nullable_to_non_nullable, unused_field
-
 import 'dart:async';
 
 import 'package:flutter_application_1/domain/services/notification_service/notification_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    show RepeatInterval;
 
 import '../abstract/records_notifier.dart';
 import 'event_notification.dart';
@@ -32,11 +32,12 @@ base class EventsNotificationNotifier
     required String text,
     required DateTime time,
     bool? isActive,
+    RepeatInterval? repeatInterval,
   }) async {
-    var event = EventNotification(
+    var event = _createEvent(
       time: time,
       text: text,
-      uuid: DateTime.now().millisecond,
+      repeatInterval: repeatInterval,
     );
 
     await _notificationService.addEvent(
@@ -53,30 +54,28 @@ base class EventsNotificationNotifier
   EventNotification _createEvent({
     required String text,
     required DateTime time,
-    required int uuid,
-    required bool isActive,
+    bool isActive = true,
+    RepeatInterval? repeatInterval,
   }) =>
       EventNotification(
-        uuid: uuid,
         text: text,
         time: time,
         isActive: isActive,
+        repeatInterval: repeatInterval,
       );
-
-  // todo
-  // String get _uuid => const UuidV7().generate();
 
   Future<void> updateNotificationRecord({
     required String text,
     required DateTime time,
     required bool? isActive,
     required EventNotification oldRecord,
+    RepeatInterval? repeatInterval,
   }) async {
     final EventNotification newEvent = _createEvent(
-      uuid: oldRecord.uuid,
       text: text,
       time: time,
       isActive: isActive ?? false,
+      repeatInterval: repeatInterval,
     );
 
     await _notificationService.updateEvent(

@@ -1,15 +1,26 @@
 import 'package:flutter_application_1/utils/date_time_converter.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    show RepeatInterval;
 import 'package:json_annotation/json_annotation.dart';
 
 part 'event_notification.g.dart';
 
+extension RepeatIntervalLabel on RepeatInterval {
+  String get label => switch (this) {
+        RepeatInterval.everyMinute => 'Поминутно',
+        RepeatInterval.hourly => 'Каждый час',
+        RepeatInterval.daily => 'Каждый день',
+        RepeatInterval.weekly => 'Каждую неделю',
+      };
+}
+
 /// todo переделать на freezed
 @JsonSerializable(explicitToJson: true)
 class EventNotification {
-  final int uuid;
-
-  // todo взять время а не то, что сейчас
-  // int get uuidAsTime => uuid;
+  // todo
+  //  взять время из настоящего uuid а не то, что сейчас
+  //  String get _uuid => const UuidV7().generate();
+  int get uuid => time.millisecond;
 
   final String text;
 
@@ -18,10 +29,12 @@ class EventNotification {
 
   final bool isActive;
 
+  final RepeatInterval? repeatInterval;
+
   const EventNotification({
-    required this.uuid,
     required this.text,
     required this.time,
+    this.repeatInterval,
     this.isActive = true,
   });
 
@@ -35,14 +48,12 @@ class EventNotification {
       identical(this, other) ||
       other is EventNotification &&
           runtimeType == other.runtimeType &&
-          uuid == other.uuid &&
           text == other.text &&
           time == other.time &&
           isActive == other.isActive;
 
   @override
-  int get hashCode =>
-      uuid.hashCode ^ text.hashCode ^ time.hashCode ^ isActive.hashCode;
+  int get hashCode => text.hashCode ^ time.hashCode ^ isActive.hashCode;
 
   EventNotification copyWith({
     int? uuid,
@@ -51,7 +62,6 @@ class EventNotification {
     bool? isActive,
   }) {
     return EventNotification(
-      uuid: uuid ?? this.uuid,
       text: text ?? this.text,
       time: time ?? this.time,
       isActive: isActive ?? this.isActive,

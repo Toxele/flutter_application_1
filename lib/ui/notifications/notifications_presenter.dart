@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/notifiers/abstract/records_notifier.dart';
 import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/event_notification.dart';
 import 'package:flutter_application_1/domain/notifiers/events_notification_notifier/events_notification_notifier.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    show RepeatInterval;
 
 sealed class NotificationsScreenState {
   const NotificationsScreenState();
@@ -44,12 +46,14 @@ class NotificationsScreenPresenter
     required String text,
     required DateTime time,
     bool? isActive,
+    RepeatInterval? repeatInterval,
   }) async {
     value = const NotificationsScreenLoading();
     await _eventsNotificationNotifier.saveRecord(
       text: text,
       time: time,
       isActive: isActive,
+      repeatInterval: repeatInterval,
     );
   }
 
@@ -57,6 +61,7 @@ class NotificationsScreenPresenter
     required String text,
     required DateTime time,
     bool? isActive,
+    RepeatInterval? repeatInterval,
     required EventNotification oldRecord,
   }) async {
     value = const NotificationsScreenLoading();
@@ -65,6 +70,7 @@ class NotificationsScreenPresenter
       text: text,
       time: time,
       isActive: isActive,
+      repeatInterval: repeatInterval,
       oldRecord: oldRecord,
     );
   }
@@ -83,6 +89,7 @@ class NotificationsScreenPresenter
           text: notify.text,
           time: notify.time,
           isActive: false,
+          repeatInterval: notify.repeatInterval,
           oldRecord: notify,
         ));
       }

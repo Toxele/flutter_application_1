@@ -20,6 +20,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
   final textController = TextEditingController();
   late final ValueNotifier<DateTime> selectedTime;
   late final ValueNotifier<DateTime> selectedDate;
+  late final ValueNotifier<RepeatInterval?> repeatInterval;
   bool isActivate = true;
 
   late final EventNotification? event = widget.event;
@@ -31,6 +32,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
         ? event!.time
         : DateTime.now().add(const Duration(days: 1, hours: 1));
 
+    repeatInterval = ValueNotifier(null);
     selectedTime = ValueNotifier(time);
     selectedDate = ValueNotifier(time);
     super.initState();
@@ -69,6 +71,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
                   hour: selectedTime.value.hour,
                   minute: selectedTime.value.minute,
                 ),
+                repeatInterval: repeatInterval.value,
                 isActive: true,
               );
             } else {
@@ -78,6 +81,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
                   hour: selectedTime.value.hour,
                   minute: selectedTime.value.minute,
                 ),
+                repeatInterval: repeatInterval.value,
                 isActive: true,
                 oldRecord: event!,
               );
@@ -128,7 +132,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
               ),
             ),
             const Divider(),
-            const PeriodicallyWidget(),
+            PeriodicallyWidget(repeatInterval: repeatInterval),
           ],
         ),
       ),
@@ -136,56 +140,47 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
   }
 }
 
-extension RepeatIntervalLabel on RepeatInterval {
-  String get label => switch (this) {
-        RepeatInterval.everyMinute => 'Поминутно',
-        RepeatInterval.hourly => 'Каждый час',
-        RepeatInterval.daily => 'Каждый день',
-        RepeatInterval.weekly => 'Каждую неделю',
-      };
-}
+class PeriodicallyWidget extends StatelessWidget {
+  const PeriodicallyWidget({
+    super.key,
+    required this.repeatInterval,
+  });
 
-class PeriodicallyWidget extends StatefulWidget {
-  const PeriodicallyWidget({super.key});
-
-  @override
-  State<PeriodicallyWidget> createState() => _PeriodicallyWidgetState();
-}
-
-class _PeriodicallyWidgetState extends State<PeriodicallyWidget> {
-  bool isPeriodically = false;
-  RepeatInterval repeatInterval = RepeatInterval.weekly;
+  final ValueNotifier<RepeatInterval?> repeatInterval;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SwitchListTile(
-          title: const Text('Периодичность уведомлений'),
-          value: isPeriodically,
-          onChanged: (value) => setState(() => isPeriodically = value),
-        ),
-        if (isPeriodically)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: DropdownMenu<RepeatInterval>(
-              width: MediaQuery.sizeOf(context).width - 16.0,
-              enableSearch: false,
-              initialSelection: repeatInterval,
-              label: const Text('Периодичность'),
-              dropdownMenuEntries: [
-                for (final interval in RepeatInterval.values)
-                  DropdownMenuEntry<RepeatInterval>(
-                    label: interval.label,
-                    value: interval,
-                  ),
-              ],
-              onSelected: (value) => setState(
-                () => repeatInterval = value!,
-              ),
+    return ValueListenableBuilder(
+      valueListenable: repeatInterval,
+      builder: (context, interval, _) {
+        return Column(
+          children: [
+            SwitchListTile(
+              title: const Text('Периодичность уведомлений'),
+              value: interval != null,
+              onChanged: (value) => repeatInterval.value = RepeatInterval.daily,
             ),
-          ),
-      ],
+            if (interval != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownMenu<RepeatInterval>(
+                  width: MediaQuery.sizeOf(context).width - 16.0,
+                  enableSearch: false,
+                  initialSelection: interval,
+                  label: const Text('Периодичность'),
+                  dropdownMenuEntries: [
+                    for (final interval in RepeatInterval.values)
+                      DropdownMenuEntry<RepeatInterval>(
+                        label: interval.label,
+                        value: interval,
+                      ),
+                  ],
+                  onSelected: (value) => repeatInterval.value = value,
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

@@ -102,6 +102,7 @@ class NotificationsScreen extends StatelessWidget {
                               context.read<NotificationsScreenPresenter>();
 
                           presenter.updateRecord(
+                            repeatInterval: event.repeatInterval,
                             text: event.text,
                             time: event.time,
                             isActive: value,
@@ -168,6 +169,7 @@ class NotificationTile extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) async {
+        // todo: выделить в слой презентера или домэин
         await context
             .read<NotificationService>()
             .flutterLocalNotificationsPlugin
