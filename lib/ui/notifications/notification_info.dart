@@ -32,7 +32,7 @@ class _EventNotificationInfoState extends State<EventNotificationInfo> {
         ? event!.time
         : DateTime.now().add(const Duration(days: 1, hours: 1));
 
-    repeatInterval = ValueNotifier(null);
+    repeatInterval = ValueNotifier(event?.repeatInterval);
     selectedTime = ValueNotifier(time);
     selectedDate = ValueNotifier(time);
     super.initState();
