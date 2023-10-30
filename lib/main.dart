@@ -84,7 +84,7 @@ class GHFlutterApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         themeMode: context.watch<ThemeModeNotifier>().value,
         theme: ThemeData.light(), // todo: поиграть с этим
-        darkTheme: ThemeData.dark(),
+        darkTheme: ThemeData.dark(), 
         title: AppConst.appTitle,
         builder: (context, child) {
           final scrollConfiguration = ScrollConfiguration.of(context);

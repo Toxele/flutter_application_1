@@ -81,17 +81,20 @@ class NotificationsScreenPresenter
   ) {
     final timeNow = DateTime.now();
     bool hasDeactivated = false;
-
     for (final notify in data) {
-      if (notify.time.isBefore(timeNow)) {
+      if (notify.time.isBefore(timeNow) && notify.isActive) {
+        
         hasDeactivated = true;
-        unawaited(_eventsNotificationNotifier.updateNotificationRecord(
-          text: notify.text,
-          time: notify.time,
-          isActive: false,
-          repeatInterval: notify.repeatInterval,
-          oldRecord: notify,
-        ));
+        unawaited(
+          _eventsNotificationNotifier.updateNotificationRecord(
+            text: notify.text,
+            time: notify.time,
+            isActive: false,
+            repeatInterval: notify.repeatInterval,
+            oldRecord: notify, 
+          ),
+        );
+        
       }
     }
 
@@ -101,10 +104,10 @@ class NotificationsScreenPresenter
   Future<void> load() async {
     value = switch (_eventsNotificationNotifier.value) {
       RecordsNotifierData(data: final records) => _deactivateWhereShown(records)
-          ? const NotificationsScreenLoading()
+          ? const NotificationsScreenLoading() 
           : NotificationsScreenData(records),
       RecordsNotifierLoading() => const NotificationsScreenLoading(),
       RecordsNotifierEmpty() => const NotificationsScreenEmpty(),
     };
-  }
+  } 
 }

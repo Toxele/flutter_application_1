@@ -24,7 +24,7 @@ class RecordsNotifierLoading<T> extends RecordsNotifierState<T> {
 
 class RecordsNotifierEmpty<T> extends RecordsNotifierState<T> {
   const RecordsNotifierEmpty();
-}
+} 
 
 /// Класс-уведомитель отвечает за получение и хранение данных в [List] типа [T]
 /// с диска.
@@ -49,6 +49,7 @@ abstract base class RecordsNotifier<T extends Object>
     final file = File(path);
     if (await file.exists()) {
       String rawRecordsList = await file.readAsString();
+      //file.delete();
       _state = _serialize(rawRecordsList);
       if (_state.isNotEmpty) {
         value = RecordsNotifierData(_state);

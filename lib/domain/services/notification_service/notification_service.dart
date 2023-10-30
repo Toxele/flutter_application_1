@@ -52,12 +52,14 @@ class NotificationService with CustomLog {
     if (Platform.isWindows) return;
 
     await flutterLocalNotificationsPlugin.cancel(id);
-    await addEvent(
-      message: message,
-      id: id,
-      time: time,
-      repeatInterval: repeatInterval,
-    );
+    if (time.isAfter(DateTime.now())) {
+      await addEvent(
+        message: message,
+        id: id,
+        time: time,
+        repeatInterval: repeatInterval,
+      );
+    }
   }
 
   Future<void> showAllPendingNotifications() async {
@@ -72,6 +74,7 @@ class NotificationService with CustomLog {
         result += 'title: ${notif.title}\n';
         result += 'body: ${notif.body}\n';
         result += 'payload: ${notif.payload}\n';
+
         return 'Уведомление ожидает поставки: $result';
       }
     });
@@ -91,7 +94,7 @@ class NotificationService with CustomLog {
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'Антон привет!',
+      'Привет!',
       'Я запустил эту штуковину 🚀',
       notificationDetails,
     );
@@ -103,7 +106,7 @@ class NotificationService with CustomLog {
     required DateTime time,
     RepeatInterval? repeatInterval,
   }) async {
-    if (Platform.isWindows) return;
+    if (!Platform.isAndroid) return;
 
     const androidNotificationDetails = AndroidNotificationDetails(
       '.',
@@ -124,10 +127,8 @@ class NotificationService with CustomLog {
       ),
       tz.local,
     );
-
     // todo: не могу вывести локальное время здесь
     l.info('Выбранное время UTC:$timeUtc, Local:${timeUtc.toLocal()}');
-
     try {
       if (repeatInterval != null) {
         await flutterLocalNotificationsPlugin.periodicallyShow(

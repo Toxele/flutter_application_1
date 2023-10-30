@@ -43,7 +43,7 @@ base class EventsNotificationNotifier
     await _notificationService.addEvent(
       id: event.uuid,
       message: event.text,
-      time: event.time,
+      time: event.time, 
     );
 
     if (isActive != null) event = event.copyWith(isActive: isActive);
@@ -71,13 +71,14 @@ base class EventsNotificationNotifier
     required EventNotification oldRecord,
     RepeatInterval? repeatInterval,
   }) async {
+    
+   // time = DateTime.now().add(const Duration(minutes: 1));
     final EventNotification newEvent = _createEvent(
       text: text,
       time: time,
       isActive: isActive ?? false,
       repeatInterval: repeatInterval,
-    );
-
+    ); 
     await _notificationService.updateEvent(
       id: newEvent.uuid,
       message: newEvent.text,

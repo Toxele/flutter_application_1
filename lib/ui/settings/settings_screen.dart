@@ -43,11 +43,11 @@ class SettingsScreen extends StatelessWidget {
               );
             },
           ),
-          SwitchListTile(
+        /*  SwitchListTile(
             value: true,
             title: const Text('bool настройка 1'),
             onChanged: (value) {},
-          ),
+          ),*/
         ],
       ),
     );

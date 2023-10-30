@@ -88,7 +88,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
     return Column(
       children: <Widget>[
         RadioListTile<User>(
-          title: const Text('Men'),
+          title: const Text('Мужской'),
           value: User.men,
           groupValue: _character,
           onChanged: (User? value) {
@@ -99,7 +99,7 @@ class _RadioListTileUserState extends State<RadioListTileUser> {
           },
         ),
         RadioListTile<User>(
-          title: const Text('Women'),
+          title: const Text('Женский'),
           value: User.women,
           groupValue: _character,
           onChanged: (User? value) {
