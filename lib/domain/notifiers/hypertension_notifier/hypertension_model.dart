@@ -7,13 +7,12 @@ part 'hypertension_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class HypertensionModel {
-  // поля значений, которые вводят пользователь, возможно сюда добавится дата и время
   final int? sys;
   final int? dia;
   final int? pulse;
   final Weather? weather;
   @EpochDateTimeConverter()
-  final DateTime timeOfRecord; // todo: это время снятия показаний?
+  final DateTime timeOfRecord;
 
   int get uuid => timeOfRecord.millisecondsSinceEpoch;
 

@@ -38,8 +38,6 @@ class TextFieldPattern extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
             ),
           ),
-          // todo: сделать в качестве параметров виджета, потому что
-          // каждой формочке нужны свои настройки
           textAlign: TextAlign.center,
           textInputAction: TextInputAction.next,
           keyboardType: inputType,

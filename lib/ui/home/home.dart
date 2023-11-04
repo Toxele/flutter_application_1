@@ -15,111 +15,112 @@ import 'home_presenter.dart';
 class HomePage extends StatelessWidget {
   const HomePage();
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProxyProvider2<HypertensionNotifier, StorageRepository,
-              HomeStatePresenter>(
-            create: (context) => HomeStatePresenter(
-              userRecordsNotifier: context.read<HypertensionNotifier>(),
-              storage: context.read<StorageRepository>(),
-            ),
-            update:
-                (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
-                    HomeStatePresenter(
-              userRecordsNotifier: userRecordsNotifier,
-              storage: storage,
-            ),
+      providers: [
+        ChangeNotifierProxyProvider2<HypertensionNotifier, StorageRepository,
+            HomeStatePresenter>(
+          create: (context) => HomeStatePresenter(
+            userRecordsNotifier: context.read<HypertensionNotifier>(),
+            storage: context.read<StorageRepository>(),
           ),
-        ],
-        builder: (context, _) {
-          final homeStateNotifier = context.watch<HomeStatePresenter>();
-          final recordsState = homeStateNotifier.value;
-          switch (recordsState) {
-            case StepperHomeState():
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text(AppConst.appTitle),
-                ),
-                body: const _HypertensionBody(),
-              );
-            default:
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text(AppConst.appTitle),
-                  actions: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/graph');
-                      },
-                      icon: const Icon(Icons.auto_graph_rounded),
-                    )
-                  ],
-                ),
-                floatingActionButton: FloatingActionButton(
-                  child: const Icon(Icons.add),
-                  onPressed: () {
-                    final userStatusNotifier =
-                        context.read<HypertensionNotifier>();
+          update:
+              (context, userRecordsNotifier, storage, oldHomeStateNotifier) =>
+                  HomeStatePresenter(
+            userRecordsNotifier: userRecordsNotifier,
+            storage: storage,
+          ),
+        ),
+      ],
+      builder: (context, _) {
+        final homeStateNotifier = context.watch<HomeStatePresenter>();
+        final recordsState = homeStateNotifier.value;
+        switch (recordsState) {
+          case StepperHomeState():
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text(AppConst.appTitle),
+              ),
+              body: const _HypertensionBody(),
+            );
+          default:
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text(AppConst.appTitle),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/graph');
+                    },
+                    icon: const Icon(Icons.auto_graph_rounded),
+                  )
+                ],
+              ),
+              floatingActionButton: FloatingActionButton(
+                child: const Icon(Icons.add),
+                onPressed: () {
+                  final userStatusNotifier =
+                      context.read<HypertensionNotifier>();
 
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return ChangeNotifierProvider.value(
-                          value: userStatusNotifier,
-                          child: InputRecordDialog(
-                            onDone: homeStateNotifier.addRecord,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-                body: const _HypertensionBody(),
-                drawer: SafeArea(
-                  child: Drawer(
-                    child: ListView(
-                      children: [
-                        const FlutterLogo(
-                          size: 50,
-                          style: FlutterLogoStyle.horizontal,
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return ChangeNotifierProvider.value(
+                        value: userStatusNotifier,
+                        child: InputRecordDialog(
+                          onDone: homeStateNotifier.addRecord,
                         ),
-                        const Divider(),
-                        ListTile(
-                          title: const Text('Настройки'),
-                          onTap: () =>
-                              Navigator.of(context).pushNamed('/settings'),
-                        ),
-                        ListTile(
-                          title: const Text('Уведомления'),
-                          onTap: () =>
-                              Navigator.of(context).pushNamed('/notifications'),
-                        ),
-                        Builder(
-                          builder: (context) {
-                            final isDark =
-                                Theme.of(context).brightness == Brightness.dark;
+                      );
+                    },
+                  );
+                },
+              ),
+              body: const _HypertensionBody(),
+              drawer: SafeArea(
+                child: Drawer(
+                  child: ListView(
+                    children: [
+                      const FlutterLogo(
+                        size: 50,
+                        style: FlutterLogoStyle.horizontal,
+                      ),
+                      const Divider(),
+                      ListTile(
+                        title: const Text('Настройки'),
+                        onTap: () =>
+                            Navigator.of(context).pushNamed('/settings'),
+                      ),
+                      ListTile(
+                        title: const Text('Уведомления'),
+                        onTap: () =>
+                            Navigator.of(context).pushNamed('/notifications'),
+                      ),
+                      Builder(
+                        builder: (context) {
+                          final isDark =
+                              Theme.of(context).brightness == Brightness.dark;
 
-                            return SwitchListTile(
-                              title: const Text('Тема'),
-                              subtitle: Text(isDark ? 'Тёмная' : 'Светлая'),
-                              value: isDark,
-                              onChanged: (value) {
-                                context.read<ThemeModeNotifier>().setTheme(
-                                      value ? ThemeMode.dark : ThemeMode.light,
-                                    );
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                          return SwitchListTile(
+                            title: const Text('Тема'),
+                            subtitle: Text(isDark ? 'Тёмная' : 'Светлая'),
+                            value: isDark,
+                            onChanged: (value) {
+                              context.read<ThemeModeNotifier>().setTheme(
+                                    value ? ThemeMode.dark : ThemeMode.light,
+                                  );
+                            },
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              );
-          }
-        });
+              ),
+            );
+        }
+      },
+    );
   }
 }
 

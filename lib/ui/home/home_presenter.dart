@@ -25,7 +25,7 @@ class HomeStateError extends HomeState {
   const HomeStateError(this.message);
 
   final String message;
-}
+} 
 
 class HomeStateDataEmpty extends HomeState {
   const HomeStateDataEmpty();
@@ -59,7 +59,7 @@ class HomeStatePresenter extends ValueNotifier<HomeState> {
       pulse: pulse,
       weather: weather,
     );
-  }
+  } 
 
   Future<void> removeRecord(HypertensionModel record) async {
     await userRecordsNotifier.removeRecord(record);

@@ -4,7 +4,6 @@ part 'weather.g.dart';
 
 @JsonSerializable()
 class Weather {
-  // todo: это для теста было
   @JsonKey(name: 'temp', defaultValue: 12.0)
   final double? temperature;
   final double? pressure;

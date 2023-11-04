@@ -32,7 +32,7 @@ class RecordsNotifierEmpty<T> extends RecordsNotifierState<T> {
 /// По умолчанию используется путь "документы".
 abstract base class RecordsNotifier<T extends Object>
     extends ValueNotifier<RecordsNotifierState<List<T>>> {
-  RecordsNotifier() : super(const RecordsNotifierLoading()) {
+  RecordsNotifier() : super(const RecordsNotifierLoading()) { 
     load();
   }
 
@@ -49,7 +49,6 @@ abstract base class RecordsNotifier<T extends Object>
     final file = File(path);
     if (await file.exists()) {
       String rawRecordsList = await file.readAsString();
-      //file.delete();
       _state = _serialize(rawRecordsList);
       if (_state.isNotEmpty) {
         value = RecordsNotifierData(_state);
@@ -76,8 +75,6 @@ abstract base class RecordsNotifier<T extends Object>
     required T newElement,
   }) async {
     value = const RecordsNotifierLoading();
-
-    // мы считаем, что в списке нет похожих элементов и они иммутабельны
     final index = _state.indexOf(oldElement);
     _state[index] = newElement;
 
@@ -90,13 +87,13 @@ abstract base class RecordsNotifier<T extends Object>
   Future<void> removeRecord(T element) async {
     value = const RecordsNotifierLoading();
 
-    // мы считаем, что в списке нет похожих элементов и они иммутабельны
     _state.removeAt(_state.indexOf(element));
 
     String encoded = _deserialize(_state);
     await _writeData(encoded);
 
     value =
+        // ignore: prefer_const_constructors
         _state.isEmpty ? RecordsNotifierEmpty() : RecordsNotifierData(_state);
   }
  
@@ -125,3 +122,4 @@ abstract base class RecordsNotifier<T extends Object>
   String _deserialize(List<T> elements) =>
       json.encode(elements.map((e) => deserializeElement(e)).toList());
 }
+ 

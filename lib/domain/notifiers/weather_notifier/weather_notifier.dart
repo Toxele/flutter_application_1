@@ -19,6 +19,8 @@ class WeatherNotifier extends ChangeNotifier {
 
   Weather? weather;
 
+  // Фактически, поле isLoading ни на что не влияет, но может понадобиться в будущем
+  // при расширении функционала сервисов погоды или перевода WeatherNotifier на ValueNotifier и sealed классы
   bool isLoading = true;
 
   Future<void> getWeather() async {

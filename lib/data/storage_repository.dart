@@ -65,4 +65,22 @@ class StorageStore {
 
   static const String minPulseKey1 = 'minPulseKey';
   static const int minPulseDefaultValue1 = 80;
+  //
+  static const String diaMinKey = 'DiaMin';
+  static const int defualtDiaMinValue = 70;
+
+  static const String diaMaxKey = 'DiaMax';
+  static const int defualtDiaMaxValue = 140;
+  //
+  static const String sysMinKey = 'SysMin';
+  static const int defualtSysMinValue = 90;
+
+  static const String sysMaxKey = 'SysMax';
+  static const int defualtSysMaxValue = 170;
+
+  static const String pulseMinKey = 'PulseMin';
+  static const int defaultPulseMinValue = 60;
+
+  static const String pulseMaxKey = 'PulseMax';
+  static const int defaultPulseMaxValue = 130;
 }
